@@ -48,6 +48,13 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = True
+'---------------------------------------------------------------------------------------
+' Module    : ypnSideMenu
+' Author    : YPN
+' Date      : 2018-03-24 00:15
+' Purpose   : 扁平化的左侧菜单
+'---------------------------------------------------------------------------------------
+
 Option Explicit
 Private Const DT_CENTER         As Long = &H1
 Private Const DT_VCENTER        As Long = &H4
@@ -110,10 +117,10 @@ Enum selIndex
     MenuID29 = 28
     MenuID30 = 29
 End Enum
-Private Declare Function SetRect Lib "user32" (lpRect As RECT, ByVal X1 As Long, ByVal Y1 As Long, ByVal X2 As Long, ByVal Y2 As Long) As Long
+Private Declare Function SetRect Lib "user32" (lpRect As RECT, ByVal x1 As Long, ByVal y1 As Long, ByVal x2 As Long, ByVal y2 As Long) As Long
 Private Declare Function DrawText Lib "user32" Alias "DrawTextA" (ByVal hDC As Long, ByVal lpStr As String, ByVal nCount As Long, lpRect As RECT, ByVal wFormat As Long) As Long
 Private Declare Function ReleaseCapture Lib "user32" () As Long
-Private Declare Function SetCapture Lib "user32" (ByVal hWnd As Long) As Long
+Private Declare Function SetCapture Lib "user32" (ByVal hwnd As Long) As Long
 Private Declare Function GetSysColor Lib "user32" (ByVal nIndex As Long) As Long
 Private m_Caption As String
 Private m_State As Long
@@ -122,10 +129,10 @@ Dim ScaleWidth As Single, ScaleHeight As Single
 Dim itemHeight As Single
 Dim itemCount As Integer
 Dim itemCaption() As String
-Dim itemEnabled() As Boolean
+Dim ItemEnabled() As Boolean
 
 Dim mTxtColor As OLE_COLOR, mBorderColor As OLE_COLOR
-Dim alignData As Long, align As menuAlign
+Dim alignData As Long, Align As menuAlign
 
 Dim skin As sidemenu_skin
 Dim aim As Integer, oldAim As Integer '指向
@@ -151,7 +158,7 @@ Private Sub UserControl_MouseMove(Button As Integer, Shift As Integer, X As Sing
     If X > 0 And X < ScaleWidth And Y > 0 And Y < ScaleHeight Then
         If Button = 1 Then Exit Sub
         If Not capture Then
-            Call SetCapture(UserControl.hWnd)
+            Call SetCapture(UserControl.hwnd)
             capture = True
         End If
         aim = getItem(Y)
@@ -212,17 +219,17 @@ Private Sub ReDrawMenu()
         drawMenuItem (i)
     Next
 End Sub
-Private Sub drawMenuItem(index As Integer)
+Private Sub drawMenuItem(Index As Integer)
     Dim Y As Single, rc As RECT
-    If index < 0 Then Exit Sub
-    Y = itemHeight * index + 2
-    If Not UserControl.Enabled Or Not itemEnabled(index) Then
+    If Index < 0 Then Exit Sub
+    Y = itemHeight * Index + 2
+    If Not UserControl.Enabled Or Not ItemEnabled(Index) Then
         UserControl.PaintPicture skinPicture.Image, 2, Y, UserControl.ScaleWidth, itemHeight, 0, itemHeight * 3, UserControl.ScaleWidth, itemHeight, vbSrcCopy
         Call SetRect(rc, 5, 5 + Y, UserControl.ScaleWidth - 3, itemHeight - 3 + Y)
-    ElseIf sel = index Then
+    ElseIf sel = Index Then
         UserControl.PaintPicture skinPicture.Image, 2, Y, UserControl.ScaleWidth, itemHeight, 0, itemHeight + itemHeight, UserControl.ScaleWidth, itemHeight, vbSrcCopy
         Call SetRect(rc, 5, 5 + Y, UserControl.ScaleWidth - 3, itemHeight - 3 + Y)
-    ElseIf aim = index Then
+    ElseIf aim = Index Then
         UserControl.PaintPicture skinPicture.Image, 2, Y, UserControl.ScaleWidth, itemHeight, 0, itemHeight, UserControl.ScaleWidth, itemHeight, vbSrcCopy
         Call SetRect(rc, 3, 3 + Y, UserControl.ScaleWidth - 3, itemHeight - 3 + Y)
     Else
@@ -235,7 +242,7 @@ Private Sub drawMenuItem(index As Integer)
     Else
         UserControl.ForeColor = GetSysColor(15)
     End If
-    Call DrawText(UserControl.hDC, itemCaption(index), -1, rc, alignData)
+    Call DrawText(UserControl.hDC, itemCaption(Index), -1, rc, alignData)
 End Sub
 Private Sub UserControl_ReadProperties(PropBag As PropertyBag)  '读取属性
     Dim i As Integer
@@ -246,14 +253,14 @@ Private Sub UserControl_ReadProperties(PropBag As PropertyBag)  '读取属性
     Font = PropBag.ReadProperty("Font", UserControl.Font)
     mTxtColor = PropBag.ReadProperty("txtColor", 0)
     mBorderColor = PropBag.ReadProperty("borderColor", &HDC861F)
-    align = PropBag.ReadProperty("align", 2)
+    Align = PropBag.ReadProperty("align", 2)
     ReDim itemCaption(itemCount - 1)
-    ReDim itemEnabled(itemCount - 1)
+    ReDim ItemEnabled(itemCount - 1)
     For i = 0 To itemCount - 1
         itemCaption(i) = PropBag.ReadProperty("Caption" + CStr(i), "菜单项")
-        itemEnabled(i) = PropBag.ReadProperty("Enabled" + CStr(i), True)
+        ItemEnabled(i) = PropBag.ReadProperty("Enabled" + CStr(i), True)
     Next
-    Call setAlign
+    Call SetAlign
     ready = True
 End Sub
 Private Sub UserControl_WriteProperties(PropBag As PropertyBag)  '写入属性
@@ -265,10 +272,10 @@ Private Sub UserControl_WriteProperties(PropBag As PropertyBag)  '写入属性
     Call PropBag.WriteProperty("Font", UserControl.Font)
     Call PropBag.WriteProperty("txtColor", mTxtColor, 0)
     Call PropBag.WriteProperty("borderColor", mBorderColor, &HDC861F)
-    Call PropBag.WriteProperty("align", align, 2)
+    Call PropBag.WriteProperty("align", Align, 2)
     For i = 0 To itemCount - 1
         Call PropBag.WriteProperty("Caption" + CStr(i), itemCaption(i))
-        Call PropBag.WriteProperty("Enabled" + CStr(i), itemEnabled(i))
+        Call PropBag.WriteProperty("Enabled" + CStr(i), ItemEnabled(i))
     Next
 End Sub
 Private Sub UserControl_Initialize()
@@ -280,23 +287,23 @@ Private Sub UserControl_Initialize()
     mBorderColor = &HDC861F
     itemHeight = 20
     itemCount = 4
-    align = 居中
+    Align = 居中
     alignData = DT_CENTER Or DT_VCENTER Or DT_SINGLELINE
     ReDim itemCaption(itemCount - 1)
-    ReDim itemEnabled(itemCount - 1)
+    ReDim ItemEnabled(itemCount - 1)
     itemCaption(0) = "菜单项1"
     itemCaption(1) = "菜单项2"
     itemCaption(2) = "菜单项3"
     itemCaption(3) = "菜单项4"
-    itemEnabled(0) = True
-    itemEnabled(1) = True
-    itemEnabled(2) = True
-    itemEnabled(3) = True
+    ItemEnabled(0) = True
+    ItemEnabled(1) = True
+    ItemEnabled(2) = True
+    ItemEnabled(3) = True
 End Sub
-Private Sub setAlign()
-    If align = 左对齐 Then
+Private Sub SetAlign()
+    If Align = 左对齐 Then
         alignData = DT_LEFT Or DT_VCENTER Or DT_SINGLELINE
-    ElseIf align = 居中 Then
+    ElseIf Align = 居中 Then
         alignData = DT_CENTER Or DT_VCENTER Or DT_SINGLELINE
     Else
         alignData = DT_RIGHT Or DT_VCENTER Or DT_SINGLELINE
@@ -332,10 +339,10 @@ Public Property Let menuItemCount(ByVal newValue As Integer)
     Dim i As Integer
     If newValue > 0 And newValue <> itemCount Then
         ReDim Preserve itemCaption(newValue - 1)
-        ReDim Preserve itemEnabled(newValue - 1)
+        ReDim Preserve ItemEnabled(newValue - 1)
         For i = itemCount To newValue - 1
             itemCaption(i) = "菜单项" & CStr(i + 1)
-            itemEnabled(i) = True
+            ItemEnabled(i) = True
         Next
         itemCount = newValue
         Call UserControl_Resize
@@ -366,15 +373,15 @@ Public Property Let menuSkin(ByVal newValue As sidemenu_skin)
 End Property
 Public Sub setItemEnabled(menuItem As Integer, newValue As Boolean)
     If menuItem >= 0 And menuItem < itemCount Then
-        If itemEnabled(menuItem) <> newValue Then Call Switch(newValue)
+        If ItemEnabled(menuItem) <> newValue Then Call Switch(newValue)
     End If
 End Sub
 Public Property Get menuEnabled() As Boolean
-    menuEnabled = itemEnabled(sel)
+    menuEnabled = ItemEnabled(sel)
 End Property
 Public Property Let menuEnabled(ByVal newValue As Boolean)
-    If itemEnabled(sel) <> newValue Then
-        itemEnabled(sel) = newValue
+    If ItemEnabled(sel) <> newValue Then
+        ItemEnabled(sel) = newValue
         Call drawMenuItem(sel)
     End If
 End Property
@@ -392,14 +399,14 @@ Public Property Let BorderColor(ByVal newValue As OLE_COLOR)   '设置前景色
     mBorderColor = newValue
     Call ReDrawMenu
 End Property
-Public Property Get alignment() As menuAlign
-    alignment = align
+Public Property Get Alignment() As menuAlign
+    Alignment = Align
 End Property
-Public Property Let alignment(ByVal newValue As menuAlign)    '设置前景色
-    If align <> newValue Then
-        align = newValue
-        Call setAlign
-        If ready Then Call setAlign
+Public Property Let Alignment(ByVal newValue As menuAlign)    '设置前景色
+    If Align <> newValue Then
+        Align = newValue
+        Call SetAlign
+        If ready Then Call SetAlign
     End If
 End Property
 Private Sub switchSel(newValue As Integer)

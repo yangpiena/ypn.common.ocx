@@ -157,6 +157,13 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = True
+'---------------------------------------------------------------------------------------
+' Module    : ypnCheckBox_Flat
+' Author    : YPN
+' Date      : 2018-03-24 00:09
+' Purpose   : ±âÆ½»¯µÄcheckbox
+'---------------------------------------------------------------------------------------
+
 Private Declare Function GetCursorPos Lib "user32" (lpPoint As POINT_API) As Long
 Private Declare Function ScreenToClient Lib "user32" (ByVal hwnd As Long, lpPoint As POINT_API) As Long
 
@@ -225,7 +232,7 @@ Private Sub p_MouseDown(Button As Integer, Shift As Integer, X As Single, Y As S
 End Sub
 
 Private Sub p_MouseMove(Button As Integer, Shift As Integer, X As Single, Y As Single)
-Call UserControl_MouseMove(Button, Shift, X, Y)
+    Call UserControl_MouseMove(Button, Shift, X, Y)
 End Sub
 
 Private Sub p_MouseUp(Button As Integer, Shift As Integer, X As Single, Y As Single)
@@ -237,12 +244,12 @@ Private Sub Timer1_Timer()
     UserControl.ScaleMode = 3
     GetCursorPos pnt
     ScreenToClient UserControl.hwnd, pnt
-
+    
     If pnt.X < UserControl.ScaleLeft Or _
-       pnt.Y < UserControl.ScaleTop Or _
-       pnt.X > (UserControl.ScaleLeft + UserControl.ScaleWidth) Or _
-       pnt.Y > (UserControl.ScaleTop + UserControl.ScaleHeight) Then
-       
+        pnt.Y < UserControl.ScaleTop Or _
+        pnt.X > (UserControl.ScaleLeft + UserControl.ScaleWidth) Or _
+        pnt.Y > (UserControl.ScaleTop + UserControl.ScaleHeight) Then
+        
         define_pic
         Timer1.Enabled = False
         RaiseEvent MouseOut
@@ -314,13 +321,13 @@ Private Sub UserControl_MouseDown(Button As Integer, Shift As Integer, X As Sing
         End If
     End If
     RaiseEvent MouseDown(Button, Shift, X, Y)
-   
+    
 End Sub
 
 Private Sub UserControl_MouseMove(Button As Integer, Shift As Integer, X As Single, Y As Single)
     Timer1.Enabled = True
     If X >= 0 And Y >= 0 And _
-       X <= UserControl.ScaleWidth And Y <= UserControl.ScaleHeight Then
+        X <= UserControl.ScaleWidth And Y <= UserControl.ScaleHeight Then
         RaiseEvent MouseMove(Button, Shift, X, Y)
         If Button = vbLeftButton Then
             If Enabled = True Then

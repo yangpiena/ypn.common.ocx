@@ -236,6 +236,13 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = True
+'---------------------------------------------------------------------------------------
+' Module    : ypnButton
+' Author    : YPN
+' Date      : 2018-03-24 00:03
+' Purpose   : 普通按钮
+'---------------------------------------------------------------------------------------
+
 Option Explicit
 Private Const DT_CENTER         As Long = &H1
 Private Const DT_VCENTER        As Long = &H4
@@ -259,10 +266,10 @@ Enum ypnButton_skin
     skin6 = 6
 End Enum
 Private Declare Function SetTextColor Lib "gdi32" (ByVal hDC As Long, ByVal crColor As Long) As Long
-Private Declare Function SetRect Lib "user32" (lpRect As RECT, ByVal X1 As Long, ByVal Y1 As Long, ByVal X2 As Long, ByVal Y2 As Long) As Long
+Private Declare Function SetRect Lib "user32" (lpRect As RECT, ByVal x1 As Long, ByVal y1 As Long, ByVal x2 As Long, ByVal y2 As Long) As Long
 Private Declare Function DrawText Lib "user32" Alias "DrawTextA" (ByVal hDC As Long, ByVal lpStr As String, ByVal nCount As Long, lpRect As RECT, ByVal wFormat As Long) As Long
 Private Declare Function ReleaseCapture Lib "user32" () As Long
-Private Declare Function SetCapture Lib "user32" (ByVal hWnd As Long) As Long
+Private Declare Function SetCapture Lib "user32" (ByVal hwnd As Long) As Long
 Private Declare Function GetFocus Lib "user32" () As Long
 Private Declare Function DrawFocusRect Lib "user32" (ByVal hDC As Long, lpRect As RECT) As Long
 Private Declare Function GetSysColor Lib "user32" (ByVal nIndex As Long) As Long
@@ -278,61 +285,66 @@ Dim m_float As Boolean
 Dim button_ico As Boolean, icoLeft As Long, icoTop As Long, icoWidth As Long, icoHeight As Long
 Dim txtRect As RECT
 Dim m_check As Boolean '使用复选模式
-Dim m_value As Boolean '按下/普通，复选模式有效
+Dim m_Value As Boolean '按下/普通，复选模式有效
 
 Public Event Click() '声明Click事件
 
 Private Sub setUnSetIco(icoPic As StdPicture)
-     Debug.Print "开始 show"
-     Debug.Print icoPic
-     Debug.Print ico(1).Picture
-     If icoPic <> 0 Then  'ico0有图
-          If ico(1).Picture = 0 Then
-               Set ico(1).Picture = icoPic
-               Debug.Print "设了ico1"
-          End If
-          If ico(2).Picture = 0 Then Set ico(2).Picture = icoPic
-          'If ico(3).Picture = 0 Then Set ico(3).Picture = icoPic
-     End If
+    Debug.Print "开始 show"
+    Debug.Print icoPic
+    Debug.Print ico(1).Picture
+    If icoPic <> 0 Then  'ico0有图
+        If ico(1).Picture = 0 Then
+            Set ico(1).Picture = icoPic
+            Debug.Print "设了ico1"
+        End If
+        If ico(2).Picture = 0 Then Set ico(2).Picture = icoPic
+        'If ico(3).Picture = 0 Then Set ico(3).Picture = icoPic
+    End If
 End Sub
 
 Private Sub UserControl_DblClick()
     If m_button = 1 Then Call DoRedraw(2)
     'RaiseEvent Click
 End Sub
+
 Private Sub UserControl_GotFocus()
-    Call ReDrawButton
+    Call RedrawButton
 End Sub
+
 Private Sub UserControl_LostFocus()
-    Call ReDrawButton
+    Call RedrawButton
 End Sub
+
 Private Sub UserControl_MouseDown(Button As Integer, Shift As Integer, X As Single, Y As Single)
     m_button = Button
     If Button = 1 Then
-        If m_check Then m_value = Not m_value
+        If m_check Then m_Value = Not m_Value
         Call DoRedraw(2)
     End If
     'If capture Then
-        'Call ReleaseCapture
-        'capture = False
+    'Call ReleaseCapture
+    'capture = False
     'End If
 End Sub
+
 Private Sub UserControl_MouseMove(Button As Integer, Shift As Integer, X As Single, Y As Single)
     If X > 0 And X < ScaleWidth And Y > 0 And Y < ScaleHeight Then
         If Button = 1 Then Exit Sub
         If Not capture Then
-            Call SetCapture(UserControl.hWnd)
+            Call SetCapture(UserControl.hwnd)
             capture = True
             Call DoRedraw(1)
         End If
     Else
         'If capture Then
-            Call ReleaseCapture
-            capture = False
-            Call DoRedraw(0)
+        Call ReleaseCapture
+        capture = False
+        Call DoRedraw(0)
         'End If
     End If
 End Sub
+
 Private Sub UserControl_MouseUp(Button As Integer, Shift As Integer, X As Single, Y As Single)
     If capture Then
         Call ReleaseCapture
@@ -341,6 +353,7 @@ Private Sub UserControl_MouseUp(Button As Integer, Shift As Integer, X As Single
         RaiseEvent Click
     End If
 End Sub
+
 Private Sub UserControl_Resize()
     If UserControl.ScaleHeight < 7 Or UserControl.ScaleWidth < 7 Then Exit Sub
     Dim i As Integer
@@ -364,8 +377,9 @@ Private Sub UserControl_Resize()
         skinPicture.PaintPicture Picture1(skin).Image, i * ScaleWidth + ScaleWidth - 3, 3, 3, ScaleHeight - 6, i * 7 + 4, 3, 3, 19, vbSrcCopy
         skinPicture.PaintPicture Picture1(skin).Image, i * ScaleWidth + ScaleWidth - 3, ScaleHeight - 3, 3, 3, i * 7 + 4, 22, 3, 3, vbSrcCopy
     Next
-    Call ReDrawButton
+    Call RedrawButton
 End Sub
+
 Private Sub UserControl_ReadProperties(PropBag As PropertyBag)  '读取属性
     m_Caption = PropBag.ReadProperty("Caption", m_Caption)
     UserControl.Enabled = PropBag.ReadProperty("Enabled", UserControl.Enabled)
@@ -385,9 +399,10 @@ Private Sub UserControl_ReadProperties(PropBag As PropertyBag)  '读取属性
     Set ico(2).Picture = PropBag.ReadProperty("ico2")
     Set ico(3).Picture = PropBag.ReadProperty("ico3")
     m_check = PropBag.ReadProperty("m_check", False)
-    m_value = PropBag.ReadProperty("m_value", False)
-    Call DoRedraw(IIf(m_value, 2, 0))
+    m_Value = PropBag.ReadProperty("m_value", False)
+    Call DoRedraw(IIf(m_Value, 2, 0))
 End Sub
+
 Private Sub UserControl_WriteProperties(PropBag As PropertyBag)  '写入属性
     Call PropBag.WriteProperty("Caption", m_Caption)
     Call PropBag.WriteProperty("Enabled", UserControl.Enabled)
@@ -407,17 +422,19 @@ Private Sub UserControl_WriteProperties(PropBag As PropertyBag)  '写入属性
     Call PropBag.WriteProperty("ico2", ico(2).Picture)
     Call PropBag.WriteProperty("ico3", ico(3).Picture)
     Call PropBag.WriteProperty("m_check", m_check)
-    Call PropBag.WriteProperty("m_value", m_value)
+    Call PropBag.WriteProperty("m_value", m_Value)
 End Sub
+
 Private Sub DoRedraw(ByVal nState As Long)   '0普通  1高亮 2按下 3无效
     If m_State = nState Then Exit Sub
     m_State = nState
     If m_check And m_State <> 3 Then
-        If m_value Then m_State = 2  'true 按下
+        If m_Value Then m_State = 2  'true 按下
     End If
-    Call ReDrawButton
+    Call RedrawButton
 End Sub
-Private Sub ReDrawButton()
+
+Private Sub RedrawButton()
     UserControl.Cls     '先清除用户控件上的旧内容
     UserControl.PaintPicture skinPicture.Image, 0, 0, UserControl.ScaleWidth, UserControl.ScaleHeight, m_State * UserControl.ScaleWidth, 0, UserControl.ScaleWidth, UserControl.ScaleHeight, vbSrcCopy
     If UserControl.Enabled Then
@@ -431,13 +448,14 @@ Private Sub ReDrawButton()
     Call SetTextColor(UserControl.hDC, &H0) '让FocusRect是黑色的。。
     Call DrawText(UserControl.hDC, m_Caption, -1, txtRect, DT_CENTER Or DT_VCENTER Or DT_SINGLELINE)
     
-    If GetFocus = UserControl.hWnd And m_FocusRect Then    '如果有焦点，则绘制FocusRect
+    If GetFocus = UserControl.hwnd And m_FocusRect Then    '如果有焦点，则绘制FocusRect
         Call SetTextColor(UserControl.hDC, &H0) '让FocusRect是黑色的。。
         Call SetRect(txtRect, 3, 3, UserControl.ScaleWidth - 3, UserControl.ScaleHeight - 3)
         Call DrawFocusRect(UserControl.hDC, txtRect)
     End If
     UserControl.Refresh
 End Sub
+
 Private Sub UserControl_InitProperties()   '初始化控件大小
     m_FocusRect = False
     m_Caption = Ambient.DisplayName
@@ -449,103 +467,128 @@ Private Sub UserControl_InitProperties()   '初始化控件大小
     icoTop = 0
     
     m_check = False
-    m_value = False
+    m_Value = False
 End Sub
+
 Public Property Get Caption() As String    '返回标题
     Caption = m_Caption
 End Property
+
 Public Property Let Caption(ByVal newValue As String) '设置标题
     m_Caption = Trim$(newValue)
-    Call ReDrawButton
+    Call RedrawButton
 End Property
+
 Public Property Get Enabled() As Boolean
     Enabled = UserControl.Enabled
 End Property
+
 Public Property Let Enabled(ByVal newValue As Boolean) '设置可用状态
     UserControl.Enabled = newValue
     m_State = IIf(newValue, 0, 3)
-    Call ReDrawButton
+    Call RedrawButton
 End Property
+
 Public Property Get Font() As StdFont  '返回字体
     Set Font = UserControl.Font
 End Property
+
 Public Property Let Font(ByVal newValue As StdFont)  '设置字体
     Set UserControl.Font = newValue
-    Call ReDrawButton
+    Call RedrawButton
 End Property
+
 Public Property Set Font(ByVal newValue As StdFont)  '设置字体
     Set UserControl.Font = newValue
-    Call ReDrawButton
+    Call RedrawButton
 End Property
+
 Public Property Get BackColor() As OLE_COLOR  '返回背景色
     BackColor = skinPicture.BackColor
 End Property
+
 Public Property Let BackColor(ByVal newValue As OLE_COLOR)    '设置背景色
     'UserControl.BackColor = NewValue
     skinPicture.BackColor = newValue
     Call UserControl_Resize
 End Property
+
 Public Property Get ForeColor() As OLE_COLOR '返回前景色
     ForeColor = UserControl.ForeColor
 End Property
+
 Public Property Let ForeColor(ByVal newValue As OLE_COLOR)   '设置前景色
     UserControl.ForeColor = newValue
-    Call ReDrawButton
+    Call RedrawButton
 End Property
+
 Public Property Get FocusRect() As Boolean
     FocusRect = m_FocusRect
 End Property
+
 Public Property Let FocusRect(ByVal newValue As Boolean)
     m_FocusRect = newValue
 End Property
+
 Public Property Get checkButton() As Boolean
     checkButton = m_check
 End Property
+
 Public Property Let checkButton(ByVal newValue As Boolean)
     m_check = newValue
-    Call ReDrawButton
+    Call RedrawButton
 End Property
+
 Public Property Get checkValue() As Boolean
-    checkValue = m_value
+    checkValue = m_Value
 End Property
+
 Public Property Let checkValue(ByVal newValue As Boolean)
     If m_check Then
-        m_value = newValue
-        Call DoRedraw(IIf(m_value, 2, 0))
+        m_Value = newValue
+        Call DoRedraw(IIf(m_Value, 2, 0))
     End If
 End Property
+
 Public Property Get buttonSkin() As ypnButton_skin
 Attribute buttonSkin.VB_Description = "皮肤"
     buttonSkin = skin
 End Property
+
 Public Property Let buttonSkin(ByVal newValue As ypnButton_skin)
     If skin <> newValue Then
         skin = newValue
         Call UserControl_Resize
     End If
 End Property
+
 Public Property Get useIco() As Boolean
     useIco = button_ico
 End Property
+
 Public Property Let useIco(ByVal newValue As Boolean)
     If button_ico <> newValue Then
         button_ico = newValue
         Call UserControl_Resize
     End If
 End Property
+
 Public Property Get Float() As Boolean
     Float = m_float
 End Property
+
 Public Property Let Float(ByVal newValue As Boolean)
     If m_float <> newValue Then
         m_float = newValue
         Call UserControl_Resize
     End If
 End Property
+
 Public Property Get ico0() As StdPicture
 Attribute ico0.VB_Description = "普通状态显示的图标"
     Set ico0 = ico(0).Picture
 End Property
+
 Public Property Set ico0(ByVal newValue As StdPicture)
     Set ico(0).Picture = newValue
     icoWidth = ico(0).ScaleWidth
@@ -554,10 +597,12 @@ Public Property Set ico0(ByVal newValue As StdPicture)
     setUnSetIco newValue
     Call UserControl_Resize
 End Property
+
 Public Property Get ico1() As StdPicture
 Attribute ico1.VB_Description = "鼠标指向时显示的图标"
     Set ico1 = ico(1).Picture
 End Property
+
 Public Property Set ico1(ByVal newValue As StdPicture)
     Set ico(1).Picture = newValue
     icoWidth = ico(1).ScaleWidth
@@ -565,10 +610,12 @@ Public Property Set ico1(ByVal newValue As StdPicture)
     button_ico = True
     Call UserControl_Resize
 End Property
+
 Public Property Get ico2() As StdPicture
 Attribute ico2.VB_Description = "按下时显示的图标"
     Set ico2 = ico(2).Picture
 End Property
+
 Public Property Set ico2(ByVal newValue As StdPicture)
     Set ico(2).Picture = newValue
     icoWidth = ico(2).ScaleWidth
@@ -576,10 +623,12 @@ Public Property Set ico2(ByVal newValue As StdPicture)
     button_ico = True
     Call UserControl_Resize
 End Property
+
 Public Property Get ico3() As StdPicture
 Attribute ico3.VB_Description = "无效时显示的图标"
     Set ico3 = ico(3).Picture
 End Property
+
 Public Property Set ico3(ByVal newValue As StdPicture)
     Set ico(3).Picture = newValue
     icoWidth = ico(3).ScaleWidth
@@ -587,6 +636,7 @@ Public Property Set ico3(ByVal newValue As StdPicture)
     button_ico = True
     Call UserControl_Resize
 End Property
+
 Private Sub calcPosition()
     If button_ico Then
         If Len(m_Caption) > 0 Then

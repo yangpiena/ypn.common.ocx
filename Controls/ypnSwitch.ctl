@@ -122,6 +122,13 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = True
+'---------------------------------------------------------------------------------------
+' Module    : ypnSwitch
+' Author    : YPN
+' Date      : 2018-03-24 00:15
+' Purpose   : 扁平化的开关
+'---------------------------------------------------------------------------------------
+
 Dim SwitchEnable As Boolean '有效无效
 Dim SwitchCondition As Integer '0普通1指向2按下
 Dim SwitchValue As Boolean '启用关闭
@@ -136,13 +143,13 @@ End Enum
 Dim SwitchSkin As mySkin
 
 Private Declare Function GetCursorPos Lib "user32" (lpPoint As POINT_API) As Long                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          'Aki
-Private Declare Function ScreenToClient Lib "user32" (ByVal hWnd As Long, lpPoint As POINT_API) As Long
+Private Declare Function ScreenToClient Lib "user32" (ByVal hwnd As Long, lpPoint As POINT_API) As Long
 Private Type POINT_API
     X As Long
     Y As Long
 End Type
 
-Public Event Click(value As Boolean)
+Public Event Click(Value As Boolean)
 Public Event MouseOut()
 Public Event MouseIn()
 
@@ -207,9 +214,9 @@ Private Sub Timer1_Timer()
     If Not SwitchEnable Then Exit Sub
     Dim dot As POINT_API
     Call GetCursorPos(dot)
-    ScreenToClient UserControl.hWnd, dot
+    ScreenToClient UserControl.hwnd, dot
     If dot.X < UserControl.ScaleLeft Or dot.Y < UserControl.ScaleTop Or _
-            dot.X > (UserControl.ScaleLeft + UserControl.ScaleWidth) Or dot.Y > (UserControl.ScaleTop + UserControl.ScaleHeight) Then
+        dot.X > (UserControl.ScaleLeft + UserControl.ScaleWidth) Or dot.Y > (UserControl.ScaleTop + UserControl.ScaleHeight) Then
         If SwitchAim Then '移出
             SwitchAim = False
             SwitchCondition = IIf(SwitchValue, 0, 4)
@@ -242,10 +249,10 @@ Public Property Let Enable(ByVal vNewValue As Boolean)
     End If
     Call Refresh
 End Property
-Public Property Get value() As Boolean
-    value = SwitchValue
+Public Property Get Value() As Boolean
+    Value = SwitchValue
 End Property
-Public Property Let value(ByVal vNewValue As Boolean)
+Public Property Let Value(ByVal vNewValue As Boolean)
     SwitchValue = vNewValue
     
     If SwitchEnable Then
@@ -269,7 +276,7 @@ Public Property Let skin(ByVal vNewValue As mySkin)
 End Property
 
 Private Sub UserControl_ReadProperties(PropBag As PropertyBag)
-    value = PropBag.ReadProperty("value", True)
+    Value = PropBag.ReadProperty("value", True)
     Enable = PropBag.ReadProperty("enable", True)
     SwitchSkin = PropBag.ReadProperty("skin", 0)
     ChangeSkin

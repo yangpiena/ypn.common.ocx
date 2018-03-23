@@ -1,5 +1,11 @@
 Attribute VB_Name = "Mod3D"
-'Download by http://www.NewXing.com
+'---------------------------------------------------------------------------------------
+' Module    : Mod3D
+' Author    : YPN
+' Date      : 2018-03-24 00:17
+' Purpose   : 3D¿Ø¼þÓÃ
+'---------------------------------------------------------------------------------------
+
 Option Explicit
 
 Public Declare Function SetCapture Lib "user32" (ByVal hwnd As Long) As Long

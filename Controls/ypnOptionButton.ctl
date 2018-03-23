@@ -152,6 +152,13 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = True
+'---------------------------------------------------------------------------------------
+' Module    : ypnOptionButton
+' Author    : YPN
+' Date      : 2018-03-24 00:13
+' Purpose   : ±âÆ½»¯µÄoptionButton
+'---------------------------------------------------------------------------------------
+
 Private Declare Function GetCursorPos Lib "user32" (lpPoint As POINT_API) As Long                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          'Aki
 Private Declare Function ScreenToClient Lib "user32" (ByVal hwnd As Long, lpPoint As POINT_API) As Long
 
@@ -159,7 +166,7 @@ Private Type POINT_API
     X As Long
     Y As Long
 End Type
-    
+
 Dim mFont As Font
 Dim mValue As Boolean
 Dim mBackColor As OLE_COLOR
@@ -174,8 +181,8 @@ Const defGroup = False
 Dim mFrame As String
 Dim chVal, btnDown As Integer
 Dim mEnabled As Boolean 'I wrote this to make it more simple otherwise will jump all the time
-                                        'to sub Get Enabled.
-                                        'Also you can see that I used mValue instead of Value(the same reason)
+'to sub Get Enabled.
+'Also you can see that I used mValue instead of Value(the same reason)
 Event Click()
 Event KeyDown(KeyCode As Integer, Shift As Integer)
 Event KeyPress(KeyAscii As Integer)
@@ -187,31 +194,31 @@ Event MouseUp(Button As Integer, Shift As Integer, X As Single, Y As Single)
 
 Private Sub UserControl_MouseUp(Button As Integer, Shift As Integer, X As Single, Y As Single)
     RaiseEvent MouseUp(Button, Shift, X, Y)
-        btnDown = 0
+    btnDown = 0
 End Sub
 
 Private Sub UserControl_MouseDown(Button As Integer, Shift As Integer, X As Single, Y As Single)
     If mEnabled = False Then Exit Sub
-        If mValue = True Then p.Picture = img(6).Picture
-            If mValue = False Then p.Picture = img(2).Picture
-                btnDown = 1
-            RaiseEvent MouseDown(Button, Shift, X, Y)
+    If mValue = True Then p.Picture = img(6).Picture
+    If mValue = False Then p.Picture = img(2).Picture
+    btnDown = 1
+    RaiseEvent MouseDown(Button, Shift, X, Y)
 End Sub
 
 Private Sub UserControl_MouseMove(Button As Integer, Shift As Integer, X As Single, Y As Single)
     If mEnabled = False Then Exit Sub
-        If p.Picture = img(chVal).Picture Then Exit Sub
-            If btnDown = 1 Then Exit Sub
-                Timer1.Enabled = True
+    If p.Picture = img(chVal).Picture Then Exit Sub
+    If btnDown = 1 Then Exit Sub
+    Timer1.Enabled = True
     
-                    If mEnabled = False Then
-                        If mValue = True Then p.Picture = img(6).Picture: chVal = 6
-                            If mValue = False Then p.Picture = img(2).Picture: chVal = 2
-                        Else
-                            If mValue = True Then p.Picture = img(5).Picture: chVal = 5
-                                If mValue = False Then p.Picture = img(1).Picture: chVal = 1
-                    End If
-        RaiseEvent MouseMove(Button, Shift, X, Y)
+    If mEnabled = False Then
+        If mValue = True Then p.Picture = img(6).Picture: chVal = 6
+        If mValue = False Then p.Picture = img(2).Picture: chVal = 2
+    Else
+        If mValue = True Then p.Picture = img(5).Picture: chVal = 5
+        If mValue = False Then p.Picture = img(1).Picture: chVal = 1
+    End If
+    RaiseEvent MouseMove(Button, Shift, X, Y)
 End Sub
 
 Private Sub lbl_MouseDown(Button As Integer, Shift As Integer, X As Single, Y As Single)
@@ -231,7 +238,7 @@ Private Sub p_MouseDown(Button As Integer, Shift As Integer, X As Single, Y As S
 End Sub
 
 Private Sub p_MouseMove(Button As Integer, Shift As Integer, X As Single, Y As Single)
-Call UserControl_MouseMove(Button, Shift, p.Left, p.Top)
+    Call UserControl_MouseMove(Button, Shift, p.Left, p.Top)
 End Sub
 
 Private Sub p_MouseUp(Button As Integer, Shift As Integer, X As Single, Y As Single)
@@ -239,21 +246,21 @@ Private Sub p_MouseUp(Button As Integer, Shift As Integer, X As Single, Y As Sin
 End Sub
 
 Private Sub p_KeyDown(KeyCode As Integer, Shift As Integer)
-RaiseEvent KeyDown(KeyCode, Shift)
+    RaiseEvent KeyDown(KeyCode, Shift)
 End Sub
 
 Private Sub p_KeyPress(KeyAscii As Integer)
     If KeyAscii <> vbKeySpace Then Exit Sub
-        RaiseEvent KeyPress(KeyAscii)
-              RaiseEvent Click
-                   Call UserControl_MouseDown(1, 0, 0, 0)
+    RaiseEvent KeyPress(KeyAscii)
+    RaiseEvent Click
+    Call UserControl_MouseDown(1, 0, 0, 0)
 End Sub
 
 Private Sub p_KeyUp(KeyCode As Integer, Shift As Integer)
     If KeyCode <> vbKeySpace Then Exit Sub
-       RaiseEvent KeyUp(KeyCode, Shift)
-           Call UserControl_Click
-               btnDown = 0
+    RaiseEvent KeyUp(KeyCode, Shift)
+    Call UserControl_Click
+    btnDown = 0
 End Sub
 
 Private Sub lbl_Click()
@@ -270,25 +277,25 @@ End Sub
 '********************************************************************************************
 
 Private Sub UserControl_Click()
-Dim OB As Object
-
+    Dim OB As Object
+    
     'Try to use variables and your program will run faster and it is much easier.
     'If you call Value it will jump to property all the time. But instead of that,
     'call mValue 'cause they have the same value and there is no jumping.
     
     If mValue = True Then CheckEnabled: Exit Sub 'Check Enabled must be here 'cause if user is
-                                                                         'checking with keys picture will be changed.
-        For Each OB In Parent.Controls
-            If TypeOf OB Is ypnOptionButton Then
-                If OB.Container Is Extender.Container Then
-                        If OB.Group = mGroup Then
-                            OB.Value = False
-                        End If
+    'checking with keys picture will be changed.
+    For Each OB In Parent.Controls
+        If TypeOf OB Is ypnOptionButton Then
+            If OB.Container Is Extender.Container Then
+                If OB.Group = mGroup Then
+                    OB.Value = False
                 End If
+            End If
         End If
     Next
-Value = True 'At the end give value to one that was clicked
-RaiseEvent Click
+    Value = True 'At the end give value to one that was clicked
+    RaiseEvent Click
 End Sub
 Private Sub lbl_Change()
     UserControl_Resize
@@ -324,30 +331,30 @@ End Sub
 
 Private Function DisablePc()
     If mEnabled = True Then
-            If mValue = True Then p.Picture = img(4).Picture
-                If mValue = False Then p.Picture = img(0).Picture
-        Else: EnablePc
+        If mValue = True Then p.Picture = img(4).Picture
+        If mValue = False Then p.Picture = img(0).Picture
+    Else: EnablePc
     End If
 End Function
 
 Private Function EnablePc()
     If mValue = True Then p.Picture = img(7).Picture
-        If mValue = False Then p.Picture = img(3).Picture
+    If mValue = False Then p.Picture = img(3).Picture
 End Function
 
 Private Sub CheckEnabled()
     If mEnabled = False Then EnablePc: lbl.ForeColor = &H80000011: Timer1.Enabled = False
-        If mEnabled = True Then DisablePc: lbl.ForeColor = mForeColor
+    If mEnabled = True Then DisablePc: lbl.ForeColor = mForeColor
 End Sub
 
 Private Sub p_GotFocus()
     Call UserControl_MouseMove(0, 0, 0, 0)
-        Timer1.Enabled = False
+    Timer1.Enabled = False
 End Sub
 
 Private Sub p_LostFocus()
     chVal = 7
-        Call UserControl_MouseMove(0, 0, 0, 0)
+    Call UserControl_MouseMove(0, 0, 0, 0)
 End Sub
 
 Private Sub UserControl_ReadProperties(PropBag As PropertyBag)
@@ -448,16 +455,16 @@ Private Sub Timer1_Timer()
     UserControl.ScaleMode = 3
     Call GetCursorPos(dot)
     ScreenToClient UserControl.hwnd, dot
-
-        If dot.X < UserControl.ScaleLeft Or _
-            dot.Y < UserControl.ScaleTop Or _
-                dot.X > (UserControl.ScaleLeft + UserControl.ScaleWidth) Or _
-                    dot.Y > (UserControl.ScaleTop + UserControl.ScaleHeight) Then
-       
-                        If btnDown = 1 Then Exit Sub
-
-                            DisablePc
-                        Timer1.Enabled = False
-                RaiseEvent MouseOut
-        End If
+    
+    If dot.X < UserControl.ScaleLeft Or _
+        dot.Y < UserControl.ScaleTop Or _
+        dot.X > (UserControl.ScaleLeft + UserControl.ScaleWidth) Or _
+        dot.Y > (UserControl.ScaleTop + UserControl.ScaleHeight) Then
+        
+        If btnDown = 1 Then Exit Sub
+        
+        DisablePc
+        Timer1.Enabled = False
+        RaiseEvent MouseOut
+    End If
 End Sub

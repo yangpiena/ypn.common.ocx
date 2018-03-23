@@ -190,6 +190,13 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = True
+'---------------------------------------------------------------------------------------
+' Module    : ypnCheckBox
+' Author    : YPN
+' Date      : 2018-03-24 00:09
+' Purpose   : ø‰’≈µƒÕº∆¨checkbox
+'---------------------------------------------------------------------------------------
+
 Option Explicit
 'Dim m_TransParent
 Dim Min As Boolean

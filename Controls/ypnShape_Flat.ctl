@@ -67,6 +67,13 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = True
+'---------------------------------------------------------------------------------------
+' Module    : ypnShape_Flat
+' Author    : YPN
+' Date      : 2018-03-24 00:14
+' Purpose   : ±âÆ½»¯µÄshape
+'---------------------------------------------------------------------------------------
+
 '++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 'Component: NShape
 'Copyright (c) 2013 Nikyts Software - Informatic and thecnologies
@@ -112,18 +119,18 @@ Private Const PS_DASH = 1
 Private Const PS_ENDCAP_FLAT = &H200
 
 Private Type RECT
-        Left As Long
-        Top As Long
-        Right As Long
-        Bottom As Long
+    Left As Long
+    Top As Long
+    Right As Long
+    Bottom As Long
 End Type
 
 'Api's utilizadas pelo componente
 Private Declare Function WindowFromPoint Lib "user32" (ByVal xPoint As Long, ByVal yPoint As Long) As Long
 Private Declare Function GetCursorPos Lib "user32" (lpPoint As POINTAPI) As Long
 Private Type POINTAPI
-        X As Long
-        Y As Long
+    X As Long
+    Y As Long
 End Type
 Private Declare Function SelectClipRgn Lib "gdi32" (ByVal hDC As Long, ByVal hRgn As Long) As Long
 Private Declare Function SelectClipPath Lib "gdi32" (ByVal hDC As Long, ByVal iMode As Long) As Long
@@ -229,7 +236,7 @@ End Sub
 Private Sub Image1_MouseMove(Button As Integer, Shift As Integer, X As Single, Y As Single)
     'Evento mousemove
     RaiseEvent MouseMove(Button, Shift, X, Y)
-
+    
     If Button = vbLeftButton Then
         Exit Sub
     End If
@@ -251,7 +258,7 @@ Private Sub Image1_MouseMove(Button As Integer, Shift As Integer, X As Single, Y
                 Image1.Picture = Picture_Normal
                 RaiseEvent MouseOut
             End If
-            End If
+        End If
     End If
 End Sub
 
@@ -308,12 +315,12 @@ Private Sub Label1_MouseMove(Button As Integer, Shift As Integer, X As Single, Y
             End If
         End If
     End If
-
+    
     'Icon do botão
     If Button = vbLeftButton Then
         Exit Sub
     End If
-
+    
     If GetCapture() <> UserControl.hwnd Then
         SetCapture (UserControl.hwnd)
         If Not Image1.Picture = Picture_Hover Then
@@ -333,7 +340,7 @@ Private Sub Label1_MouseMove(Button As Integer, Shift As Integer, X As Single, Y
                 m_MouseInside = False
                 RaiseEvent MouseOut
             End If
-            End If
+        End If
     End If
 End Sub
 
@@ -378,7 +385,7 @@ Private Sub UserControl_Initialize()
     If Not Picture_Normal Is Nothing Then
         Set Image1.Picture = Picture_Normal
     End If
-
+    
     'Call Ajustar_Botao
 End Sub
 
@@ -425,13 +432,13 @@ End Sub
 Private Sub UserControl_KeyDown(KeyCode As Integer, Shift As Integer)
     'Evento keydown, atalho para as teclas
     Select Case KeyCode
-        Case vbKeyRight, vbKeyDown
-            Call SendKeys("{TAB}")
-            Case vbKeyLeft, vbKeyUp
-            Call SendKeys("+{TAB}")
+    Case vbKeyRight, vbKeyDown
+        Call SendKeys("{TAB}")
+    Case vbKeyLeft, vbKeyUp
+        Call SendKeys("+{TAB}")
         
-        Case vbKeyReturn
-            UserControl_Click
+    Case vbKeyReturn
+        UserControl_Click
     End Select
     RaiseEvent KeyDown(KeyCode, Shift)
 End Sub
@@ -487,12 +494,12 @@ Private Sub UserControl_MouseMove(Button As Integer, Shift As Integer, X As Sing
             End If
         End If
     End If
-
+    
     'Icon do botão
     If Button = vbLeftButton Then
         Exit Sub
     End If
-
+    
     If GetCapture() <> UserControl.hwnd Then
         SetCapture (UserControl.hwnd)
         If Not Image1.Picture = Picture_Hover Then
@@ -512,7 +519,7 @@ Private Sub UserControl_MouseMove(Button As Integer, Shift As Integer, X As Sing
                 m_MouseInside = False
                 RaiseEvent MouseOut
             End If
-            End If
+        End If
     End If
 End Sub
 
@@ -545,7 +552,7 @@ Private Sub DrawState()
         Label1.ForeColor = cor_letra_hover
         Shape1.BorderColor = cor_contorno_hover
         'If Graphical = True Then Image1.Picture = Picture_Hover
-    
+        
     ElseIf m_State = 2 Then 'mouse down
         Shape1.FillColor = cor_fundo_down
         Label1.ForeColor = cor_letra_down
@@ -754,7 +761,7 @@ Public Property Let Graphical(New_Value As Boolean)
     'Verificar se o botão fica activo ou não
     botao_com_icon = New_Value
     PropertyChanged "Graphical"
-
+    
     If botao_com_icon = True Then
         Image1.Visible = True
     Else
@@ -773,7 +780,7 @@ Public Property Let StretchToText(New_Value As Boolean)
     'Verificar se o botão fica activo ou não
     ajustar_ao_texto = New_Value
     PropertyChanged "StretchToText"
-
+    
     Call Ajustar_Botao
 End Property
 
@@ -786,7 +793,7 @@ Public Property Let Text_Visible(New_Value As Boolean)
     'Verificar se o botão fica activo ou não
     texto_visivel = New_Value
     PropertyChanged "Text_Visible"
-
+    
     If texto_visivel = True Then
         Label1.Visible = True
     Else
@@ -875,7 +882,7 @@ Public Sub Ajustar_Botao()
             Else
                 .Left = Image1.Left + Image1.Width + 8
             End If
-        
+            
         Else
             .Left = (UserControl.ScaleWidth - .Width) / 2 '8
         End If

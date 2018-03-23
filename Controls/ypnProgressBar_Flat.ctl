@@ -63,6 +63,13 @@ Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = True
 Attribute VB_Ext_KEY = "PropPageWizardRun" ,"Yes"
+'---------------------------------------------------------------------------------------
+' Module    : ypnProgressBar_Flat
+' Author    : YPN
+' Date      : 2018-03-24 00:14
+' Purpose   : ±âÆ½»¯µÄprogressbar
+'---------------------------------------------------------------------------------------
+
 'Declaração das variáveis utilizadas pelo control
 Public Max As Long
 Attribute Max.VB_VarProcData = "PropertyPage1"
@@ -131,33 +138,33 @@ Public Property Let Value(ByVal vData As Long)
     'used when assigning a value to the property, on the left side of an assignment.
     'Syntax: X.value = 5
     On Error Resume Next
-        
-     ''set the percentage using a simple math equasion
-     
+    
+    ''set the percentage using a simple math equasion
+    
     percent = Format(Value / (Max / 100), "00.00")
     
     '' check if value is higher than the max value so as not to go over 100%
     If vData < Max Then
-    ''if its lower than 100% set our value
-     mvarvalue = vData
+        ''if its lower than 100% set our value
+        mvarvalue = vData
     Else
-    '' our value is higher than it should be so setting it to 100%
-    mvarvalue = Max
-    percent = Format(100, "00.00")
+        '' our value is higher than it should be so setting it to 100%
+        mvarvalue = Max
+        percent = Format(100, "00.00")
     End If
     
     If vData > 0 Then
-    ''set the picture width to the level of the percent for visual purpose
-    Barra_Progresso.Width = (Fundo_Barra_Progresso.ScaleWidth / 100) * Value / (Max / 100)
-    Caption = (Fundo_Barra_Progresso.ScaleWidth / 100) * Value / (Max / 100)
-    If Value < Max Then
-    percent = Format(Value / (Max / 100), "00.00")
+        ''set the picture width to the level of the percent for visual purpose
+        Barra_Progresso.Width = (Fundo_Barra_Progresso.ScaleWidth / 100) * Value / (Max / 100)
+        Caption = (Fundo_Barra_Progresso.ScaleWidth / 100) * Value / (Max / 100)
+        If Value < Max Then
+            percent = Format(Value / (Max / 100), "00.00")
+        Else
+            percent = Format(100, "00.00")
+            
+        End If
     Else
-    percent = Format(100, "00.00")
-    
-    End If
-    Else
-    Exit Property
+        Exit Property
     End If
 err:
 End Property

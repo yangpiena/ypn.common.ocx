@@ -1,23 +1,10 @@
 Attribute VB_Name = "ModShape"
-'***************************************************
-'**系统名称：菲麦森装备制造业产前数据准备系统
-'**模块描述：用户控件按钮用到的
-'**模 块 名：ModLvTimer
-'**创 建 人：杨东
-'**日    期：2014-09-10 15:14:22
-'**修 改 人：
-'**日    期：
-'**描    述：
-'**版    本：V1.0.0
-'***************************************************
-' THIS MODULE WAS NOT WRITTEN BY DEAN CAMERA. I CANNOT OFFER ANY SUPPORT FOR THIS MODULE.
-
-
-' REQUIRED: copy & paste these few lines in any module of your project
-' This is used by every lvButtons control as a replacement of the Timer control
-' By doing it this way, each button control does NOT need an individual timer control
-' The timer function is primarily used to determine when the mouse enters/leaves
-' the button's physical region on the screen.
+'---------------------------------------------------------------------------------------
+' Module    : ModShape
+' Author    : YPN
+' Date      : 2018-03-24 00:17
+' Purpose   : 变形控件用
+'---------------------------------------------------------------------------------------
 
 Public Declare Function ReleaseCapture Lib "user32" () As Long
 Private Declare Sub CopyMemory Lib "kernel32" Alias "RtlMoveMemory" (pDest As Any, pSource As Any, ByVal ByteLen As Long)

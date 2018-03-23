@@ -94,6 +94,13 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = True
+'---------------------------------------------------------------------------------------
+' Module    : ypnTextBox_Flat
+' Author    : YPN
+' Date      : 2018-03-24 00:16
+' Purpose   : 扁平化的输入框
+'---------------------------------------------------------------------------------------
+
 Option Explicit
 
 ' Properties variables
@@ -463,7 +470,7 @@ End Sub
 
 ' This routine is used to align the controls
 Private Sub SetAlign(ByVal Value As Byte)
-Dim yOffset As Integer
+    Dim yOffset As Integer
     lblHeader.AutoSize = True   ' Automatically gets the header minimum height
     lblHeader.AutoSize = False
     If lblHeader.Visible Then   ' If the header is visible, all other things get shifted down
@@ -479,15 +486,15 @@ Dim yOffset As Integer
     lbl.AutoSize = True         ' It automatically gets the label minimum height
     lbl.AutoSize = False
     Select Case Value
-        Case 0                  ' TOP
-            txt.Top = 15 + shpBorder.Top
-            lbl.Top = 15 + shpBorder.Top
-        Case 1                  ' CENTER
-            lbl.Top = shpBorder.Top + ((shpBorder.Height - lbl.Height) / 2)
-            txt.Top = lbl.Top
-        Case 2                  ' BOTTOM
-            lbl.Top = shpBorder.Top + (shpBorder.Height - lbl.Height) - 15
-            txt.Top = lbl.Top
+    Case 0                  ' TOP
+        txt.Top = 15 + shpBorder.Top
+        lbl.Top = 15 + shpBorder.Top
+    Case 1                  ' CENTER
+        lbl.Top = shpBorder.Top + ((shpBorder.Height - lbl.Height) / 2)
+        txt.Top = lbl.Top
+    Case 2                  ' BOTTOM
+        lbl.Top = shpBorder.Top + (shpBorder.Height - lbl.Height) - 15
+        txt.Top = lbl.Top
     End Select
     lbl.Width = txt.Width       ' Readjust the width
     lbl.Left = txt.Left         ' Readjust the position

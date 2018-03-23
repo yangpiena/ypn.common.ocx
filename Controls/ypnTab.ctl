@@ -18,6 +18,13 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = True
+'---------------------------------------------------------------------------------------
+' Module    : ypnTab
+' Author    : YPN
+' Date      : 2018-03-24 00:15
+' Purpose   : 多种风格tab页签选项卡
+'---------------------------------------------------------------------------------------
+
 '+  File Description:
 '       ypnTab - SelfSubclassed Tab Replacement Container
 '
@@ -189,11 +196,11 @@ Private Type OSVERSIONINFO
     dwVerMajor      As Long             'ie NT 3.51, dwVerMajor = 3; NT 4.0, dwVerMajor = 4.
     dwVerMinor      As Long             'ie NT 3.51, dwVerMinor = 51; NT 4.0, dwVerMinor= 0.
     dwBuildNumber   As Long             'NT: build number of the OS
-                                        'Win9x: build number of the OS in low-order word.
-                                        '       High-order word contains major & minor ver nos.
+    'Win9x: build number of the OS in low-order word.
+    '       High-order word contains major & minor ver nos.
     PlatformID      As Long             'Identifies the operating system platform.
     szCSDVersion    As String * 128     'NT: string, such as "Service Pack 3"
-                                        'Win9x: string providing arbitrary additional information
+    'Win9x: string providing arbitrary additional information
 End Type
 
 'Bitmap type used to store Bitmap Data
@@ -447,7 +454,7 @@ Private m_utRect As RECT                            'Stores a Copy of RECT
 '   Note that bCancel is passed by Reference in below event. This event is called just before a
 '   tab is being switched, we can prevent tab switch by making bCancel as true
 Public Event BeforeTabSwitch(ByVal iNewActiveTab As Integer, bCancel As Boolean)
-                                                                                  
+
 '   If we Set bCancel in the BeforeTabSwitch following event will not occur.
 Public Event TabSwitch(ByVal lLastActiveTab As Integer)
 
@@ -516,18 +523,18 @@ Private Const WM_THEMECHANGED           As Long = &H31A
 
 '   Mouse Tracking Constants
 Private Enum TRACKMOUSEEVENT_FLAGS
-  TME_HOVER = &H1&
-  TME_LEAVE = &H2&
-  TME_QUERY = &H40000000
-  TME_CANCEL = &H80000000
+    TME_HOVER = &H1&
+    TME_LEAVE = &H2&
+    TME_QUERY = &H40000000
+    TME_CANCEL = &H80000000
 End Enum
 
 '   Mouse Tracking Structure
 Private Type TRACKMOUSEEVENT_STRUCT
-  cbSize                             As Long
-  dwFlags                            As TRACKMOUSEEVENT_FLAGS
-  hWndTrack                          As Long
-  dwHoverTime                        As Long
+    cbSize                             As Long
+    dwFlags                            As TRACKMOUSEEVENT_FLAGS
+    hWndTrack                          As Long
+    dwHoverTime                        As Long
 End Type
 
 '   SelfSubclasser Local Properties
@@ -548,9 +555,9 @@ Private Declare Function SetTimer Lib "user32" (ByVal hwnd As Long, ByVal nIDEve
 
 '   Subclasser Declarations
 Private Enum eMsgWhen
-  MSG_AFTER = 1                                                                         'Message calls back after the original (previous) WndProc
-  MSG_BEFORE = 2                                                                        'Message calls back before the original (previous) WndProc
-  MSG_BEFORE_AND_AFTER = MSG_AFTER Or MSG_BEFORE                                        'Message calls back before and after the original (previous) WndProc
+    MSG_AFTER = 1                                                                         'Message calls back after the original (previous) WndProc
+    MSG_BEFORE = 2                                                                        'Message calls back before the original (previous) WndProc
+    MSG_BEFORE_AND_AFTER = MSG_AFTER Or MSG_BEFORE                                        'Message calls back before and after the original (previous) WndProc
 End Enum
 
 Private Const ALL_MESSAGES           As Long = -1                                       'All messages added or deleted
@@ -562,13 +569,13 @@ Private Const PATCH_08               As Long = 132                              
 Private Const PATCH_09               As Long = 137                                      'Table A (after) entry count patch offset
 
 Private Type tSubData                                                                   'Subclass data type
-  hwnd                               As Long                                            'Handle of the window being subclassed
-  nAddrSub                           As Long                                            'The address of our new WndProc (allocated memory).
-  nAddrOrig                          As Long                                            'The address of the pre-existing WndProc
-  nMsgCntA                           As Long                                            'Msg after table entry count
-  nMsgCntB                           As Long                                            'Msg before table entry count
-  aMsgTblA()                         As Long                                            'Msg after table array
-  aMsgTblB()                         As Long                                            'Msg Before table array
+    hwnd                               As Long                                            'Handle of the window being subclassed
+    nAddrSub                           As Long                                            'The address of our new WndProc (allocated memory).
+    nAddrOrig                          As Long                                            'The address of the pre-existing WndProc
+    nMsgCntA                           As Long                                            'Msg after table entry count
+    nMsgCntB                           As Long                                            'Msg before table entry count
+    aMsgTblA()                         As Long                                            'Msg after table array
+    aMsgTblB()                         As Long                                            'Msg Before table array
 End Type
 
 Private sc_aSubData()                As tSubData                                        'Subclass data array
@@ -587,16 +594,16 @@ Private Declare Function SetWindowLongA Lib "user32" (ByVal hwnd As Long, ByVal 
 Private Function IsFunctionExported(ByVal sFunction As String, ByVal sModule As String) As Boolean
     Dim hMod        As Long
     Dim bLibLoaded  As Boolean
-
+    
     hMod = GetModuleHandleA(sModule)
-
+    
     If hMod = 0 Then
         hMod = LoadLibraryA(sModule)
         If hMod Then
             bLibLoaded = True
         End If
     End If
-
+    
     If hMod Then
         If GetProcAddress(hMod, sFunction) Then
             IsFunctionExported = True
@@ -609,9 +616,9 @@ End Function
 
 
 Private Sub TrackMouseLeave(ByVal lng_hWnd As Long)
-'   Track the mouse leaving the indicated window
+    '   Track the mouse leaving the indicated window
     Dim tme As TRACKMOUSEEVENT_STRUCT
-  
+    
     If bTrack Then
         With tme
             .cbSize = Len(tme)
@@ -631,214 +638,214 @@ End Sub
 
 Public Sub zSubclass_Proc(ByVal bBefore As Boolean, ByRef bHandled As Boolean, ByRef lReturn As Long, ByRef lng_hWnd As Long, ByRef uMsg As Long, ByRef wParam As Long, ByRef lParam As Long)
     'Parameters:
-        'bBefore  - Indicates whether the the message is being processed before or after the default handler - only really needed if a message is set to callback both before & after.
-        'bHandled - Set this variable to True in a 'before' callback to prevent the message being subsequently processed by the default handler... and if set, an 'after' callback
-        'lReturn  - Set this variable as per your intentions and requirements, see the MSDN documentation for each individual message value.
-        'hWnd     - The window handle
-        'uMsg     - The message number
-        'wParam   - Message related data
-        'lParam   - Message related data
+    'bBefore  - Indicates whether the the message is being processed before or after the default handler - only really needed if a message is set to callback both before & after.
+    'bHandled - Set this variable to True in a 'before' callback to prevent the message being subsequently processed by the default handler... and if set, an 'after' callback
+    'lReturn  - Set this variable as per your intentions and requirements, see the MSDN documentation for each individual message value.
+    'hWnd     - The window handle
+    'uMsg     - The message number
+    'wParam   - Message related data
+    'lParam   - Message related data
     'Notes:
-        'If you really know what you're doing, it's possible to change the values of the
-        'hWnd, uMsg, wParam and lParam parameters in a 'before' callback so that different
-        'values get passed to the default handler.. and optionaly, the 'after' callback
+    'If you really know what you're doing, it's possible to change the values of the
+    'hWnd, uMsg, wParam and lParam parameters in a 'before' callback so that different
+    'values get passed to the default handler.. and optionaly, the 'after' callback
     Static bMoving As Boolean
     Dim ActiveRect As RECT, MouseOverRect As RECT, ControlBoxRect As RECT
     Dim iCnt As Long
-
+    
     Select Case uMsg
-        Case WM_ACTIVATE
-            '   Store the current tab mouseover data so when the
-            '   control regains focus we can repaint the header caps
-            '   correctly....this mainly is required for XP Style
-            '   when using a Focused Color
-            m_lMouseOverTabIndex = m_lActiveTab
-            Refresh
-            
-        Case WM_MOUSEMOVE
-            If Not bInCtrl Then
-                bInCtrl = True
-                Call TrackMouseLeave(lng_hWnd)
-                RaiseEvent MouseEnter
+    Case WM_ACTIVATE
+        '   Store the current tab mouseover data so when the
+        '   control regains focus we can repaint the header caps
+        '   correctly....this mainly is required for XP Style
+        '   when using a Focused Color
+        m_lMouseOverTabIndex = m_lActiveTab
+        Refresh
+        
+    Case WM_MOUSEMOVE
+        If Not bInCtrl Then
+            bInCtrl = True
+            Call TrackMouseLeave(lng_hWnd)
+            RaiseEvent MouseEnter
+        End If
+        '   Get our position
+        Call GetCursorPos(m_Pnt)
+        '   Convert coordinates
+        Call ScreenToClient(m_lhWnd, m_Pnt)
+        '   Copy the active Rect to temp variable
+        ActiveRect = AryTabs(m_lActiveTab).ClickableRect
+        MouseOverRect = AryTabs(m_lMouseOverTabIndex).ClickableRect
+        '   See if this is a Theme which supports MouseOver Coloring
+        If (m_enmTheme = xThemeWinXP) Or (m_enmTheme = xThemeGalaxy) Then
+            '   Check if the mouse is in the clickable region of the tab...
+            If PtInRect(ActiveRect, m_Pnt.X, m_Pnt.Y) Then
+                RaiseEvent MouseHover(m_lActiveTab, CSng(m_Pnt.X), CSng(m_Pnt.Y))
+                If m_bUseControlBox Then
+                    '   Copy the ControlBox Rect to temp variable
+                    ControlBoxRect = AryTabs(m_lActiveTab).ControlBoxRect
+                    '   See if we are in the ControlBox
+                    If PtInRect(ControlBoxRect, m_Pnt.X, m_Pnt.Y) Then
+                        If Not bInCtrlBox Then
+                            bInCtrlBox = True
+                            RaiseEvent ControlBoxEnter
+                        Else
+                            RaiseEvent ControlBoxHover(CSng(m_Pnt.X), CSng(m_Pnt.Y))
+                        End If
+                        Call DrawControlBox(xStateHover, m_lActiveTab)
+                    Else
+                        bInCtrlBox = False
+                        RaiseEvent ControlBoxExit
+                        Call DrawControlBox(xStateNormal, m_lActiveTab)
+                    End If
+                End If
+            ElseIf PtInRect(MouseOverRect, m_Pnt.X, m_Pnt.Y) Then
+                RaiseEvent MouseHover(m_lMouseOverTabIndex, CSng(m_Pnt.X), CSng(m_Pnt.Y))
+                '   Copy the ControlBox Rect to temp variable
+                If m_bUseControlBox Then
+                    ControlBoxRect = AryTabs(m_lMouseOverTabIndex).ControlBoxRect
+                    '   See if we are in the ControlBox
+                    If PtInRect(ControlBoxRect, m_Pnt.X, m_Pnt.Y) Then
+                        If Not bInCtrlBox Then
+                            bInCtrlBox = True
+                            RaiseEvent ControlBoxEnter
+                        Else
+                            RaiseEvent ControlBoxHover(CSng(m_Pnt.X), CSng(m_Pnt.Y))
+                        End If
+                        Call DrawControlBox(xStateHover, m_lMouseOverTabIndex)
+                    Else
+                        bInCtrlBox = False
+                        RaiseEvent ControlBoxExit
+                        Call DrawControlBox(xStateNormal, m_lMouseOverTabIndex)
+                    End If
+                End If
             End If
+        Else
+            If m_bUseControlBox Then
+                For iCnt = 0 To m_lTabCount - 1
+                    '   Copy the ControlBox Rect to temp variable
+                    ControlBoxRect = AryTabs(iCnt).ControlBoxRect
+                    '   See if we are in the ControlBox
+                    If PtInRect(ControlBoxRect, m_Pnt.X, m_Pnt.Y) Then
+                        m_lMouseOverTabIndex = iCnt
+                        If Not bInCtrlBox Then
+                            bInCtrlBox = True
+                            RaiseEvent ControlBoxEnter
+                        Else
+                            RaiseEvent ControlBoxHover(CSng(m_Pnt.X), CSng(m_Pnt.Y))
+                        End If
+                        Call DrawControlBox(xStateHover, iCnt)
+                        Exit For
+                    Else
+                        'Debug.Print "MouseOverTabIndex: " & m_lMouseOverTabIndex
+                        If iCnt = m_lMouseOverTabIndex Then
+                            bInCtrlBox = False
+                            RaiseEvent ControlBoxExit
+                            Call DrawControlBox(xStateNormal, iCnt)
+                        End If
+                    End If
+                Next
+            End If
+        End If
+        
+    Case WM_MOUSELEAVE
+        bInCtrl = False
+        RaiseEvent MouseLeave
+        
+    Case WM_MOUSEWHEEL
+        If m_aryTabs(m_lActiveTab).Enabled Then
+            If m_bUseMouseWheelScroll = True Then
+                If wParam < 0 Then
+                    '   Scrolling Up
+                    RaiseEvent MouseScrollUp
+                Else
+                    '   Scrolling Down
+                    RaiseEvent MouseScrollDown
+                End If
+                Call ScrollTabs(wParam)
+            End If
+        End If
+        
+    Case WM_MOVING
+        bMoving = True
+        RaiseEvent Status("Form is moving...")
+        
+    Case WM_SIZING
+        bMoving = False
+        RaiseEvent Status("Form is sizing...")
+        
+    Case WM_EXITSIZEMOVE
+        RaiseEvent Status("Finished " & IIf(bMoving, "Moving.", "Sizing."))
+        
+    Case WM_LBUTTONDOWN
+        '   Handle ControlBox Closure Events
+        If m_bUseControlBox Then
             '   Get our position
             Call GetCursorPos(m_Pnt)
             '   Convert coordinates
             Call ScreenToClient(m_lhWnd, m_Pnt)
-            '   Copy the active Rect to temp variable
-            ActiveRect = AryTabs(m_lActiveTab).ClickableRect
-            MouseOverRect = AryTabs(m_lMouseOverTabIndex).ClickableRect
-            '   See if this is a Theme which supports MouseOver Coloring
-            If (m_enmTheme = xThemeWinXP) Or (m_enmTheme = xThemeGalaxy) Then
-                '   Check if the mouse is in the clickable region of the tab...
-                If PtInRect(ActiveRect, m_Pnt.X, m_Pnt.Y) Then
-                    RaiseEvent MouseHover(m_lActiveTab, CSng(m_Pnt.X), CSng(m_Pnt.Y))
-                    If m_bUseControlBox Then
-                        '   Copy the ControlBox Rect to temp variable
-                        ControlBoxRect = AryTabs(m_lActiveTab).ControlBoxRect
-                        '   See if we are in the ControlBox
-                        If PtInRect(ControlBoxRect, m_Pnt.X, m_Pnt.Y) Then
-                            If Not bInCtrlBox Then
-                                bInCtrlBox = True
-                                RaiseEvent ControlBoxEnter
-                            Else
-                                RaiseEvent ControlBoxHover(CSng(m_Pnt.X), CSng(m_Pnt.Y))
-                            End If
-                            Call DrawControlBox(xStateHover, m_lActiveTab)
-                        Else
-                            bInCtrlBox = False
-                            RaiseEvent ControlBoxExit
-                            Call DrawControlBox(xStateNormal, m_lActiveTab)
-                        End If
-                    End If
-                ElseIf PtInRect(MouseOverRect, m_Pnt.X, m_Pnt.Y) Then
-                    RaiseEvent MouseHover(m_lMouseOverTabIndex, CSng(m_Pnt.X), CSng(m_Pnt.Y))
-                    '   Copy the ControlBox Rect to temp variable
-                    If m_bUseControlBox Then
-                        ControlBoxRect = AryTabs(m_lMouseOverTabIndex).ControlBoxRect
-                        '   See if we are in the ControlBox
-                        If PtInRect(ControlBoxRect, m_Pnt.X, m_Pnt.Y) Then
-                            If Not bInCtrlBox Then
-                                bInCtrlBox = True
-                                RaiseEvent ControlBoxEnter
-                            Else
-                                RaiseEvent ControlBoxHover(CSng(m_Pnt.X), CSng(m_Pnt.Y))
-                            End If
-                            Call DrawControlBox(xStateHover, m_lMouseOverTabIndex)
-                        Else
-                            bInCtrlBox = False
-                            RaiseEvent ControlBoxExit
-                            Call DrawControlBox(xStateNormal, m_lMouseOverTabIndex)
-                        End If
-                    End If
+            For iCnt = 0 To m_lTabCount - 1
+                '   Copy the ControlBox Rect to temp variable
+                ControlBoxRect = AryTabs(iCnt).ControlBoxRect
+                '   See if we are in the ControlBox
+                If PtInRect(ControlBoxRect, m_Pnt.X, m_Pnt.Y) Then
+                    bInCtrlBox = True
+                    '   Found it, so paint it as a MouseDown for the ControlBox
+                    RaiseEvent ControlBoxMouseDown(CSng(m_Pnt.X), CSng(m_Pnt.Y))
+                    Call DrawControlBox(xStateDown, iCnt)
+                    Exit For
                 End If
-            Else
-                If m_bUseControlBox Then
-                    For iCnt = 0 To m_lTabCount - 1
-                        '   Copy the ControlBox Rect to temp variable
-                        ControlBoxRect = AryTabs(iCnt).ControlBoxRect
-                        '   See if we are in the ControlBox
-                        If PtInRect(ControlBoxRect, m_Pnt.X, m_Pnt.Y) Then
-                            m_lMouseOverTabIndex = iCnt
-                            If Not bInCtrlBox Then
-                                bInCtrlBox = True
-                                RaiseEvent ControlBoxEnter
-                            Else
-                                RaiseEvent ControlBoxHover(CSng(m_Pnt.X), CSng(m_Pnt.Y))
-                            End If
-                            Call DrawControlBox(xStateHover, iCnt)
-                            Exit For
-                        Else
-                            'Debug.Print "MouseOverTabIndex: " & m_lMouseOverTabIndex
-                            If iCnt = m_lMouseOverTabIndex Then
-                                bInCtrlBox = False
-                                RaiseEvent ControlBoxExit
-                                Call DrawControlBox(xStateNormal, iCnt)
-                            End If
-                        End If
-                    Next
+            Next
+        End If
+        '   The Remaining Events Handled by Normal UserControl Events
+        
+    Case WM_LBUTTONUP
+        '   Only remove the tab....if we are still over it
+        If m_bUseControlBox Then
+            '   Get our position
+            Call GetCursorPos(m_Pnt)
+            '   Convert coordinates
+            Call ScreenToClient(m_lhWnd, m_Pnt)
+            For iCnt = 0 To m_lTabCount - 1
+                '   Copy the ControlBox Rect to temp variable
+                ControlBoxRect = AryTabs(iCnt).ControlBoxRect
+                '   See if we are in the ControlBox
+                If PtInRect(ControlBoxRect, m_Pnt.X, m_Pnt.Y) Then
+                    bInCtrlBox = True
+                    '   Yep, so we must want to remove it, so call our routine
+                    RaiseEvent ControlBoxMouseUp(CSng(m_Pnt.X), CSng(m_Pnt.Y))
+                    Call RemoveTab(iCnt)
+                    Exit For
                 End If
-            End If
-
-        Case WM_MOUSELEAVE
-            bInCtrl = False
-            RaiseEvent MouseLeave
+            Next
+        End If
         
-        Case WM_MOUSEWHEEL
-            If m_aryTabs(m_lActiveTab).Enabled Then
-                If m_bUseMouseWheelScroll = True Then
-                    If wParam < 0 Then
-                        '   Scrolling Up
-                        RaiseEvent MouseScrollUp
-                    Else
-                        '   Scrolling Down
-                        RaiseEvent MouseScrollDown
-                    End If
-                    Call ScrollTabs(wParam)
-                End If
-            End If
-
-        Case WM_MOVING
-            bMoving = True
-            RaiseEvent Status("Form is moving...")
-
-        Case WM_SIZING
-            bMoving = False
-            RaiseEvent Status("Form is sizing...")
-
-        Case WM_EXITSIZEMOVE
-            RaiseEvent Status("Finished " & IIf(bMoving, "Moving.", "Sizing."))
-
-        Case WM_LBUTTONDOWN
-            '   Handle ControlBox Closure Events
-            If m_bUseControlBox Then
-                '   Get our position
-                Call GetCursorPos(m_Pnt)
-                '   Convert coordinates
-                Call ScreenToClient(m_lhWnd, m_Pnt)
-                For iCnt = 0 To m_lTabCount - 1
-                    '   Copy the ControlBox Rect to temp variable
-                    ControlBoxRect = AryTabs(iCnt).ControlBoxRect
-                    '   See if we are in the ControlBox
-                    If PtInRect(ControlBoxRect, m_Pnt.X, m_Pnt.Y) Then
-                        bInCtrlBox = True
-                        '   Found it, so paint it as a MouseDown for the ControlBox
-                        RaiseEvent ControlBoxMouseDown(CSng(m_Pnt.X), CSng(m_Pnt.Y))
-                        Call DrawControlBox(xStateDown, iCnt)
-                        Exit For
-                    End If
-                Next
-            End If
-            '   The Remaining Events Handled by Normal UserControl Events
+    Case WM_LBUTTONDBLCLK
+        '   Nothing
+        '   Handled by Normal UserControl Events
         
-        Case WM_LBUTTONUP
-            '   Only remove the tab....if we are still over it
-            If m_bUseControlBox Then
-                '   Get our position
-                Call GetCursorPos(m_Pnt)
-                '   Convert coordinates
-                Call ScreenToClient(m_lhWnd, m_Pnt)
-                For iCnt = 0 To m_lTabCount - 1
-                    '   Copy the ControlBox Rect to temp variable
-                    ControlBoxRect = AryTabs(iCnt).ControlBoxRect
-                    '   See if we are in the ControlBox
-                    If PtInRect(ControlBoxRect, m_Pnt.X, m_Pnt.Y) Then
-                        bInCtrlBox = True
-                        '   Yep, so we must want to remove it, so call our routine
-                        RaiseEvent ControlBoxMouseUp(CSng(m_Pnt.X), CSng(m_Pnt.Y))
-                        Call RemoveTab(iCnt)
-                        Exit For
-                    End If
-                Next
-            End If
+    Case WM_RBUTTONDOWN
+        '   Nothing
+        '   Handled by Normal UserControl Events
         
-        Case WM_LBUTTONDBLCLK
-            '   Nothing
-            '   Handled by Normal UserControl Events
-            
-        Case WM_RBUTTONDOWN
-            '   Nothing
-            '   Handled by Normal UserControl Events
-            
-        Case WM_RBUTTONDBLCLK
-            '   Nothing
-            '   Handled by Normal UserControl Events
-            
-        Case WM_TIMER
-            '   This calls the private TimerEvents but uses the SelfSubclasser
-            '   to handle the processing of these events....
-            Call TimerEvent
-
-        Case WM_SYSCOLORCHANGE
-            '   There has been a change in the SystemColors so update the
-            '   control...
-            Call Refresh
-            
-        Case WM_THEMECHANGED
-            '   There has been a change in the SystemTheme so update the
-            '   control...
-            Call Refresh
-
+    Case WM_RBUTTONDBLCLK
+        '   Nothing
+        '   Handled by Normal UserControl Events
+        
+    Case WM_TIMER
+        '   This calls the private TimerEvents but uses the SelfSubclasser
+        '   to handle the processing of these events....
+        Call TimerEvent
+        
+    Case WM_SYSCOLORCHANGE
+        '   There has been a change in the SystemColors so update the
+        '   control...
+        Call Refresh
+        
+    Case WM_THEMECHANGED
+        '   There has been a change in the SystemTheme so update the
+        '   control...
+        Call Refresh
+        
     End Select
 End Sub
 
@@ -847,10 +854,10 @@ End Sub
 
 'Add a message to the table of those that will invoke a callback. You should Subclass_Start first and then add the messages
 Private Sub Subclass_AddMsg(ByVal lng_hWnd As Long, ByVal uMsg As Long, Optional ByVal When As eMsgWhen = MSG_AFTER)
-'Parameters:
-  'lng_hWnd  - The handle of the window for which the uMsg is to be added to the callback table
-  'uMsg      - The message number that will invoke a callback. NB Can also be ALL_MESSAGES, ie all messages will callback
-  'When      - Whether the msg is to callback before, after or both with respect to the the default (previous) handler
+    'Parameters:
+    'lng_hWnd  - The handle of the window for which the uMsg is to be added to the callback table
+    'uMsg      - The message number that will invoke a callback. NB Can also be ALL_MESSAGES, ie all messages will callback
+    'When      - Whether the msg is to callback before, after or both with respect to the the default (previous) handler
     With sc_aSubData(zIdx(lng_hWnd))
         If When And eMsgWhen.MSG_BEFORE Then
             Call zAddMsg(uMsg, .aMsgTblB, .nMsgCntB, eMsgWhen.MSG_BEFORE, .nAddrSub)
@@ -863,10 +870,10 @@ End Sub
 
 'Delete a message from the table of those that will invoke a callback.
 Private Sub Subclass_DelMsg(ByVal lng_hWnd As Long, ByVal uMsg As Long, Optional ByVal When As eMsgWhen = MSG_AFTER)
-'Parameters:
-  'lng_hWnd  - The handle of the window for which the uMsg is to be removed from the callback table
-  'uMsg      - The message number that will be removed from the callback table. NB Can also be ALL_MESSAGES, ie all messages will callback
-  'When      - Whether the msg is to be removed from the before, after or both callback tables
+    'Parameters:
+    'lng_hWnd  - The handle of the window for which the uMsg is to be removed from the callback table
+    'uMsg      - The message number that will be removed from the callback table. NB Can also be ALL_MESSAGES, ie all messages will callback
+    'When      - Whether the msg is to be removed from the before, after or both callback tables
     With sc_aSubData(zIdx(lng_hWnd))
         If When And eMsgWhen.MSG_BEFORE Then
             Call zDelMsg(uMsg, .aMsgTblB, .nMsgCntB, eMsgWhen.MSG_BEFORE, .nAddrSub)
@@ -884,10 +891,10 @@ End Function
 
 'Start subclassing the passed window handle
 Private Function Subclass_Start(ByVal lng_hWnd As Long) As Long
-'Parameters:
-  'lng_hWnd  - The handle of the window to be subclassed
-'Returns;
-  'The sc_aSubData() index
+    'Parameters:
+    'lng_hWnd  - The handle of the window to be subclassed
+    'Returns;
+    'The sc_aSubData() index
     Const CODE_LEN              As Long = 204   'Use 204 Bytes to prevent Win9X GPF                                             'Length of the machine code in bytes
     Const FUNC_CWP              As String = "CallWindowProcA"                             'We use CallWindowProc to call the original WndProc
     Const FUNC_EBM              As String = "EbMode"                                      'VBA's EbMode function allows the machine code thunk to know if the IDE has stopped or is on a breakpoint
@@ -909,15 +916,15 @@ Private Function Subclass_Start(ByVal lng_hWnd As Long) As Long
     Dim j                       As Long                                                   'Loop index
     Dim nSubIdx                 As Long                                                   'Subclass data index
     Dim sHex                    As String                                                 'Hex code string
-  
+    
     'If it's the first time through here..
     If aBuf(1) = 0 Then
-  
+        
         'The hex pair machine code representation.
         sHex = "5589E583C4F85731C08945FC8945F8EB0EE80000000083F802742185C07424E830000000837DF800750AE838000000E84D00" & _
-               "00005F8B45FCC9C21000E826000000EBF168000000006AFCFF7508E800000000EBE031D24ABF00000000B900000000E82D00" & _
-               "0000C3FF7514FF7510FF750CFF75086800000000E8000000008945FCC331D2BF00000000B900000000E801000000C3E33209" & _
-               "C978078B450CF2AF75278D4514508D4510508D450C508D4508508D45FC508D45F85052B800000000508B00FF90A4070000C3"
+        "00005F8B45FCC9C21000E826000000EBF168000000006AFCFF7508E800000000EBE031D24ABF00000000B900000000E82D00" & _
+        "0000C3FF7514FF7510FF750CFF75086800000000E8000000008945FCC331D2BF00000000B900000000E801000000C3E33209" & _
+        "C978078B450CF2AF75278D4514508D4510508D450C508D4508508D45FC508D45F85052B800000000508B00FF90A4070000C3"
         
         'Convert the string from hex pairs to bytes and store in the static machine code buffer
         i = 1
@@ -948,7 +955,7 @@ Private Function Subclass_Start(ByVal lng_hWnd As Long) As Long
         End If
         Subclass_Start = nSubIdx
     End If
-
+    
     With sc_aSubData(nSubIdx)
         .hwnd = lng_hWnd                                                                    'Store the hWnd
         .nAddrSub = GlobalAlloc(GMEM_FIXED, CODE_LEN)                                       'Allocate memory for the machine code WndProc
@@ -980,8 +987,8 @@ End Sub
 
 'Stop subclassing the passed window handle
 Private Sub Subclass_Stop(ByVal lng_hWnd As Long)
-'Parameters:
-  'lng_hWnd  - The handle of the window to stop being subclassed
+    'Parameters:
+    'lng_hWnd  - The handle of the window to stop being subclassed
     With sc_aSubData(zIdx(lng_hWnd))
         Call SetWindowLongA(.hwnd, GWL_WNDPROC, .nAddrOrig)                                 'Restore the original WndProc
         Call zPatchVal(.nAddrSub, PATCH_05, 0)                                              'Patch the Table B entry count to ensure no further 'before' callbacks
@@ -1003,7 +1010,7 @@ Private Sub zAddMsg(ByVal uMsg As Long, ByRef aMsgTbl() As Long, ByRef nMsgCnt A
     Dim nEntry  As Long                                                                   'Message table entry index
     Dim nOff1   As Long                                                                   'Machine code buffer offset 1
     Dim nOff2   As Long                                                                   'Machine code buffer offset 2
-  
+    
     If uMsg = ALL_MESSAGES Then                                                           'If all messages
         nMsgCnt = ALL_MESSAGES                                                              'Indicates that all messages will callback
     Else                                                                                  'Else a specific message number
@@ -1064,7 +1071,7 @@ End Sub
 
 'Get the sc_aSubData() array index of the passed hWnd
 Private Function zIdx(ByVal lng_hWnd As Long, Optional ByVal bAdd As Boolean = False) As Long
-'Get the upper bound of sc_aSubData() - If you get an error here, you're probably Subclass_AddMsg-ing before Subclass_Start
+    'Get the upper bound of sc_aSubData() - If you get an error here, you're probably Subclass_AddMsg-ing before Subclass_Start
     zIdx = UBound(sc_aSubData)
     Do While zIdx >= 0                                                                    'Iterate through the existing sc_aSubData() elements
         With sc_aSubData(zIdx)
@@ -1084,8 +1091,8 @@ Private Function zIdx(ByVal lng_hWnd As Long, Optional ByVal bAdd As Boolean = F
     If Not bAdd Then
         Debug.Assert False                                                                  'hWnd not found, programmer error
     End If
-
-'If we exit here, we're returning -1, no freed elements were found
+    
+    'If we exit here, we're returning -1, no freed elements were found
 End Function
 
 'Patch the machine code buffer at the indicated offset with the relative address to the target address.
@@ -1108,10 +1115,10 @@ End Function
 '*******************************************************************************
 
 Public Property Get ActiveTabBackEndColor() As OLE_COLOR
-
+    
     '   Handle Any Errors
     On Error GoTo Prop_ErrHandler
-
+    
     ActiveTabBackEndColor = m_lActiveTabBackEndColor
     
 Prop_ErrHandlerExit:
@@ -1122,10 +1129,10 @@ Prop_ErrHandler:
 End Property
 
 Public Property Let ActiveTabBackEndColor(ByVal lNewValue As OLE_COLOR)
-
+    
     '   Handle Any Errors
     On Error GoTo Prop_ErrHandler
-
+    
     m_lActiveTabBackEndColor = lNewValue
     '   Redraw
     Refresh
@@ -1139,10 +1146,10 @@ Prop_ErrHandler:
 End Property
 
 Public Property Get ActiveTabBackStartColor() As OLE_COLOR
-
+    
     '   Handle Any Errors
     On Error GoTo Prop_ErrHandler
-
+    
     ActiveTabBackStartColor = m_lActiveTabBackStartColor
     
 Prop_ErrHandlerExit:
@@ -1153,10 +1160,10 @@ Prop_ErrHandler:
 End Property
 
 Public Property Let ActiveTabBackStartColor(ByVal lNewValue As OLE_COLOR)
-
+    
     '   Handle Any Errors
     On Error GoTo Prop_ErrHandler
-
+    
     m_lActiveTabBackStartColor = lNewValue
     '   Redraw
     Refresh
@@ -1170,10 +1177,10 @@ Prop_ErrHandler:
 End Property
 
 Public Property Get ActiveTabFont() As StdFont
-
+    
     '   Handle Any Errors
     On Error GoTo Prop_ErrHandler
-
+    
     Set ActiveTabFont = m_oActiveTabFont
     
 Prop_ErrHandlerExit:
@@ -1184,10 +1191,10 @@ Prop_ErrHandler:
 End Property
 
 Public Property Set ActiveTabFont(oNewFont As StdFont)
-
+    
     '   Handle Any Errors
     On Error GoTo Prop_ErrHandler
-
+    
     Set m_oActiveTabFont = oNewFont
     '   Redraw
     Refresh
@@ -1201,10 +1208,10 @@ Prop_ErrHandler:
 End Property
 
 Public Property Get ActiveTabForeColor() As OLE_COLOR
-
+    
     '   Handle Any Errors
     On Error GoTo Prop_ErrHandler
-
+    
     ActiveTabForeColor = m_lActiveTabForeColor
     
 Prop_ErrHandlerExit:
@@ -1215,10 +1222,10 @@ Prop_ErrHandler:
 End Property
 
 Public Property Let ActiveTabForeColor(ByVal lNewValue As OLE_COLOR)
-
+    
     '   Handle Any Errors
     On Error GoTo Prop_ErrHandler
-
+    
     m_lActiveTabForeColor = lNewValue
     '   Redraw
     Refresh
@@ -1232,13 +1239,13 @@ Prop_ErrHandler:
 End Property
 
 Public Property Get ActiveTab() As Long
-
+    
     '   Handle Any Errors
     On Error GoTo Prop_ErrHandler
     
     '   Active tab index
     ActiveTab = m_lActiveTab
-
+    
 Prop_ErrHandlerExit:
     Exit Property
 Prop_ErrHandler:
@@ -1247,10 +1254,10 @@ Prop_ErrHandler:
 End Property
 
 Public Property Get ActiveTabHeight() As Long
-
+    
     '   Handle Any Errors
     On Error GoTo Prop_ErrHandler
-
+    
     ActiveTabHeight = m_lActiveTabHeight
     
 Prop_ErrHandlerExit:
@@ -1261,10 +1268,10 @@ Prop_ErrHandler:
 End Property
 
 Public Property Let ActiveTabHeight(ByVal lNewValue As Long)
-
+    
     '   Handle Any Errors
     On Error GoTo Prop_ErrHandler
-
+    
     m_lActiveTabHeight = lNewValue
     '   Redraw
     Refresh
@@ -1278,10 +1285,10 @@ Prop_ErrHandler:
 End Property
 
 Public Property Let ActiveTab(ByVal lNewValue As Long)
-
+    
     '   Handle Any Errors
     On Error GoTo Prop_ErrHandler
-
+    
     If (lNewValue < 0) Or (lNewValue >= m_lTabCount) Then
         '   Handle Under/Over Ranged Values by wrapping
         If (lNewValue < 0) Then lNewValue = m_lTabCount
@@ -1381,10 +1388,10 @@ Public Sub AddControl(Optional ByRef Ctrl As Object, Optional lhWnd As Long = -1
 End Sub
 
 Private Property Get Ambient() As Object
-
+    
     '   Handle Any Errors
     On Error GoTo Prop_ErrHandler
-
+    
     Set Ambient = UserControl.Ambient
     
 Prop_ErrHandlerExit:
@@ -1421,7 +1428,7 @@ Sub_ErrHandler:
 End Sub
 
 Private Sub APILine(x1 As Long, y1 As Long, x2 As Long, y2 As Long, lColor As Long)
-        
+    
     Dim pt As POINTAPI
     Dim hPen As Long, hPenOld As Long
     
@@ -1474,7 +1481,7 @@ Private Function APIRectangle(ByVal X As Long, ByVal Y As Long, ByVal W As Long,
     SelectObject UserControl.hDC, hPenOld
     '   Delete the New Pen
     DeleteObject hPen
-
+    
 Func_ErrHandlerExit:
     Exit Function
 Func_ErrHandler:
@@ -1485,12 +1492,12 @@ End Function
 Private Property Get AryTabs(iIndex As Long) As TabInfo
     '   Handle Any Errors
     On Error GoTo Prop_ErrHandler
-
+    
     If iIndex < LBound(m_aryTabs) Then iIndex = LBound(m_aryTabs)
     If iIndex > UBound(m_aryTabs) Then iIndex = UBound(m_aryTabs)
     '   Private Structure Properties for the Tabs
     AryTabs = m_aryTabs(iIndex)
-
+    
 Prop_ErrHandlerExit:
     Exit Property
 Prop_ErrHandler:
@@ -1501,10 +1508,10 @@ End Property
 Private Property Let AryTabs(iIndex As Long, utNewValue As TabInfo)
     '   Handle Any Errors
     On Error GoTo Prop_ErrHandler
-
+    
     '   Private Structure Properties for the Tabs
     m_aryTabs(iIndex) = utNewValue
-
+    
 Prop_ErrHandlerExit:
     Exit Property
 Prop_ErrHandler:
@@ -1513,10 +1520,10 @@ Prop_ErrHandler:
 End Property
 
 Private Property Get BackColor() As OLE_COLOR
-
+    
     '   Handle Any Errors
     On Error GoTo Prop_ErrHandler
-
+    
     BackColor = UserControl.BackColor
     
 Prop_ErrHandlerExit:
@@ -1527,10 +1534,10 @@ Prop_ErrHandler:
 End Property
 
 Private Property Let BackColor(ByVal lNewValue As OLE_COLOR)
-
+    
     '   Handle Any Errors
     On Error GoTo Prop_ErrHandler
-
+    
     UserControl.BackColor = lNewValue
     '   Redraw
     Refresh
@@ -1544,10 +1551,10 @@ Prop_ErrHandler:
 End Property
 
 Public Property Get BottomRightInnerBorderColor() As OLE_COLOR
-
+    
     '   Handle Any Errors
     On Error GoTo Prop_ErrHandler
-
+    
     BottomRightInnerBorderColor = m_lBottomRightInnerBorderColor
     
 Prop_ErrHandlerExit:
@@ -1558,10 +1565,10 @@ Prop_ErrHandler:
 End Property
 
 Public Property Let BottomRightInnerBorderColor(ByVal lNewValue As OLE_COLOR)
-
+    
     '   Handle Any Errors
     On Error GoTo Prop_ErrHandler
-
+    
     m_lBottomRightInnerBorderColor = lNewValue
     '   Redraw
     Refresh
@@ -1584,10 +1591,10 @@ Private Property Get bUserMode() As Boolean
 End Property
 
 Public Sub Cls()
-
+    
     '   Handle Any Errors
     On Error GoTo Sub_ErrHandler
-
+    
     UserControl.Cls
     
 Sub_ErrHandlerExit:
@@ -1616,10 +1623,10 @@ Finally:
 End Sub
 
 Public Property Get DisabledTabBackColor() As OLE_COLOR
-
+    
     '   Handle Any Errors
     On Error GoTo Prop_ErrHandler
-
+    
     DisabledTabBackColor = m_lDisabledTabBackColor
     
 Prop_ErrHandlerExit:
@@ -1630,10 +1637,10 @@ Prop_ErrHandler:
 End Property
 
 Public Property Let DisabledTabBackColor(ByVal lNewValue As OLE_COLOR)
-
+    
     '   Handle Any Errors
     On Error GoTo Prop_ErrHandler
-
+    
     m_lDisabledTabBackColor = lNewValue
     '   Redraw
     Refresh
@@ -1647,10 +1654,10 @@ Prop_ErrHandler:
 End Property
 
 Public Property Get DisabledTabForeColor() As OLE_COLOR
-
+    
     '   Handle Any Errors
     On Error GoTo Prop_ErrHandler
-
+    
     DisabledTabForeColor = m_lDisabledTabForeColor
     
 Prop_ErrHandlerExit:
@@ -1686,32 +1693,32 @@ Private Sub DrawBackground()
     '   (does not draw the tabs), Called from Refresh Event
     '   of the UserControl
     Select Case m_enmTheme
-        Case xThemeRoundTabs            'xThemeRoundTabs
-            '   The below has been added to allow skipping of background paint.
-            '   We want to draw the tabs and background one after another for
-            '   this theme. We set the flag to true and then call this function
-            '   again from the DrawTabs() method
-            If Not m_bIsBackgroundPaintDelayed Then
-                m_bIsBackgroundPaintDelayed = True
-            Else
-                '   Get the current cached properties
-                Call pGetCachedProperties
-                Select Case m_enmStyle
-                    Case xStyleTabbedDialog:
-                        Call DrawBackgroundTabbedDialog
-                    Case xStylePropertyPages:
-                        Call DrawBackgroundPropertyPages
-                End Select
-            End If
-        Case xThemeVisualStudio2003, xThemeWin9X, xThemeWinXP, xThemeGalaxy
+    Case xThemeRoundTabs            'xThemeRoundTabs
+        '   The below has been added to allow skipping of background paint.
+        '   We want to draw the tabs and background one after another for
+        '   this theme. We set the flag to true and then call this function
+        '   again from the DrawTabs() method
+        If Not m_bIsBackgroundPaintDelayed Then
+            m_bIsBackgroundPaintDelayed = True
+        Else
             '   Get the current cached properties
             Call pGetCachedProperties
             Select Case m_enmStyle
-                Case xStyleTabbedDialog:
-                    Call DrawBackgroundTabbedDialog
-                Case xStylePropertyPages:
-                    Call DrawBackgroundPropertyPages
+            Case xStyleTabbedDialog:
+                Call DrawBackgroundTabbedDialog
+            Case xStylePropertyPages:
+                Call DrawBackgroundPropertyPages
             End Select
+        End If
+    Case xThemeVisualStudio2003, xThemeWin9X, xThemeWinXP, xThemeGalaxy
+        '   Get the current cached properties
+        Call pGetCachedProperties
+        Select Case m_enmStyle
+        Case xStyleTabbedDialog:
+            Call DrawBackgroundTabbedDialog
+        Case xStylePropertyPages:
+            Call DrawBackgroundPropertyPages
+        End Select
     End Select
     
 Sub_ErrHandlerExit:
@@ -1728,49 +1735,49 @@ Public Sub DrawBackgroundPropertyPages()
     
     '   Handle Any Errors
     On Error GoTo Sub_ErrHandler
-
+    
     Select Case m_enmTheme
-        Case xThemeRoundTabs            'xThemeRoundTabs
-            Call DrawBackgroundTabbedDialog
-        Case xThemeVisualStudio2003     'xThemeVisualStudio2003
-            '   Get the larger of the active tab height and inactive tab height
-            iTmp = IIf(m_lActiveTabHeight > m_lInActiveTabHeight, m_lActiveTabHeight, m_lInActiveTabHeight)
-            
-            UserControl.Cls   'clear the control
-            '   Fill background color based on tab's enabled property
-            If AryTabs(m_lActiveTab).Enabled Then
-                BackColor = m_lActiveTabBackEndColor
-            Else
-                BackColor = m_lDisabledTabBackColor
-            End If
-            '   Draw inner shadow (left)
-            APILine 0, iTmp, 0, m_lScaleHeight - 1, m_lOuterBorderColor
-            '   Draw inner shadow (right)
-            APILine m_lScaleWidth - 1, iTmp, m_lScaleWidth - 1, m_lScaleHeight - 1, m_lOuterBorderColor
-            '   Draw inner shadow (bottom)
-            APILine 0, m_lScaleHeight - 1, m_lScaleWidth, m_lScaleHeight - 1, m_lOuterBorderColor
-            
-        Case xThemeWin9X                'xThemeWin9x
-            '   Get the larger of the active tab height and inactive tab height
-            iTmp = IIf(m_lActiveTabHeight > m_lInActiveTabHeight, m_lActiveTabHeight, m_lInActiveTabHeight)
-            UserControl.Cls
-            '   Fill background color based on tab's enabled property
-            If AryTabs(m_lActiveTab).Enabled Then
-                BackColor = m_lActiveTabBackEndColor
-            Else
-                BackColor = m_lDisabledTabBackColor
-            End If
-            '   Draw inner shadow (left)
-            APILine 0, iTmp + 1, 0, m_lScaleHeight - 1, m_lTopLeftInnerBorderColor
-            '   Draw inner shadow (right)
-            APILine m_lScaleWidth - 1, iTmp + 1, m_lScaleWidth - 1, m_lScaleHeight - 1, m_lOuterBorderColor
-            APILine m_lScaleWidth - 2, iTmp + 1, m_lScaleWidth - 2, m_lScaleHeight - 2, m_lBottomRightInnerBorderColor
-            '   Draw inner shadow (bottom)
-            APILine 0, m_lScaleHeight - 1, m_lScaleWidth, m_lScaleHeight - 1, m_lOuterBorderColor
-            APILine 1, m_lScaleHeight - 2, m_lScaleWidth - 1, m_lScaleHeight - 2, m_lBottomRightInnerBorderColor
-            
-        Case xThemeWinXP, xThemeGalaxy  'xThemeWinXP, xThemeGalaxy
-            Call DrawBackgroundTabbedDialog
+    Case xThemeRoundTabs            'xThemeRoundTabs
+        Call DrawBackgroundTabbedDialog
+    Case xThemeVisualStudio2003     'xThemeVisualStudio2003
+        '   Get the larger of the active tab height and inactive tab height
+        iTmp = IIf(m_lActiveTabHeight > m_lInActiveTabHeight, m_lActiveTabHeight, m_lInActiveTabHeight)
+        
+        UserControl.Cls   'clear the control
+        '   Fill background color based on tab's enabled property
+        If AryTabs(m_lActiveTab).Enabled Then
+            BackColor = m_lActiveTabBackEndColor
+        Else
+            BackColor = m_lDisabledTabBackColor
+        End If
+        '   Draw inner shadow (left)
+        APILine 0, iTmp, 0, m_lScaleHeight - 1, m_lOuterBorderColor
+        '   Draw inner shadow (right)
+        APILine m_lScaleWidth - 1, iTmp, m_lScaleWidth - 1, m_lScaleHeight - 1, m_lOuterBorderColor
+        '   Draw inner shadow (bottom)
+        APILine 0, m_lScaleHeight - 1, m_lScaleWidth, m_lScaleHeight - 1, m_lOuterBorderColor
+        
+    Case xThemeWin9X                'xThemeWin9x
+        '   Get the larger of the active tab height and inactive tab height
+        iTmp = IIf(m_lActiveTabHeight > m_lInActiveTabHeight, m_lActiveTabHeight, m_lInActiveTabHeight)
+        UserControl.Cls
+        '   Fill background color based on tab's enabled property
+        If AryTabs(m_lActiveTab).Enabled Then
+            BackColor = m_lActiveTabBackEndColor
+        Else
+            BackColor = m_lDisabledTabBackColor
+        End If
+        '   Draw inner shadow (left)
+        APILine 0, iTmp + 1, 0, m_lScaleHeight - 1, m_lTopLeftInnerBorderColor
+        '   Draw inner shadow (right)
+        APILine m_lScaleWidth - 1, iTmp + 1, m_lScaleWidth - 1, m_lScaleHeight - 1, m_lOuterBorderColor
+        APILine m_lScaleWidth - 2, iTmp + 1, m_lScaleWidth - 2, m_lScaleHeight - 2, m_lBottomRightInnerBorderColor
+        '   Draw inner shadow (bottom)
+        APILine 0, m_lScaleHeight - 1, m_lScaleWidth, m_lScaleHeight - 1, m_lOuterBorderColor
+        APILine 1, m_lScaleHeight - 2, m_lScaleWidth - 1, m_lScaleHeight - 2, m_lBottomRightInnerBorderColor
+        
+    Case xThemeWinXP, xThemeGalaxy  'xThemeWinXP, xThemeGalaxy
+        Call DrawBackgroundTabbedDialog
     End Select
     
 Sub_ErrHandlerExit:
@@ -1788,70 +1795,70 @@ Public Sub DrawBackgroundTabbedDialog()
     
     '   Handle Any Errors
     On Error GoTo Sub_ErrHandler
-
+    
     Select Case m_enmTheme
-        Case xThemeRoundTabs            'xThemeRoundTabs
-            '   Get the larger of the active tab height and inactive tab height
-            iTmp = IIf(m_lActiveTabHeight > m_lInActiveTabHeight, m_lActiveTabHeight, m_lInActiveTabHeight)
-            '   Fill background color based on tab's enabled property
-            If AryTabs(m_lActiveTab).Enabled Then
-                FillColor = m_lActiveTabBackStartColor
-            Else
-                FillColor = m_lDisabledTabBackColor
-            End If
-            FillStyle = vbFSSolid   'must set to transparent (since we are setting it to Solid in the DrawTabs() )
-            '   First Fill the Rect
-            APIFillRectByCoords 0, iTmp + 1, m_lScaleWidth - 1, m_lScaleHeight - iTmp - 2, FillColor
-            '   Now outline the main body
-            APIRectangle 0, iTmp + 1, m_lScaleWidth - 1, m_lScaleHeight - iTmp - 2, m_lOuterBorderColor
-            '   Erase the bottom line for active tab
-            utRect = AryTabs(m_lActiveTab).ClickableRect
-            If AryTabs(m_lActiveTab).Enabled Then
-                APILine utRect.Left + 1, utRect.Bottom - 1, utRect.Right - 1, utRect.Bottom - 1, m_lActiveTabBackStartColor
-            Else
-                APILine utRect.Left + 1, utRect.Bottom - 1, utRect.Right - 1, utRect.Bottom - 1, m_lDisabledTabBackColor
-            End If
-            
-        Case xThemeVisualStudio2003     'xThemeVisualStudio2003
-            Call DrawBackgroundPropertyPages
-        Case xThemeWin9X                'xThemeWin9x
-            '   Get the larger of the active tab height and inactive tab height
-            iTmp = IIf(m_lActiveTabHeight > m_lInActiveTabHeight, m_lActiveTabHeight, m_lInActiveTabHeight)
-            UserControl.Cls   'clear the control
-            '   Fill background color based on tab's enabled property
-            If AryTabs(m_lActiveTab).Enabled Then
-                BackColor = m_lActiveTabBackEndColor
-            Else
-                BackColor = m_lDisabledTabBackColor
-            End If
-            '   Draw inner shadow (left)
-            APILine 0, iTmp + 1, 0, m_lScaleHeight - 1, m_lOuterBorderColor
-            APILine 1, iTmp + 2, 1, m_lScaleHeight - 2, m_lTopLeftInnerBorderColor
-            APILine 2, iTmp + 3, 2, m_lScaleHeight - 3, m_lTopLeftInnerBorderColor
-            '   Draw inner shadow (right)
-            APILine m_lScaleWidth - 1, iTmp + 1, m_lScaleWidth - 1, m_lScaleHeight - 1, m_lOuterBorderColor
-            APILine m_lScaleWidth - 2, iTmp + 2, m_lScaleWidth - 2, m_lScaleHeight - 2, m_lBottomRightInnerBorderColor
-            APILine m_lScaleWidth - 3, iTmp + 3, m_lScaleWidth - 3, m_lScaleHeight - 3, m_lBottomRightInnerBorderColor
-            '   Draw inner shadow (bottom)
-            APILine 0, m_lScaleHeight - 1, m_lScaleWidth, m_lScaleHeight - 1, m_lOuterBorderColor
-            APILine 1, m_lScaleHeight - 2, m_lScaleWidth - 1, m_lScaleHeight - 2, m_lBottomRightInnerBorderColor
-            APILine 2, m_lScaleHeight - 3, m_lScaleWidth - 2, m_lScaleHeight - 3, m_lBottomRightInnerBorderColor
-        Case xThemeWinXP, xThemeGalaxy  'xThemeWinXP, xThemeGalaxy
-            '   Get the larger of the active tab height and inactive tab height
-            iTmp = IIf(m_lActiveTabHeight > m_lInActiveTabHeight, m_lActiveTabHeight, m_lInActiveTabHeight)
-            UserControl.Cls   'clear control
-            '   Fill background color based on tab's enabled property
-            If AryTabs(m_lActiveTab).Enabled Then
-                BackColor = m_lActiveTabBackEndColor
-            Else
-                BackColor = m_lDisabledTabBackColor
-            End If
-            '   Draw inner shadow (left)
-            APILine 0, iTmp, 0, m_lScaleHeight - 1, m_lOuterBorderColor
-            '   Draw inner shadow (right)
-            APILine m_lScaleWidth - 1, iTmp, m_lScaleWidth - 1, m_lScaleHeight - 1, m_lOuterBorderColor
-             '   Draw inner shadow (bottom)
-            APILine 0, m_lScaleHeight - 1, m_lScaleWidth, m_lScaleHeight - 1, m_lOuterBorderColor
+    Case xThemeRoundTabs            'xThemeRoundTabs
+        '   Get the larger of the active tab height and inactive tab height
+        iTmp = IIf(m_lActiveTabHeight > m_lInActiveTabHeight, m_lActiveTabHeight, m_lInActiveTabHeight)
+        '   Fill background color based on tab's enabled property
+        If AryTabs(m_lActiveTab).Enabled Then
+            FillColor = m_lActiveTabBackStartColor
+        Else
+            FillColor = m_lDisabledTabBackColor
+        End If
+        FillStyle = vbFSSolid   'must set to transparent (since we are setting it to Solid in the DrawTabs() )
+        '   First Fill the Rect
+        APIFillRectByCoords 0, iTmp + 1, m_lScaleWidth - 1, m_lScaleHeight - iTmp - 2, FillColor
+        '   Now outline the main body
+        APIRectangle 0, iTmp + 1, m_lScaleWidth - 1, m_lScaleHeight - iTmp - 2, m_lOuterBorderColor
+        '   Erase the bottom line for active tab
+        utRect = AryTabs(m_lActiveTab).ClickableRect
+        If AryTabs(m_lActiveTab).Enabled Then
+            APILine utRect.Left + 1, utRect.Bottom - 1, utRect.Right - 1, utRect.Bottom - 1, m_lActiveTabBackStartColor
+        Else
+            APILine utRect.Left + 1, utRect.Bottom - 1, utRect.Right - 1, utRect.Bottom - 1, m_lDisabledTabBackColor
+        End If
+        
+    Case xThemeVisualStudio2003     'xThemeVisualStudio2003
+        Call DrawBackgroundPropertyPages
+    Case xThemeWin9X                'xThemeWin9x
+        '   Get the larger of the active tab height and inactive tab height
+        iTmp = IIf(m_lActiveTabHeight > m_lInActiveTabHeight, m_lActiveTabHeight, m_lInActiveTabHeight)
+        UserControl.Cls   'clear the control
+        '   Fill background color based on tab's enabled property
+        If AryTabs(m_lActiveTab).Enabled Then
+            BackColor = m_lActiveTabBackEndColor
+        Else
+            BackColor = m_lDisabledTabBackColor
+        End If
+        '   Draw inner shadow (left)
+        APILine 0, iTmp + 1, 0, m_lScaleHeight - 1, m_lOuterBorderColor
+        APILine 1, iTmp + 2, 1, m_lScaleHeight - 2, m_lTopLeftInnerBorderColor
+        APILine 2, iTmp + 3, 2, m_lScaleHeight - 3, m_lTopLeftInnerBorderColor
+        '   Draw inner shadow (right)
+        APILine m_lScaleWidth - 1, iTmp + 1, m_lScaleWidth - 1, m_lScaleHeight - 1, m_lOuterBorderColor
+        APILine m_lScaleWidth - 2, iTmp + 2, m_lScaleWidth - 2, m_lScaleHeight - 2, m_lBottomRightInnerBorderColor
+        APILine m_lScaleWidth - 3, iTmp + 3, m_lScaleWidth - 3, m_lScaleHeight - 3, m_lBottomRightInnerBorderColor
+        '   Draw inner shadow (bottom)
+        APILine 0, m_lScaleHeight - 1, m_lScaleWidth, m_lScaleHeight - 1, m_lOuterBorderColor
+        APILine 1, m_lScaleHeight - 2, m_lScaleWidth - 1, m_lScaleHeight - 2, m_lBottomRightInnerBorderColor
+        APILine 2, m_lScaleHeight - 3, m_lScaleWidth - 2, m_lScaleHeight - 3, m_lBottomRightInnerBorderColor
+    Case xThemeWinXP, xThemeGalaxy  'xThemeWinXP, xThemeGalaxy
+        '   Get the larger of the active tab height and inactive tab height
+        iTmp = IIf(m_lActiveTabHeight > m_lInActiveTabHeight, m_lActiveTabHeight, m_lInActiveTabHeight)
+        UserControl.Cls   'clear control
+        '   Fill background color based on tab's enabled property
+        If AryTabs(m_lActiveTab).Enabled Then
+            BackColor = m_lActiveTabBackEndColor
+        Else
+            BackColor = m_lDisabledTabBackColor
+        End If
+        '   Draw inner shadow (left)
+        APILine 0, iTmp, 0, m_lScaleHeight - 1, m_lOuterBorderColor
+        '   Draw inner shadow (right)
+        APILine m_lScaleWidth - 1, iTmp, m_lScaleWidth - 1, m_lScaleHeight - 1, m_lOuterBorderColor
+        '   Draw inner shadow (bottom)
+        APILine 0, m_lScaleHeight - 1, m_lScaleWidth, m_lScaleHeight - 1, m_lOuterBorderColor
     End Select
     
 Sub_ErrHandlerExit:
@@ -1869,14 +1876,31 @@ Private Sub DrawControlBox(Optional ByVal xState As xStateEnum, Optional ByVal l
     
     '   Handle Any Errors
     On Error GoTo Sub_ErrHandler
-        
+    
     Select Case m_enmTheme
-        Case xThemeWin9X                'xThemeWin9x
-            If lIndex <> -1 Then Exit Sub
+    Case xThemeWin9X                'xThemeWin9x
+        If lIndex <> -1 Then Exit Sub
+        For iCnt = 0 To m_lTabCount - 1
+            '   Fetch local copy
+            utTabInfo = AryTabs(iCnt)
+            ForeColor = m_lOuterBorderColor
+            With utTabInfo.ControlBoxRect
+                '   Draw the controlbox frame
+                RoundRect UserControl.hDC, .Left, .Top, .Right, .Bottom, 2, 2
+                '   Fill the gradient inside
+                pFillCurvedGradient .Left + 1, .Top + 1, .Right - 1, .Bottom - 2, m_lActiveTabBackStartColor, m_lActiveTabBackEndColor, , True, True
+                '   Now draw the "/" of the X
+                APILine .Left + 3, .Bottom - 4, .Right - 3, .Top + 2, OffsetColor(m_lOuterBorderColor, -&HC0)
+                '   Now draw the "\" of the X
+                APILine .Left + 3, .Top + 3, .Right - 3, .Bottom - 3, OffsetColor(m_lOuterBorderColor, -&HC0)
+            End With
+        Next
+    Case xThemeRoundTabs, xThemeVisualStudio2003, xThemeWinXP, xThemeGalaxy  'xThemeRoundTabs, xThemeVisualStudio2003, xThemeWinXP, xThemeGalaxy
+        If lIndex = -1 Then
+            ForeColor = m_lOuterBorderColor
             For iCnt = 0 To m_lTabCount - 1
                 '   Fetch local copy
                 utTabInfo = AryTabs(iCnt)
-                ForeColor = m_lOuterBorderColor
                 With utTabInfo.ControlBoxRect
                     '   Draw the controlbox frame
                     RoundRect UserControl.hDC, .Left, .Top, .Right, .Bottom, 2, 2
@@ -1888,56 +1912,39 @@ Private Sub DrawControlBox(Optional ByVal xState As xStateEnum, Optional ByVal l
                     APILine .Left + 3, .Top + 3, .Right - 3, .Bottom - 3, OffsetColor(m_lOuterBorderColor, -&HC0)
                 End With
             Next
-        Case xThemeRoundTabs, xThemeVisualStudio2003, xThemeWinXP, xThemeGalaxy  'xThemeRoundTabs, xThemeVisualStudio2003, xThemeWinXP, xThemeGalaxy
-            If lIndex = -1 Then
-                ForeColor = m_lOuterBorderColor
-                For iCnt = 0 To m_lTabCount - 1
-                    '   Fetch local copy
-                    utTabInfo = AryTabs(iCnt)
-                    With utTabInfo.ControlBoxRect
-                        '   Draw the controlbox frame
-                        RoundRect UserControl.hDC, .Left, .Top, .Right, .Bottom, 2, 2
-                        '   Fill the gradient inside
-                        pFillCurvedGradient .Left + 1, .Top + 1, .Right - 1, .Bottom - 2, m_lActiveTabBackStartColor, m_lActiveTabBackEndColor, , True, True
-                        '   Now draw the "/" of the X
-                        APILine .Left + 3, .Bottom - 4, .Right - 3, .Top + 2, OffsetColor(m_lOuterBorderColor, -&HC0)
-                        '   Now draw the "\" of the X
-                        APILine .Left + 3, .Top + 3, .Right - 3, .Bottom - 3, OffsetColor(m_lOuterBorderColor, -&HC0)
-                    End With
-                Next
-            Else
-                Select Case xState
-                    Case xStateNormal
-                        lStartcolor = m_lActiveTabBackStartColor
-                        lEndColor = m_lActiveTabBackEndColor
-                    Case xStateHover
-                        If m_enmTheme = xThemeVisualStudio2003 Then
-                            lStartcolor = m_lActiveTabBackStartColor
-                            'lEndColor = OffsetColor(&HDD1, &H20)
-                            lEndColor = OffsetColor(m_lActiveTabBackEndColor, -&H30)
-                        Else
-                            lStartcolor = m_lActiveTabBackStartColor
-                            lEndColor = OffsetColor(m_lActiveTabBackEndColor, -&H30)
-                        End If
-                    Case xStateDown
-                        lStartcolor = OffsetColor(m_lActiveTabBackEndColor, -&H30)
-                        lEndColor = OffsetColor(m_lActiveTabBackEndColor, -&H30)
-                End Select
-                '   Fetch local copy
-                utTabInfo = AryTabs(lIndex)
-                With utTabInfo.ControlBoxRect
-                    '   Draw the controlbox frame
-                    RoundRect UserControl.hDC, .Left, .Top, .Right, .Bottom, 2, 2
-                    '   Fill the gradient inside
-                    pFillCurvedGradient .Left + 1, .Top + 1, .Right - 1, .Bottom - 2, lStartcolor, lEndColor, , True, True
-                    '   Now draw the "/" of the X
-                    APILine .Left + 3, .Bottom - 4, .Right - 3, .Top + 2, OffsetColor(m_lOuterBorderColor, -&HC0)
-                    '   Now draw the "\" of the X
-                    APILine .Left + 3, .Top + 3, .Right - 3, .Bottom - 3, OffsetColor(m_lOuterBorderColor, -&HC0)
-                End With
-            End If
+        Else
+            Select Case xState
+            Case xStateNormal
+                lStartcolor = m_lActiveTabBackStartColor
+                lEndColor = m_lActiveTabBackEndColor
+            Case xStateHover
+                If m_enmTheme = xThemeVisualStudio2003 Then
+                    lStartcolor = m_lActiveTabBackStartColor
+                    'lEndColor = OffsetColor(&HDD1, &H20)
+                    lEndColor = OffsetColor(m_lActiveTabBackEndColor, -&H30)
+                Else
+                    lStartcolor = m_lActiveTabBackStartColor
+                    lEndColor = OffsetColor(m_lActiveTabBackEndColor, -&H30)
+                End If
+            Case xStateDown
+                lStartcolor = OffsetColor(m_lActiveTabBackEndColor, -&H30)
+                lEndColor = OffsetColor(m_lActiveTabBackEndColor, -&H30)
+            End Select
+            '   Fetch local copy
+            utTabInfo = AryTabs(lIndex)
+            With utTabInfo.ControlBoxRect
+                '   Draw the controlbox frame
+                RoundRect UserControl.hDC, .Left, .Top, .Right, .Bottom, 2, 2
+                '   Fill the gradient inside
+                pFillCurvedGradient .Left + 1, .Top + 1, .Right - 1, .Bottom - 2, lStartcolor, lEndColor, , True, True
+                '   Now draw the "/" of the X
+                APILine .Left + 3, .Bottom - 4, .Right - 3, .Top + 2, OffsetColor(m_lOuterBorderColor, -&HC0)
+                '   Now draw the "\" of the X
+                APILine .Left + 3, .Top + 3, .Right - 3, .Bottom - 3, OffsetColor(m_lOuterBorderColor, -&HC0)
+            End With
+        End If
     End Select
-
+    
 Sub_ErrHandlerExit:
     Exit Sub
 Sub_ErrHandler:
@@ -1974,37 +1981,37 @@ Sub_ErrHandler:
 End Sub
 
 Public Sub DrawTabs()
-
+    
     '   Handle Any Errors
     On Error GoTo Sub_ErrHandler
     
     '   Erases the previous tabs and draws each one by one
     Select Case m_enmTheme
-        Case xThemeRoundTabs            'xThemeRoundTabs
-            'Get the current cached properties
-            Call pGetCachedProperties
-            With Me
-                Select Case .TabStyle
-                Case xStyleTabbedDialog:
-                    Call DrawTabsTabbedDialog
-                Case xStylePropertyPages:
-                    Call DrawTabsPropertyPages
-                End Select
-            End With
-            m_bIsBackgroundPaintDelayed = True
-            '   Draw Background again to give a nice effect
-            DrawBackground
-        Case xThemeVisualStudio2003, xThemeWin9X, xThemeWinXP, xThemeGalaxy     'Everything else
-            'Get the current cached properties
-            Call pGetCachedProperties
-            With Me
-                Select Case .TabStyle
-                Case xStyleTabbedDialog:
-                    Call DrawTabsTabbedDialog
-                Case xStylePropertyPages:
-                    Call DrawTabsPropertyPages
-                End Select
-            End With
+    Case xThemeRoundTabs            'xThemeRoundTabs
+        'Get the current cached properties
+        Call pGetCachedProperties
+        With Me
+            Select Case .TabStyle
+            Case xStyleTabbedDialog:
+                Call DrawTabsTabbedDialog
+            Case xStylePropertyPages:
+                Call DrawTabsPropertyPages
+            End Select
+        End With
+        m_bIsBackgroundPaintDelayed = True
+        '   Draw Background again to give a nice effect
+        DrawBackground
+    Case xThemeVisualStudio2003, xThemeWin9X, xThemeWinXP, xThemeGalaxy     'Everything else
+        'Get the current cached properties
+        Call pGetCachedProperties
+        With Me
+            Select Case .TabStyle
+            Case xStyleTabbedDialog:
+                Call DrawTabsTabbedDialog
+            Case xStylePropertyPages:
+                Call DrawTabsPropertyPages
+            End Select
+        End With
     End Select
     If m_bUseControlBox Then
         Call DrawControlBox
@@ -2036,848 +2043,549 @@ Public Sub DrawTabsPropertyPages()
     
     '   Handle Any Errors
     On Error GoTo Sub_ErrHandler
-
+    
     Select Case m_enmTheme
-        Case xThemeRoundTabs            'xThemeRoundTabs
-            '   Set the active tab's font as current font (since the TextWidth function
-            '   will use the current font's size)
-            Set Font = ActiveTabFont
-            '   Store the larger height in tmp var
-            iTmpHeight = IIf(m_lActiveTabHeight > m_lInActiveTabHeight, m_lActiveTabHeight, m_lInActiveTabHeight)
-            '   Initialize the clickable items
-            For iCnt = 0 To m_lTabCount - 1
-                utTabInfo = AryTabs(iCnt)
-                sTmp = Replace$(utTabInfo.Caption, "&&", "&")
-                If InStr(1, sTmp, "&") Then
-                    '   If still there is one '&' in the string then reduce the width by one more character (since the '&' will be conveted into an underline when painted)
-                    sTmp = Mid$(sTmp, 1, Len(sTmp) - 1)
-                End If
-                If utTabInfo.TabPicture Is Nothing Then
-                    '   Get tab width acc to the text size and border
-                    iTabWidth = TextWidth(sTmp) + iPROP_PAGE_BORDER_AND_TEXT_DISTANCE * 2
+    Case xThemeRoundTabs            'xThemeRoundTabs
+        '   Set the active tab's font as current font (since the TextWidth function
+        '   will use the current font's size)
+        Set Font = ActiveTabFont
+        '   Store the larger height in tmp var
+        iTmpHeight = IIf(m_lActiveTabHeight > m_lInActiveTabHeight, m_lActiveTabHeight, m_lInActiveTabHeight)
+        '   Initialize the clickable items
+        For iCnt = 0 To m_lTabCount - 1
+            utTabInfo = AryTabs(iCnt)
+            sTmp = Replace$(utTabInfo.Caption, "&&", "&")
+            If InStr(1, sTmp, "&") Then
+                '   If still there is one '&' in the string then reduce the width by one more character (since the '&' will be conveted into an underline when painted)
+                sTmp = Mid$(sTmp, 1, Len(sTmp) - 1)
+            End If
+            If utTabInfo.TabPicture Is Nothing Then
+                '   Get tab width acc to the text size and border
+                iTabWidth = TextWidth(sTmp) + iPROP_PAGE_BORDER_AND_TEXT_DISTANCE * 2
+            Else
+                If iTmpHeight - 2 < m_lIconSize Then    '-2 for borders
+                    '   Here we adjust the size of the icon if it does not
+                    '   fit into current tab
+                    iAdjustedIconSize = iTmpHeight - 2
                 Else
-                    If iTmpHeight - 2 < m_lIconSize Then    '-2 for borders
-                        '   Here we adjust the size of the icon if it does not
-                        '   fit into current tab
-                        iAdjustedIconSize = iTmpHeight - 2
+                    iAdjustedIconSize = m_lIconSize
+                End If
+                '   Get tab width based on the text size, border and Image
+                iTabWidth = TextWidth(sTmp) + (iPROP_PAGE_BORDER_AND_TEXT_DISTANCE * 2) + iAdjustedIconSize + 4
+            End If
+            '   Following adjustments are used in case of property pages only. We must shift
+            '   the left (+2) or (-2) to make it look like standard property pages
+            With utTabInfo.ClickableRect
+                If iCnt = 0 And iCnt <> m_lActiveTab Then
+                    .Left = iPROP_PAGE_INACTIVE_TOP
+                    .Right = .Left + iTabWidth - iPROP_PAGE_INACTIVE_TOP + 1
+                Else
+                    If iCnt = 0 Then
+                        .Left = 0
+                    Else
+                        .Left = AryTabs(iCnt - 1).ClickableRect.Right + 1
+                    End If
+                    .Right = .Left + iTabWidth
+                End If
+                If m_bUseControlBox Then
+                    If iCnt = m_lActiveTab Then
+                        .Right = .Right + iPROP_CONTROLBOX / 2
+                    End If
+                End If
+                If iCnt = m_lActiveTab Then
+                    If m_lActiveTabHeight > m_lInActiveTabHeight Then
+                        .Top = 0
+                    Else
+                        .Top = m_lInActiveTabHeight - m_lActiveTabHeight
+                    End If
+                    .Bottom = .Top + m_lActiveTabHeight
+                Else
+                    If m_lInActiveTabHeight > m_lActiveTabHeight Then
+                        .Top = 0
+                        .Bottom = .Top + m_lInActiveTabHeight
+                    Else
+                        .Top = m_lActiveTabHeight - m_lInActiveTabHeight
+                        .Bottom = .Top + m_lInActiveTabHeight
+                    End If
+                End If
+                .Bottom = .Bottom + 2
+            End With
+            '   Store the ControlBox values for hit testing
+            With utTabInfo.ControlBoxRect
+                .Left = utTabInfo.ClickableRect.Right - 13
+                .Top = utTabInfo.ClickableRect.Top + 6
+                .Right = utTabInfo.ClickableRect.Right - 3
+                .Bottom = utTabInfo.ClickableRect.Top + 16
+            End With
+            AryTabs(iCnt) = utTabInfo
+        Next
+        '   Fill the tab strip with TabStripBackColor (customizable... so that tab's can easily blend with the background)
+        APIFillRectByCoords 0, 0, m_lScaleWidth, IIf(m_lActiveTabHeight > m_lInActiveTabHeight, m_lActiveTabHeight, m_lInActiveTabHeight), TabStripBackColor
+        '   Set the fill style to Solid
+        FillStyle = vbFSSolid
+        '   Now Draw Each Tab
+        For iCnt = 0 To m_lTabCount - 1
+            utTabInfo = AryTabs(iCnt)     'fetch local copy
+            ForeColor = m_lOuterBorderColor
+            With utTabInfo.ClickableRect
+                '   If we are drawing active tab
+                If iCnt = m_lActiveTab Then
+                    '   We'll use solid colors for background (since we are calling RoundRect API)
+                    If utTabInfo.Enabled Then
+                        FillColor = m_lActiveTabBackStartColor
+                    Else
+                        FillColor = m_lDisabledTabBackColor
+                    End If
+                    '   Draw round effect
+                    Call RoundRect(m_lhDC, .Left, .Top, .Right, m_lScaleHeight - 1, m_lXRadius, m_lYRadius)
+                    Set Font = ActiveTabFont       'set the font
+                    '   Set foreground color
+                    If utTabInfo.Enabled Then
+                        ForeColor = m_lActiveTabForeColor
+                    Else
+                        ForeColor = m_lDisabledTabForeColor
+                    End If
+                Else
+                    '   We'll use solid colors for background (since we are
+                    '   calling RoundRect API)
+                    If utTabInfo.Enabled Then
+                        FillColor = m_lInActiveTabBackStartColor
+                    Else
+                        FillColor = m_lDisabledTabBackColor
+                    End If
+                    '   Draw rounded rectangle
+                    Call RoundRect(m_lhDC, .Left, .Top, .Right, m_lScaleHeight - 1, m_lXRadius, m_lYRadius)
+                    '   Set the font
+                    Set Font = InActiveTabFont
+                    '   Set foreground color
+                    If utTabInfo.Enabled Then
+                        ForeColor = m_lInActiveTabForeColor
+                    Else
+                        ForeColor = m_lDisabledTabForeColor
+                    End If
+                End If
+                '   Do the adjustments for the border
+                utFontRect.Left = .Left
+                utFontRect.Top = .Top
+                utFontRect.Bottom = .Bottom
+                utFontRect.Right = .Right - 1
+                If m_bUseControlBox Then
+                    OffsetRect utFontRect, -2, 0
+                End If
+                If Not utTabInfo.TabPicture Is Nothing Then
+                    If utFontRect.Top + m_lIconSize > utFontRect.Bottom + 1 Then '+1 for minor adjustments
+                        '   Adjust if going out of current tab's bottom
+                        iAdjustedIconSize = (utFontRect.Bottom - 4) - utFontRect.Top
                     Else
                         iAdjustedIconSize = m_lIconSize
                     End If
-                    '   Get tab width based on the text size, border and Image
-                    iTabWidth = TextWidth(sTmp) + (iPROP_PAGE_BORDER_AND_TEXT_DISTANCE * 2) + iAdjustedIconSize + 4
+                    iTmpY = utFontRect.Top + Round((utFontRect.Bottom - utFontRect.Top - iAdjustedIconSize) / 2)
+                    Select Case PictureAlign
+                    Case xAlignLeftEdge, xAlignLeftOfCaption:
+                        iTmpX = utFontRect.Left + 4 'move the icon a little far from left edge
+                        If utTabInfo.TabPicture.Type = vbPicTypeBitmap And UseMaskColor Then
+                            Call DrawImage(m_lhDC, utTabInfo.TabPicture.handle, GetRGBFromOLE(PictureMaskColor), iTmpX, iTmpY, iAdjustedIconSize, iAdjustedIconSize)
+                        Else
+                            Call pPaintPicture(utTabInfo.TabPicture, iTmpX, iTmpY, iAdjustedIconSize, iAdjustedIconSize)
+                        End If
+                        iOrigLeft = iTmpX + iAdjustedIconSize + 2
+                        iOrigRight = iOrigLeft + (utFontRect.Right - utFontRect.Left)
+                        utFontRect.Left = iOrigLeft
+                    Case xAlignRightEdge, xAlignRightOfCaption:
+                        iOrigLeft = utFontRect.Left
+                        iOrigRight = utFontRect.Right
+                        utFontRect.Right = utFontRect.Right - iAdjustedIconSize - 2
+                    End Select
                 End If
-                '   Following adjustments are used in case of property pages only. We must shift
-                '   the left (+2) or (-2) to make it look like standard property pages
-                With utTabInfo.ClickableRect
-                    If iCnt = 0 And iCnt <> m_lActiveTab Then
-                        .Left = iPROP_PAGE_INACTIVE_TOP
-                        .Right = .Left + iTabWidth - iPROP_PAGE_INACTIVE_TOP + 1
-                    Else
-                        If iCnt = 0 Then
-                            .Left = 0
-                        Else
-                            .Left = AryTabs(iCnt - 1).ClickableRect.Right + 1
-                        End If
-                        .Right = .Left + iTabWidth
-                    End If
-                    If m_bUseControlBox Then
-                        If iCnt = m_lActiveTab Then
-                            .Right = .Right + iPROP_CONTROLBOX / 2
-                        End If
-                    End If
-                    If iCnt = m_lActiveTab Then
-                        If m_lActiveTabHeight > m_lInActiveTabHeight Then
-                            .Top = 0
-                        Else
-                            .Top = m_lInActiveTabHeight - m_lActiveTabHeight
-                        End If
-                        .Bottom = .Top + m_lActiveTabHeight
-                    Else
-                        If m_lInActiveTabHeight > m_lActiveTabHeight Then
-                            .Top = 0
-                            .Bottom = .Top + m_lInActiveTabHeight
-                        Else
-                            .Top = m_lActiveTabHeight - m_lInActiveTabHeight
-                            .Bottom = .Top + m_lInActiveTabHeight
-                        End If
-                    End If
-                    .Bottom = .Bottom + 2
-                End With
-                '   Store the ControlBox values for hit testing
-                With utTabInfo.ControlBoxRect
-                    .Left = utTabInfo.ClickableRect.Right - 13
-                    .Top = utTabInfo.ClickableRect.Top + 6
-                    .Right = utTabInfo.ClickableRect.Right - 3
-                    .Bottom = utTabInfo.ClickableRect.Top + 16
-                End With
-                AryTabs(iCnt) = utTabInfo
-            Next
-            '   Fill the tab strip with TabStripBackColor (customizable... so that tab's can easily blend with the background)
-            APIFillRectByCoords 0, 0, m_lScaleWidth, IIf(m_lActiveTabHeight > m_lInActiveTabHeight, m_lActiveTabHeight, m_lInActiveTabHeight), TabStripBackColor
-            '   Set the fill style to Solid
-            FillStyle = vbFSSolid
-            '   Now Draw Each Tab
-            For iCnt = 0 To m_lTabCount - 1
-                utTabInfo = AryTabs(iCnt)     'fetch local copy
-                ForeColor = m_lOuterBorderColor
-                With utTabInfo.ClickableRect
-                    '   If we are drawing active tab
-                    If iCnt = m_lActiveTab Then
-                        '   We'll use solid colors for background (since we are calling RoundRect API)
-                        If utTabInfo.Enabled Then
-                            FillColor = m_lActiveTabBackStartColor
-                        Else
-                            FillColor = m_lDisabledTabBackColor
-                        End If
-                        '   Draw round effect
-                        Call RoundRect(m_lhDC, .Left, .Top, .Right, m_lScaleHeight - 1, m_lXRadius, m_lYRadius)
-                        Set Font = ActiveTabFont       'set the font
-                        '   Set foreground color
-                        If utTabInfo.Enabled Then
-                            ForeColor = m_lActiveTabForeColor
-                        Else
-                            ForeColor = m_lDisabledTabForeColor
-                        End If
-                    Else
-                        '   We'll use solid colors for background (since we are
-                        '   calling RoundRect API)
-                        If utTabInfo.Enabled Then
-                            FillColor = m_lInActiveTabBackStartColor
-                        Else
-                            FillColor = m_lDisabledTabBackColor
-                        End If
-                        '   Draw rounded rectangle
-                        Call RoundRect(m_lhDC, .Left, .Top, .Right, m_lScaleHeight - 1, m_lXRadius, m_lYRadius)
-                        '   Set the font
-                        Set Font = InActiveTabFont
-                        '   Set foreground color
-                        If utTabInfo.Enabled Then
-                            ForeColor = m_lInActiveTabForeColor
-                        Else
-                            ForeColor = m_lDisabledTabForeColor
-                        End If
-                    End If
-                    '   Do the adjustments for the border
-                    utFontRect.Left = .Left
-                    utFontRect.Top = .Top
-                    utFontRect.Bottom = .Bottom
-                    utFontRect.Right = .Right - 1
-                    If m_bUseControlBox Then
-                        OffsetRect utFontRect, -2, 0
-                    End If
-                    If Not utTabInfo.TabPicture Is Nothing Then
-                        If utFontRect.Top + m_lIconSize > utFontRect.Bottom + 1 Then '+1 for minor adjustments
-                            '   Adjust if going out of current tab's bottom
-                            iAdjustedIconSize = (utFontRect.Bottom - 4) - utFontRect.Top
-                        Else
-                            iAdjustedIconSize = m_lIconSize
-                        End If
-                        iTmpY = utFontRect.Top + Round((utFontRect.Bottom - utFontRect.Top - iAdjustedIconSize) / 2)
-                        Select Case PictureAlign
-                            Case xAlignLeftEdge, xAlignLeftOfCaption:
-                                iTmpX = utFontRect.Left + 4 'move the icon a little far from left edge
-                                If utTabInfo.TabPicture.Type = vbPicTypeBitmap And UseMaskColor Then
-                                    Call DrawImage(m_lhDC, utTabInfo.TabPicture.handle, GetRGBFromOLE(PictureMaskColor), iTmpX, iTmpY, iAdjustedIconSize, iAdjustedIconSize)
-                                Else
-                                    Call pPaintPicture(utTabInfo.TabPicture, iTmpX, iTmpY, iAdjustedIconSize, iAdjustedIconSize)
-                                End If
-                                iOrigLeft = iTmpX + iAdjustedIconSize + 2
-                                iOrigRight = iOrigLeft + (utFontRect.Right - utFontRect.Left)
-                                utFontRect.Left = iOrigLeft
-                            Case xAlignRightEdge, xAlignRightOfCaption:
-                                iOrigLeft = utFontRect.Left
-                                iOrigRight = utFontRect.Right
-                                utFontRect.Right = utFontRect.Right - iAdjustedIconSize - 2
-                        End Select
-                    End If
-                    sTmp = utTabInfo.Caption
-                    '   Calculate the rect to draw the text, also modify the string to get ellipsis etc
-                    DrawText m_lhDC, sTmp, -1, utFontRect, DT_CALCRECT Or DT_SINGLELINE Or DT_END_ELLIPSIS Or DT_MODIFYSTRING
-                    iTmpW = utFontRect.Right - utFontRect.Left + iFOCUS_RECT_AND_TEXT_DISTANCE
-                    iTmpH = utFontRect.Bottom - utFontRect.Top + iFOCUS_RECT_AND_TEXT_DISTANCE / 2
-                    '   Do the adjustments to center the text (both vertically and horizontally)
-                    utFontRect.Left = (utFontRect.Left + iPROP_PAGE_BORDER_AND_TEXT_DISTANCE)
-                    If utTabInfo.TabPicture Is Nothing Then
-                        utFontRect.Right = utFontRect.Left + iTmpW
-                    Else
-                        utFontRect.Right = utFontRect.Left + iTmpW - iPROP_PAGE_BORDER_AND_TEXT_DISTANCE
-                    End If
-                    utFontRect.Top = utFontRect.Top + .Bottom / 2 - utFontRect.Bottom / 2
-                    utFontRect.Bottom = utFontRect.Top + iTmpH
-                    If Not utTabInfo.TabPicture Is Nothing Then
-                      Select Case PictureAlign
-                            Case xAlignLeftEdge, xAlignLeftOfCaption:
-                                utFontRect.Left = iOrigLeft
-                                '   Now draw the text
-                                DrawText m_lhDC, sTmp, -1, utFontRect, DT_SINGLELINE
-                            Case xAlignRightEdge, xAlignRightOfCaption:
-                                iTmpW = utFontRect.Right
-                                utFontRect.Right = iTmpW + iPROP_PAGE_BORDER_AND_TEXT_DISTANCE
-                                '   Now draw the text
-                                DrawText m_lhDC, sTmp, -1, utFontRect, DT_SINGLELINE
-                                iTmpX = utFontRect.Right + iPROP_PAGE_BORDER_AND_TEXT_DISTANCE - 2
-                                '   make sure our adjustment dosen't make it out of the font area
-                                If iTmpX + iAdjustedIconSize > iOrigRight Then iTmpX = iOrigRight - iAdjustedIconSize
-                                If utTabInfo.TabPicture.Type = vbPicTypeBitmap And UseMaskColor Then
-                                    Call DrawImage(m_lhDC, utTabInfo.TabPicture.handle, GetRGBFromOLE(PictureMaskColor), iTmpX, iTmpY, iAdjustedIconSize, iAdjustedIconSize)
-                                Else
-                                    Call pPaintPicture(utTabInfo.TabPicture, iTmpX, iTmpY, iAdjustedIconSize, iAdjustedIconSize)
-                                End If
-                        End Select
-                    Else
+                sTmp = utTabInfo.Caption
+                '   Calculate the rect to draw the text, also modify the string to get ellipsis etc
+                DrawText m_lhDC, sTmp, -1, utFontRect, DT_CALCRECT Or DT_SINGLELINE Or DT_END_ELLIPSIS Or DT_MODIFYSTRING
+                iTmpW = utFontRect.Right - utFontRect.Left + iFOCUS_RECT_AND_TEXT_DISTANCE
+                iTmpH = utFontRect.Bottom - utFontRect.Top + iFOCUS_RECT_AND_TEXT_DISTANCE / 2
+                '   Do the adjustments to center the text (both vertically and horizontally)
+                utFontRect.Left = (utFontRect.Left + iPROP_PAGE_BORDER_AND_TEXT_DISTANCE)
+                If utTabInfo.TabPicture Is Nothing Then
+                    utFontRect.Right = utFontRect.Left + iTmpW
+                Else
+                    utFontRect.Right = utFontRect.Left + iTmpW - iPROP_PAGE_BORDER_AND_TEXT_DISTANCE
+                End If
+                utFontRect.Top = utFontRect.Top + .Bottom / 2 - utFontRect.Bottom / 2
+                utFontRect.Bottom = utFontRect.Top + iTmpH
+                If Not utTabInfo.TabPicture Is Nothing Then
+                    Select Case PictureAlign
+                    Case xAlignLeftEdge, xAlignLeftOfCaption:
+                        utFontRect.Left = iOrigLeft
                         '   Now draw the text
                         DrawText m_lhDC, sTmp, -1, utFontRect, DT_SINGLELINE
-                    End If
-                    If bUserMode Then    'only if in the run mode
-                        If iCnt = m_lActiveTab And m_IsFocused And ShowFocusRect Then
-                            If m_bUseControlBox Then
-                                OffsetRect utFontRect, -2, 0
-                            End If
-                            '   Show the focus rectangle
-                            Call DrawFocusRect(m_lhDC, utFontRect)
+                    Case xAlignRightEdge, xAlignRightOfCaption:
+                        iTmpW = utFontRect.Right
+                        utFontRect.Right = iTmpW + iPROP_PAGE_BORDER_AND_TEXT_DISTANCE
+                        '   Now draw the text
+                        DrawText m_lhDC, sTmp, -1, utFontRect, DT_SINGLELINE
+                        iTmpX = utFontRect.Right + iPROP_PAGE_BORDER_AND_TEXT_DISTANCE - 2
+                        '   make sure our adjustment dosen't make it out of the font area
+                        If iTmpX + iAdjustedIconSize > iOrigRight Then iTmpX = iOrigRight - iAdjustedIconSize
+                        If utTabInfo.TabPicture.Type = vbPicTypeBitmap And UseMaskColor Then
+                            Call DrawImage(m_lhDC, utTabInfo.TabPicture.handle, GetRGBFromOLE(PictureMaskColor), iTmpX, iTmpY, iAdjustedIconSize, iAdjustedIconSize)
+                        Else
+                            Call pPaintPicture(utTabInfo.TabPicture, iTmpX, iTmpY, iAdjustedIconSize, iAdjustedIconSize)
                         End If
-                    End If
-                End With
-            Next
-        Case xThemeVisualStudio2003     'xThemeVisualStudio2003
-            '   Store the larger height in tmp var
-            iTmpHeight = IIf(m_lActiveTabHeight > m_lInActiveTabHeight, m_lActiveTabHeight, m_lInActiveTabHeight)
-            '   Set the active tab's font as current font (since the TextWidth function
-            '   will use the current font's size)
-            Set Font = ActiveTabFont
-            '   Initialize the clickable items
-            For iCnt = 0 To m_lTabCount - 1
-                utTabInfo = AryTabs(iCnt)     'get into local variable
-                sTmp = Replace$(utTabInfo.Caption, "&&", "&")
-                If InStr(1, sTmp, "&") Then
-                    '   If still there is one '&' in the string then reduce
-                    '   the width by one more character (since the '&' will
-                    '   be conveted into an underline when painted)
-                    sTmp = Mid$(sTmp, 1, Len(sTmp) - 1)
-                End If
-                If utTabInfo.TabPicture Is Nothing Then
-                    '   Get tab width acc to the text size and border
-                    iTabWidth = TextWidth(sTmp) + iPROP_PAGE_BORDER_AND_TEXT_DISTANCE * 2
+                    End Select
                 Else
-                    If iTmpHeight - 2 < m_lIconSize Then    '-6 for borders
-                        '   Here we adjust the size of the icon if it does not fit into current tab
-                        iAdjustedIconSize = iTmpHeight - 2
-                    Else
-                        iAdjustedIconSize = m_lIconSize
-                    End If
-                    '   Get tab width based on the text size, border and Image
-                    iTabWidth = TextWidth(sTmp) + (iPROP_PAGE_BORDER_AND_TEXT_DISTANCE * 2) + iAdjustedIconSize + 1
+                    '   Now draw the text
+                    DrawText m_lhDC, sTmp, -1, utFontRect, DT_SINGLELINE
                 End If
+                If bUserMode Then    'only if in the run mode
+                    If iCnt = m_lActiveTab And m_IsFocused And ShowFocusRect Then
+                        If m_bUseControlBox Then
+                            OffsetRect utFontRect, -2, 0
+                        End If
+                        '   Show the focus rectangle
+                        Call DrawFocusRect(m_lhDC, utFontRect)
+                    End If
+                End If
+            End With
+        Next
+    Case xThemeVisualStudio2003     'xThemeVisualStudio2003
+        '   Store the larger height in tmp var
+        iTmpHeight = IIf(m_lActiveTabHeight > m_lInActiveTabHeight, m_lActiveTabHeight, m_lInActiveTabHeight)
+        '   Set the active tab's font as current font (since the TextWidth function
+        '   will use the current font's size)
+        Set Font = ActiveTabFont
+        '   Initialize the clickable items
+        For iCnt = 0 To m_lTabCount - 1
+            utTabInfo = AryTabs(iCnt)     'get into local variable
+            sTmp = Replace$(utTabInfo.Caption, "&&", "&")
+            If InStr(1, sTmp, "&") Then
+                '   If still there is one '&' in the string then reduce
+                '   the width by one more character (since the '&' will
+                '   be conveted into an underline when painted)
+                sTmp = Mid$(sTmp, 1, Len(sTmp) - 1)
+            End If
+            If utTabInfo.TabPicture Is Nothing Then
                 '   Get tab width acc to the text size and border
-                '   iTabWidth = TextWidth(sTmp) + iPROP_PAGE_BORDER_AND_TEXT_DISTANCE * 2
-                '   following adjustments are used in case of property pages only. We must shift
-                '   the left (+2) or (-2) to make it look like standard property pages
-                With utTabInfo.ClickableRect
-                    If iCnt = 0 And iCnt <> m_lActiveTab Then
-                        .Left = iPROP_PAGE_INACTIVE_TOP
-                        .Right = .Left + iTabWidth - iPROP_PAGE_INACTIVE_TOP + 1
-                    Else
-                        If iCnt = 0 Then
-                          .Left = 0
-                        Else
-                          .Left = AryTabs(iCnt - 1).ClickableRect.Right
-                        End If
-                        .Right = .Left + iTabWidth
-                    End If
-                    If m_bUseControlBox Then
-                        If iCnt = m_lActiveTab Then
-                            .Right = .Right + iPROP_CONTROLBOX * 1.25
-                        Else
-                            .Right = .Right + iPROP_CONTROLBOX
-                        End If
-                    End If
-                    If iCnt = m_lActiveTab Then
-                        If m_lActiveTabHeight > m_lInActiveTabHeight Then
-                            .Top = 0
-                        Else
-                            .Top = m_lInActiveTabHeight - m_lActiveTabHeight
-                        End If
-                        .Bottom = .Top + m_lActiveTabHeight
-                    Else
-                        If m_lInActiveTabHeight > m_lActiveTabHeight Then
-                            .Top = 0
-                            .Bottom = .Top + m_lInActiveTabHeight
-                        Else
-                            .Top = m_lActiveTabHeight - m_lInActiveTabHeight
-                            .Bottom = .Top + m_lInActiveTabHeight
-                        End If
-                    End If
-                End With
-                '   Store the ControlBox values for hit testing
-                With utTabInfo.ControlBoxRect
-                    .Left = utTabInfo.ClickableRect.Right - 13
-                    .Top = utTabInfo.ClickableRect.Top + 5
-                    .Right = utTabInfo.ClickableRect.Right - 3
-                    .Bottom = utTabInfo.ClickableRect.Top + 15
-                End With
-                '   Assign the new tab info to the existing one
-                AryTabs(iCnt) = utTabInfo
-            Next
-            '   Fill the tab strip with TabStripBackColor (customizable... so that tab's can easily blend with the background)
-            APIFillRectByCoords 0, 0, m_lScaleWidth, IIf(m_lActiveTabHeight > m_lInActiveTabHeight, m_lActiveTabHeight, m_lInActiveTabHeight), TabStripBackColor
-            '   Now Draw Each Tab
-            For iCnt = 0 To m_lTabCount - 1
-                '   Fetch local copy
-                utTabInfo = AryTabs(iCnt)
-                With utTabInfo.ClickableRect
-                    '   If we are drawing the active tab
-                    If iCnt = m_lActiveTab Then
-                        If utTabInfo.Enabled Then
-                            pFillCurvedGradient .Left, .Top, .Right, .Bottom, m_lActiveTabBackStartColor, m_lActiveTabBackEndColor
-                        Else
-                            pFillCurvedGradient .Left, .Top, .Right, .Bottom, m_lDisabledTabBackColor, m_lDisabledTabBackColor
-                        End If
-                        '   Top line
-                        APILine .Left, .Top, .Right, .Top, m_lOuterBorderColor
-                        '   Right line
-                        APILine .Right, .Top, .Right, .Bottom + 2, m_lBottomRightInnerBorderColor
-                        If utTabInfo.Enabled Then
-                            '   Bottom line  (actually we must erase the previously
-                            '   drawn background (since this is the active tab)
-                            APILine .Left, .Bottom + 1, .Right, .Bottom + 1, m_lActiveTabBackEndColor
-                        Else
-                            '   Bottom line  (actually we must erase the previously drawn background (since this is the active tab)
-                            APILine .Left, .Bottom + 1, .Right, .Bottom + 1, m_lDisabledTabBackColor
-                        End If
-                        '   Left line
-                        APILine .Left, .Top, .Left, .Bottom + 2, m_lOuterBorderColor
-                        '   Set the active tab font as current font
-                        Set Font = ActiveTabFont
-                        '   Set fore color
-                        If utTabInfo.Enabled Then
-                          ForeColor = m_lActiveTabForeColor
-                        Else
-                          ForeColor = m_lDisabledTabForeColor
-                        End If
-                    Else
-                        '   Its an inactive tab
-                        If utTabInfo.Enabled Then
-                            '   If we are drawing tab just after active tab, then
-                            If iCnt = m_lActiveTab + 1 Then
-                                Call pFillCurvedGradient(.Left + 1, .Top, .Right, .Bottom, m_lInActiveTabBackStartColor, m_lInActiveTabBackEndColor)
-                            Else
-                                '   We are drawing tab just b4 active tab, then
-                                Call pFillCurvedGradient(.Left, .Top, .Right, .Bottom, m_lInActiveTabBackStartColor, m_lInActiveTabBackEndColor)
-                            End If
-                        Else
-                            '   If we are drawing tab just after active tab, then
-                            If iCnt = m_lActiveTab + 1 Then
-                                Call pFillCurvedGradient(.Left + 1, .Top, .Right, .Bottom, m_lDisabledTabBackColor, m_lDisabledTabBackColor)
-                            Else
-                                '   We are drawing tab just b4 active tab, then
-                                Call pFillCurvedGradient(.Left, .Top, .Right, .Bottom, m_lDisabledTabBackColor, m_lDisabledTabBackColor)
-                            End If
-                        End If
-                        '   Following is special in case of Visual studio .Net 2003 tabs , a simple line seperates two inactive tabs
-                        If iCnt <> m_lActiveTab - 1 Then
-                            '   Right line
-                            APILine .Right - 1, .Top + 2, .Right - 1, .Bottom - 2, m_lInActiveTabForeColor
-                        End If
-                        '   Bottom line
-                        APILine .Left, .Bottom + 1, .Right + 1, .Bottom + 1, m_lOuterBorderColor
-                        '   Set the font
-                        Set Font = InActiveTabFont
-                        '   Set fore color
-                        If utTabInfo.Enabled Then
-                            ForeColor = m_lInActiveTabForeColor
-                        Else
-                            ForeColor = m_lDisabledTabForeColor
-                        End If
-                    End If
-                    '   Do the adjustments for the border
-                    utFontRect.Left = .Left + 2
-                    utFontRect.Top = .Top + 2
-                    utFontRect.Bottom = .Bottom
-                    utFontRect.Right = .Right - 1
-                    If m_bUseControlBox Then
-                        OffsetRect utFontRect, -2, 0
-                    End If
-                    sTmp = utTabInfo.Caption
-                    If Not utTabInfo.TabPicture Is Nothing Then
-                        If iTmpHeight - 6 < m_lIconSize Then    '-6 for borders
-                            ' Here we adjust the size of the icon if it does not fit into current tab
-                            iAdjustedIconSize = iTmpHeight - 6
-                        Else
-                            iAdjustedIconSize = m_lIconSize
-                        End If
-                        iTmpY = utFontRect.Top + Round((utFontRect.Bottom - utFontRect.Top - iAdjustedIconSize) / 2)
-                        Select Case PictureAlign
-                            Case xAlignLeftEdge, xAlignLeftOfCaption:
-                                If utTabInfo.TabPicture.Type = vbPicTypeBitmap And UseMaskColor Then
-                                    Call DrawImage(m_lhDC, utTabInfo.TabPicture.handle, GetRGBFromOLE(PictureMaskColor), utFontRect.Left + 2, iTmpY, iAdjustedIconSize, iAdjustedIconSize)
-                                Else
-                                    Call pPaintPicture(utTabInfo.TabPicture, utFontRect.Left + 2, iTmpY, iAdjustedIconSize, iAdjustedIconSize)
-                                End If
-                                '   Shift the text to be drawn after the picture
-                                utFontRect.Left = (utFontRect.Left + iAdjustedIconSize + 6) - iPROP_PAGE_BORDER_AND_TEXT_DISTANCE
-                                '   Call the API for the text drawing
-                                DrawText m_lhDC, sTmp, -1, utFontRect, DT_CENTER Or DT_VCENTER Or DT_SINGLELINE
-                                '   Revert the changes so that the focus rectangle
-                                '   can be drawn for the whole tab's clickable area
-                                utFontRect.Left = (utFontRect.Left - iAdjustedIconSize - 6) + iPROP_PAGE_BORDER_AND_TEXT_DISTANCE
-                            Case xAlignRightEdge, xAlignRightOfCaption:
-                                If utTabInfo.TabPicture.Type = vbPicTypeBitmap And UseMaskColor Then
-                                    Call DrawImage(m_lhDC, utTabInfo.TabPicture.handle, GetRGBFromOLE(PictureMaskColor), utFontRect.Right - iAdjustedIconSize - 2, iTmpY, iAdjustedIconSize, iAdjustedIconSize)
-                                Else
-                                    Call pPaintPicture(utTabInfo.TabPicture, utFontRect.Right - iAdjustedIconSize - 2, iTmpY, iAdjustedIconSize, iAdjustedIconSize)
-                                End If
-                                '   Shift the text to be drawn after the picture
-                                utFontRect.Right = (utFontRect.Right + 1) - iAdjustedIconSize - 6
-                                '   Call the API for the text drawing
-                                DrawText m_lhDC, sTmp, -1, utFontRect, DT_CENTER Or DT_VCENTER Or DT_SINGLELINE
-                                '   Revert the changes so that the focus rectangle
-                                '   can be drawn for the whole tab's clickable area
-                                utFontRect.Right = (utFontRect.Right - 1) + iAdjustedIconSize + 6
-                        End Select
-                    Else
-                        '   Call the API for the text drawing
-                        DrawText m_lhDC, sTmp, -1, utFontRect, DT_CENTER Or DT_VCENTER Or DT_SINGLELINE
-                    End If
-                    '   Call the API for the text drawing
-                    '   DrawText m_lHDC, sTmp, -1, utFontRect, DT_CENTER Or DT_VCENTER Or DT_SINGLELINE
-                    If bUserMode Then    'only if in the run mode
-                        If iCnt = m_lActiveTab And m_IsFocused And ShowFocusRect Then
-                            If m_bUseControlBox Then
-                                OffsetRect utFontRect, 2, 0
-                            End If
-                            '   Draw focus rect
-                            Call DrawFocusRect(m_lhDC, utFontRect)
-                        End If
-                    End If
-                End With
-            Next
-
-            '   Store the larger tab height
-            iCnt = IIf(m_lActiveTabHeight > m_lInActiveTabHeight, m_lActiveTabHeight, m_lInActiveTabHeight)
-            '   Adjust the corners
-            APILine 0, iCnt + 1, 0, iCnt + 4, m_lOuterBorderColor
-            APILine m_lScaleWidth - 1, iCnt + 1, m_lScaleWidth - 1, iCnt + 4, m_lOuterBorderColor
-            '   Draw the line in the empty area after all the property
-            '   pages heads are drawn
-            APILine AryTabs(m_lTabCount - 1).ClickableRect.Right, AryTabs(m_lTabCount - 1).ClickableRect.Bottom + 1, m_lScaleWidth, AryTabs(m_lTabCount - 1).ClickableRect.Bottom + 1, m_lOuterBorderColor
-        Case xThemeWin9X                'xThemeWin9x
-            '   Set the active tab's font as current font (since the TextWidth
-            '   function will use the current font's size)
-            Set Font = ActiveTabFont
-            '   Store the larger height in tmp var
-            iTmpHeight = IIf(m_lActiveTabHeight > m_lInActiveTabHeight, m_lActiveTabHeight, m_lInActiveTabHeight)
-            '   Initialize the clickable items
-            For iCnt = 0 To m_lTabCount - 1
-                utTabInfo = AryTabs(iCnt)
-                sTmp = Replace$(utTabInfo.Caption, "&&", "&")
-                If InStr(1, sTmp, "&") Then
-                    '   If still there is one '&' in the string then reduce the
-                    '   width by one more character (since the '&' will be conveted
-                    '   into an underline when painted)
-                    sTmp = Mid$(sTmp, 1, Len(sTmp) - 1)
-                End If
-                If utTabInfo.TabPicture Is Nothing Then
-                    '   Get tab width acc to the text size and border
-                    iTabWidth = TextWidth(sTmp) + iPROP_PAGE_BORDER_AND_TEXT_DISTANCE * 2
+                iTabWidth = TextWidth(sTmp) + iPROP_PAGE_BORDER_AND_TEXT_DISTANCE * 2
+            Else
+                If iTmpHeight - 2 < m_lIconSize Then    '-6 for borders
+                    '   Here we adjust the size of the icon if it does not fit into current tab
+                    iAdjustedIconSize = iTmpHeight - 2
                 Else
+                    iAdjustedIconSize = m_lIconSize
+                End If
+                '   Get tab width based on the text size, border and Image
+                iTabWidth = TextWidth(sTmp) + (iPROP_PAGE_BORDER_AND_TEXT_DISTANCE * 2) + iAdjustedIconSize + 1
+            End If
+            '   Get tab width acc to the text size and border
+            '   iTabWidth = TextWidth(sTmp) + iPROP_PAGE_BORDER_AND_TEXT_DISTANCE * 2
+            '   following adjustments are used in case of property pages only. We must shift
+            '   the left (+2) or (-2) to make it look like standard property pages
+            With utTabInfo.ClickableRect
+                If iCnt = 0 And iCnt <> m_lActiveTab Then
+                    .Left = iPROP_PAGE_INACTIVE_TOP
+                    .Right = .Left + iTabWidth - iPROP_PAGE_INACTIVE_TOP + 1
+                Else
+                    If iCnt = 0 Then
+                        .Left = 0
+                    Else
+                        .Left = AryTabs(iCnt - 1).ClickableRect.Right
+                    End If
+                    .Right = .Left + iTabWidth
+                End If
+                If m_bUseControlBox Then
+                    If iCnt = m_lActiveTab Then
+                        .Right = .Right + iPROP_CONTROLBOX * 1.25
+                    Else
+                        .Right = .Right + iPROP_CONTROLBOX
+                    End If
+                End If
+                If iCnt = m_lActiveTab Then
+                    If m_lActiveTabHeight > m_lInActiveTabHeight Then
+                        .Top = 0
+                    Else
+                        .Top = m_lInActiveTabHeight - m_lActiveTabHeight
+                    End If
+                    .Bottom = .Top + m_lActiveTabHeight
+                Else
+                    If m_lInActiveTabHeight > m_lActiveTabHeight Then
+                        .Top = 0
+                        .Bottom = .Top + m_lInActiveTabHeight
+                    Else
+                        .Top = m_lActiveTabHeight - m_lInActiveTabHeight
+                        .Bottom = .Top + m_lInActiveTabHeight
+                    End If
+                End If
+            End With
+            '   Store the ControlBox values for hit testing
+            With utTabInfo.ControlBoxRect
+                .Left = utTabInfo.ClickableRect.Right - 13
+                .Top = utTabInfo.ClickableRect.Top + 5
+                .Right = utTabInfo.ClickableRect.Right - 3
+                .Bottom = utTabInfo.ClickableRect.Top + 15
+            End With
+            '   Assign the new tab info to the existing one
+            AryTabs(iCnt) = utTabInfo
+        Next
+        '   Fill the tab strip with TabStripBackColor (customizable... so that tab's can easily blend with the background)
+        APIFillRectByCoords 0, 0, m_lScaleWidth, IIf(m_lActiveTabHeight > m_lInActiveTabHeight, m_lActiveTabHeight, m_lInActiveTabHeight), TabStripBackColor
+        '   Now Draw Each Tab
+        For iCnt = 0 To m_lTabCount - 1
+            '   Fetch local copy
+            utTabInfo = AryTabs(iCnt)
+            With utTabInfo.ClickableRect
+                '   If we are drawing the active tab
+                If iCnt = m_lActiveTab Then
+                    If utTabInfo.Enabled Then
+                        pFillCurvedGradient .Left, .Top, .Right, .Bottom, m_lActiveTabBackStartColor, m_lActiveTabBackEndColor
+                    Else
+                        pFillCurvedGradient .Left, .Top, .Right, .Bottom, m_lDisabledTabBackColor, m_lDisabledTabBackColor
+                    End If
+                    '   Top line
+                    APILine .Left, .Top, .Right, .Top, m_lOuterBorderColor
+                    '   Right line
+                    APILine .Right, .Top, .Right, .Bottom + 2, m_lBottomRightInnerBorderColor
+                    If utTabInfo.Enabled Then
+                        '   Bottom line  (actually we must erase the previously
+                        '   drawn background (since this is the active tab)
+                        APILine .Left, .Bottom + 1, .Right, .Bottom + 1, m_lActiveTabBackEndColor
+                    Else
+                        '   Bottom line  (actually we must erase the previously drawn background (since this is the active tab)
+                        APILine .Left, .Bottom + 1, .Right, .Bottom + 1, m_lDisabledTabBackColor
+                    End If
+                    '   Left line
+                    APILine .Left, .Top, .Left, .Bottom + 2, m_lOuterBorderColor
+                    '   Set the active tab font as current font
+                    Set Font = ActiveTabFont
+                    '   Set fore color
+                    If utTabInfo.Enabled Then
+                        ForeColor = m_lActiveTabForeColor
+                    Else
+                        ForeColor = m_lDisabledTabForeColor
+                    End If
+                Else
+                    '   Its an inactive tab
+                    If utTabInfo.Enabled Then
+                        '   If we are drawing tab just after active tab, then
+                        If iCnt = m_lActiveTab + 1 Then
+                            Call pFillCurvedGradient(.Left + 1, .Top, .Right, .Bottom, m_lInActiveTabBackStartColor, m_lInActiveTabBackEndColor)
+                        Else
+                            '   We are drawing tab just b4 active tab, then
+                            Call pFillCurvedGradient(.Left, .Top, .Right, .Bottom, m_lInActiveTabBackStartColor, m_lInActiveTabBackEndColor)
+                        End If
+                    Else
+                        '   If we are drawing tab just after active tab, then
+                        If iCnt = m_lActiveTab + 1 Then
+                            Call pFillCurvedGradient(.Left + 1, .Top, .Right, .Bottom, m_lDisabledTabBackColor, m_lDisabledTabBackColor)
+                        Else
+                            '   We are drawing tab just b4 active tab, then
+                            Call pFillCurvedGradient(.Left, .Top, .Right, .Bottom, m_lDisabledTabBackColor, m_lDisabledTabBackColor)
+                        End If
+                    End If
+                    '   Following is special in case of Visual studio .Net 2003 tabs , a simple line seperates two inactive tabs
+                    If iCnt <> m_lActiveTab - 1 Then
+                        '   Right line
+                        APILine .Right - 1, .Top + 2, .Right - 1, .Bottom - 2, m_lInActiveTabForeColor
+                    End If
+                    '   Bottom line
+                    APILine .Left, .Bottom + 1, .Right + 1, .Bottom + 1, m_lOuterBorderColor
+                    '   Set the font
+                    Set Font = InActiveTabFont
+                    '   Set fore color
+                    If utTabInfo.Enabled Then
+                        ForeColor = m_lInActiveTabForeColor
+                    Else
+                        ForeColor = m_lDisabledTabForeColor
+                    End If
+                End If
+                '   Do the adjustments for the border
+                utFontRect.Left = .Left + 2
+                utFontRect.Top = .Top + 2
+                utFontRect.Bottom = .Bottom
+                utFontRect.Right = .Right - 1
+                If m_bUseControlBox Then
+                    OffsetRect utFontRect, -2, 0
+                End If
+                sTmp = utTabInfo.Caption
+                If Not utTabInfo.TabPicture Is Nothing Then
                     If iTmpHeight - 6 < m_lIconSize Then    '-6 for borders
-                        '   Here we adjust the size of the icon if it does not
-                        '   fit into current tab
+                        ' Here we adjust the size of the icon if it does not fit into current tab
                         iAdjustedIconSize = iTmpHeight - 6
                     Else
                         iAdjustedIconSize = m_lIconSize
                     End If
-                    '   Get tab width based on the text size, border and Image
-                    iTabWidth = TextWidth(sTmp) + (iPROP_PAGE_BORDER_AND_TEXT_DISTANCE * 2) + iAdjustedIconSize + 1
-                End If
-                '   Following adjustments are used in case of property pages only. We must shift
-                '   the left (+2) or (-2) to make it look like standard property pages
-                With utTabInfo.ClickableRect
-                    If iCnt = 0 And iCnt <> m_lActiveTab Then
-                        .Left = iPROP_PAGE_INACTIVE_TOP
-                        .Right = .Left + iTabWidth - iPROP_PAGE_INACTIVE_TOP
-                    Else
-                        If iCnt = 0 Then
-                            .Left = 0
+                    iTmpY = utFontRect.Top + Round((utFontRect.Bottom - utFontRect.Top - iAdjustedIconSize) / 2)
+                    Select Case PictureAlign
+                    Case xAlignLeftEdge, xAlignLeftOfCaption:
+                        If utTabInfo.TabPicture.Type = vbPicTypeBitmap And UseMaskColor Then
+                            Call DrawImage(m_lhDC, utTabInfo.TabPicture.handle, GetRGBFromOLE(PictureMaskColor), utFontRect.Left + 2, iTmpY, iAdjustedIconSize, iAdjustedIconSize)
                         Else
-                            .Left = AryTabs(iCnt - 1).ClickableRect.Right
+                            Call pPaintPicture(utTabInfo.TabPicture, utFontRect.Left + 2, iTmpY, iAdjustedIconSize, iAdjustedIconSize)
                         End If
-                        .Right = .Left + iTabWidth
-                    End If
-                    If m_bUseControlBox Then
-                        If iCnt = m_lActiveTab Then
-                            .Right = .Right + iPROP_CONTROLBOX * 1.25
-                        Else
-                            .Right = .Right + iPROP_CONTROLBOX
-                        End If
-                    End If
-                    If iCnt = m_lActiveTab Then
-                        If m_lActiveTabHeight > m_lInActiveTabHeight Then
-                            .Top = 0
-                        Else
-                            .Top = m_lInActiveTabHeight - m_lActiveTabHeight
-                        End If
-                        .Bottom = .Top + m_lActiveTabHeight
-                    Else
-                        If m_lInActiveTabHeight > m_lActiveTabHeight Then
-                            .Top = 0
-                            .Bottom = .Top + m_lInActiveTabHeight
-                        Else
-                            .Top = m_lActiveTabHeight - m_lInActiveTabHeight
-                            .Bottom = .Top + m_lInActiveTabHeight
-                        End If
-                    End If
-                End With
-                '   Store the ControlBox values for hit testing
-                With utTabInfo.ControlBoxRect
-                    .Left = utTabInfo.ClickableRect.Right - 14
-                    .Top = utTabInfo.ClickableRect.Top + 5
-                    .Right = utTabInfo.ClickableRect.Right - 4
-                    .Bottom = utTabInfo.ClickableRect.Top + 15
-                End With
-                '   Assign the new tab info to the existing one
-                AryTabs(iCnt) = utTabInfo
-            Next
-            '   Fill the tab strip with TabStripBackColor (customizable... so that tab's can easily blend with the background)
-            APIFillRectByCoords 0, 0, m_lScaleWidth, iTmpHeight, TabStripBackColor
-            '   Now Draw Each Tab
-            For iCnt = 0 To m_lTabCount - 1
-                '   Get local copy
-                utTabInfo = AryTabs(iCnt)
-                With utTabInfo.ClickableRect
-                    '   If we are drawing the active tab
-                    If iCnt = m_lActiveTab Then
-                        If utTabInfo.Enabled Then
-                          Call pFillCurvedGradient(.Left, .Top, .Right - 1, .Bottom, m_lActiveTabBackStartColor, m_lActiveTabBackEndColor, 2, True, True)
-                        Else
-                          Call pFillCurvedGradient(.Left, .Top, .Right - 1, .Bottom, m_lDisabledTabBackColor, m_lDisabledTabBackColor, 2, True, True)
-                        End If
-                        '   Top-left corner
-                        APILine .Left, .Top + 2, .Left + 3, .Top - 1, m_lTopLeftInnerBorderColor
-                        '   Top line
-                        APILine .Left + 2, .Top, .Right - 2, .Top, m_lTopLeftInnerBorderColor
-                        '   Top-right corner
-                        APILine .Right - 2, .Top + 1, .Right, .Top + 3, m_lOuterBorderColor
-                        '   Right line
-                        APILine .Right - 1, .Top + 2, .Right - 1, .Bottom + 1, m_lOuterBorderColor
-                        APILine .Right - 2, .Top + 2, .Right - 2, .Bottom + 1, m_lBottomRightInnerBorderColor
-                        '   Left line
-                        APILine .Left, .Top + 2, .Left, .Bottom + 1, m_lTopLeftInnerBorderColor
-                        '   Set the active tab font as current font
-                        Set Font = ActiveTabFont
-                        '   Set foreground color (for text drawing)
-                        If utTabInfo.Enabled Then
-                            ForeColor = m_lActiveTabForeColor
-                        Else
-                            ForeColor = m_lDisabledTabForeColor
-                        End If
-                    Else
-                        '   We are not drawing active tab, it can be any one
-                        '   from the following
-                        '
-                        '   If we are drawing tab just b4 active tab, then
-                        If iCnt = m_lActiveTab - 1 Then
-                            If utTabInfo.Enabled Then
-                                '   Following adjustments are needed if the inactive tab's height is more than active tab's height (the tab's corner should be properly rounded)
-                                If m_lInActiveTabHeight + 2 > m_lActiveTabHeight Then
-                                    Call pFillCurvedGradient(.Left, .Top, .Right, .Bottom, m_lInActiveTabBackStartColor, m_lInActiveTabBackEndColor, 2, True, True)
-                                Else
-                                    Call pFillCurvedGradient(.Left, .Top, .Right, .Bottom, m_lInActiveTabBackStartColor, m_lInActiveTabBackEndColor, 2, True, False)
-                                End If
-                            Else
-                                '   Following adjustments are needed if the inactive tab's height is more than active tab's height (the tab's corner should be properly rounded)
-                                If m_lInActiveTabHeight + 2 > m_lActiveTabHeight Then
-                                    Call pFillCurvedGradient(.Left, .Top, .Right, .Bottom, m_lDisabledTabBackColor, m_lDisabledTabBackColor, 2, True, True)
-                                Else
-                                    Call pFillCurvedGradient(.Left, .Top, .Right, .Bottom, m_lDisabledTabBackColor, m_lDisabledTabBackColor, 2, True, False)
-                                End If
-                            End If
-                            '   Top-left corner
-                            APILine .Left, .Top + 2, .Left + 3, .Top - 1, m_lTopLeftInnerBorderColor
-                            '   Following adjustments are needed if the inactive tab's height is more than active tab's height (the tab's corner should be properly rounded)
-                            If m_lInActiveTabHeight + 2 > m_lActiveTabHeight Then
-                                '   Top line
-                                APILine .Left + 2, .Top, .Right - 2, .Top, m_lTopLeftInnerBorderColor
-                                
-                                '   Top-right corner
-                                APILine .Right - 2, .Top + 1, .Right, .Top + 3, m_lOuterBorderColor
-                                
-                                '   Right line
-                                APILine .Right - 1, .Top + 2, .Right - 1, .Bottom + 1, m_lOuterBorderColor
-                                APILine .Right - 2, .Top + 2, .Right - 2, .Bottom + 1, m_lBottomRightInnerBorderColor
-                            Else
-                                '   Top line
-                                APILine .Left + 2, .Top, .Right, .Top, m_lTopLeftInnerBorderColor
-                            End If
-                            '   Bottom line
-                            APILine .Left, .Bottom, .Right, .Bottom, m_lTopLeftInnerBorderColor
-                            
-                            '   Left Line
-                            APILine .Left, .Top + 2, .Left, .Bottom + 1, m_lTopLeftInnerBorderColor
-                        ElseIf iCnt = m_lActiveTab + 1 Then   'tab just after active tab
-                            If utTabInfo.Enabled Then
-                                '   Following adjustments are needed if the
-                                '   inactive tab's height is more than active
-                                '   tab's height (the tab's corner should be
-                                '   properly rounded)
-                                If m_lInActiveTabHeight + 2 > m_lActiveTabHeight Then
-                                    Call pFillCurvedGradient(.Left, .Top, .Right - 1, .Bottom, m_lInActiveTabBackStartColor, m_lInActiveTabBackEndColor, 2, True, True)
-                                Else
-                                    Call pFillCurvedGradient(.Left, .Top, .Right - 1, .Bottom, m_lInActiveTabBackStartColor, m_lInActiveTabBackEndColor, 2, False, True)
-                                End If
-                            Else
-                                '   Following adjustments are needed if the
-                                '   inactive tab's height is more than active
-                                '   tab's height (the tab's corner should be
-                                '   properly rounded)
-                                If m_lInActiveTabHeight + 2 > m_lActiveTabHeight Then
-                                    Call pFillCurvedGradient(.Left, .Top, .Right - 1, .Bottom, m_lDisabledTabBackColor, m_lDisabledTabBackColor, 2, True, True)
-                                Else
-                                    Call pFillCurvedGradient(.Left, .Top, .Right - 1, .Bottom, m_lDisabledTabBackColor, m_lDisabledTabBackColor, 2, False, True)
-                                End If
-                            End If
-                            '   Following adjustments are needed if the inactive
-                            '   tab's height is more than active tab's height
-                            '   (the tab's corner should be properly rounded)
-                            If m_lInActiveTabHeight + 2 > m_lActiveTabHeight Then
-                                '   Top-left corner
-                                APILine .Left, .Top + 2, .Left + 3, .Top - 1, m_lTopLeftInnerBorderColor
-                                '   Top line
-                                APILine .Left + 2, .Top, .Right - 2, .Top, m_lTopLeftInnerBorderColor
-                                '   Left Line
-                                APILine .Left, .Top + 2, .Left, .Bottom + 1, m_lTopLeftInnerBorderColor
-                            Else
-                                '   Top line
-                                APILine .Left, .Top, .Right - 2, .Top, m_lTopLeftInnerBorderColor
-                            End If
-                            '   Top-right corner
-                            APILine .Right - 2, .Top + 1, .Right, .Top + 3, m_lOuterBorderColor
-                            
-                            '   Right line
-                            APILine .Right - 1, .Top + 2, .Right - 1, .Bottom, m_lOuterBorderColor
-                            APILine .Right - 2, .Top + 2, .Right - 2, .Bottom, m_lBottomRightInnerBorderColor
-                            
-                            '   Bottom line
-                            APILine .Left, .Bottom, .Right, .Bottom, m_lTopLeftInnerBorderColor
-                        Else
-                            '   Other non active tab (must draw full curves on
-                            '   both the sides)
-                            If utTabInfo.Enabled Then
-                                Call pFillCurvedGradient(.Left, .Top, .Right - 1, .Bottom, m_lInActiveTabBackStartColor, m_lInActiveTabBackEndColor, 2, True, True)
-                            Else
-                                Call pFillCurvedGradient(.Left, .Top, .Right - 1, .Bottom, m_lDisabledTabBackColor, m_lInActiveTabBackEndColor, 2, True, True)
-                            End If
-                            '   Top-left corner
-                            APILine .Left, .Top + 2, .Left + 3, .Top - 1, m_lTopLeftInnerBorderColor
-                            '   Top line
-                            APILine .Left + 2, .Top, .Right - 2, .Top, m_lTopLeftInnerBorderColor
-                            '   Top-right corner
-                            APILine .Right - 2, .Top + 1, .Right, .Top + 3, m_lOuterBorderColor
-                            '   Right line
-                            APILine .Right - 1, .Top + 2, .Right - 1, .Bottom, m_lOuterBorderColor
-                            APILine .Right - 2, .Top + 2, .Right - 2, .Bottom, m_lBottomRightInnerBorderColor
-                            '   Bottom line
-                            APILine .Left, .Bottom, .Right, .Bottom, m_lTopLeftInnerBorderColor
-                            '   Left Line
-                            APILine .Left, .Top + 2, .Left, .Bottom + 1, m_lTopLeftInnerBorderColor
-                        End If
-                        '   Set the font
-                        Set Font = InActiveTabFont
-                        '   Set fore color
-                        If utTabInfo.Enabled Then
-                            ForeColor = m_lInActiveTabForeColor
-                        Else
-                            ForeColor = m_lDisabledTabForeColor
-                        End If
-                    End If
-                    '   If its left most tab then adjust the bottom line
-                    If iCnt = 0 Then
-                        '   Bottom line
-                        APILine .Left - 2, .Bottom, .Left, .Bottom, m_lTopLeftInnerBorderColor
-                    End If
-                    '   Do the adjustments for the border
-                    utFontRect.Left = .Left + 2
-                    utFontRect.Top = .Top + 2
-                    utFontRect.Bottom = .Bottom
-                    utFontRect.Right = .Right - 3
-                    If m_bUseControlBox Then
-                        OffsetRect utFontRect, -2, 0
-                    End If
-                    '   Get the Tab's caption in a local variable
-                    sTmp = utTabInfo.Caption
-                    If Not utTabInfo.TabPicture Is Nothing Then
-                        If iTmpHeight - 6 < m_lIconSize Then    '-6 for borders
-                            '   Here we adjust the size of the icon if it
-                            '   does not fit into current tab
-                            iAdjustedIconSize = iTmpHeight - 6
-                        Else
-                            iAdjustedIconSize = m_lIconSize
-                        End If
-                        iTmpY = utFontRect.Top + Round((utFontRect.Bottom - utFontRect.Top - iAdjustedIconSize) / 2)
-                        Select Case PictureAlign
-                            Case xAlignLeftEdge, xAlignLeftOfCaption:
-                                If utTabInfo.TabPicture.Type = vbPicTypeBitmap And UseMaskColor Then
-                                    Call DrawImage(m_lhDC, utTabInfo.TabPicture.handle, GetRGBFromOLE(PictureMaskColor), utFontRect.Left + 2, iTmpY, iAdjustedIconSize, iAdjustedIconSize)
-                                Else
-                                  Call pPaintPicture(utTabInfo.TabPicture, utFontRect.Left + 2, iTmpY, iAdjustedIconSize, iAdjustedIconSize)
-                                End If
-                                '   Shift the text to be drawn after the picture
-                                utFontRect.Left = (utFontRect.Left + iAdjustedIconSize + 1) - iPROP_PAGE_BORDER_AND_TEXT_DISTANCE
-                                '   Call the API for the text drawing
-                                DrawText m_lhDC, sTmp, -1, utFontRect, DT_CENTER Or DT_VCENTER Or DT_SINGLELINE
-                                '   Revert the changes so that the focus rectangle
-                                '   can be drawn for the whole tab's clickable area
-                                utFontRect.Left = (utFontRect.Left - iAdjustedIconSize - 1) + iPROP_PAGE_BORDER_AND_TEXT_DISTANCE
-                            Case xAlignRightEdge, xAlignRightOfCaption:
-                                If utTabInfo.TabPicture.Type = vbPicTypeBitmap And UseMaskColor Then
-                                    Call DrawImage(m_lhDC, utTabInfo.TabPicture.handle, GetRGBFromOLE(PictureMaskColor), utFontRect.Right - iAdjustedIconSize - 2, iTmpY, iAdjustedIconSize, iAdjustedIconSize)
-                                Else
-                                    Call pPaintPicture(utTabInfo.TabPicture, utFontRect.Right - iAdjustedIconSize, iTmpY, iAdjustedIconSize, iAdjustedIconSize)
-                                End If
-                                '   Shift the text to be drawn after the picture
-                                utFontRect.Right = (utFontRect.Right + 1 + 2) - iAdjustedIconSize
-                                '   Call the API for the text drawing
-                                DrawText m_lhDC, sTmp, -1, utFontRect, DT_CENTER Or DT_VCENTER Or DT_SINGLELINE
-                                '   Revert the changes so that the focus rectangle
-                                '   can be drawn for the whole tab's clickable area
-                                utFontRect.Right = (utFontRect.Right - 1 - 2) + iAdjustedIconSize
-                        End Select
-                    Else
+                        '   Shift the text to be drawn after the picture
+                        utFontRect.Left = (utFontRect.Left + iAdjustedIconSize + 6) - iPROP_PAGE_BORDER_AND_TEXT_DISTANCE
                         '   Call the API for the text drawing
                         DrawText m_lhDC, sTmp, -1, utFontRect, DT_CENTER Or DT_VCENTER Or DT_SINGLELINE
-                    End If
-                    If bUserMode Then    'only if in the run mode
-                        If iCnt = m_lActiveTab And m_IsFocused And ShowFocusRect Then
-                            If m_bUseControlBox Then
-                                OffsetRect utFontRect, 2, 0
-                            End If
-                            '   Show the focus rectangle
-                            Call DrawFocusRect(m_lhDC, utFontRect)
+                        '   Revert the changes so that the focus rectangle
+                        '   can be drawn for the whole tab's clickable area
+                        utFontRect.Left = (utFontRect.Left - iAdjustedIconSize - 6) + iPROP_PAGE_BORDER_AND_TEXT_DISTANCE
+                    Case xAlignRightEdge, xAlignRightOfCaption:
+                        If utTabInfo.TabPicture.Type = vbPicTypeBitmap And UseMaskColor Then
+                            Call DrawImage(m_lhDC, utTabInfo.TabPicture.handle, GetRGBFromOLE(PictureMaskColor), utFontRect.Right - iAdjustedIconSize - 2, iTmpY, iAdjustedIconSize, iAdjustedIconSize)
+                        Else
+                            Call pPaintPicture(utTabInfo.TabPicture, utFontRect.Right - iAdjustedIconSize - 2, iTmpY, iAdjustedIconSize, iAdjustedIconSize)
                         End If
-                    End If
-                End With
-            Next
-            '   Draw the line in the empty area after all the property pages heads are drawn
-            APILine AryTabs(m_lTabCount - 1).ClickableRect.Right, AryTabs(m_lTabCount - 1).ClickableRect.Bottom, m_lScaleWidth, AryTabs(m_lTabCount - 1).ClickableRect.Bottom, m_lTopLeftInnerBorderColor
-        Case xThemeWinXP, xThemeGalaxy      'xThemeWinXP, xThemeGalaxy
-            '   Set the Inactive tab's font as current font (since the TextWidth function
-            '   Will use the current font's size)
-            Set Font = InActiveTabFont
-            '   Store the larger height in tmp var
-            iTmpHeight = IIf(m_lActiveTabHeight > m_lInActiveTabHeight, m_lActiveTabHeight, m_lInActiveTabHeight)
-            '   Initialize the clickable items
-            For iCnt = 0 To m_lTabCount - 1
-                utTabInfo = AryTabs(iCnt)
-                sTmp = Replace$(utTabInfo.Caption, "&&", "&")
-                If InStr(1, sTmp, "&") Then
-                    'if still there is one '&' in the string then reduce the width by one more character (since the '&' will be conveted into an underline when painted)
-                    sTmp = Mid$(sTmp, 1, Len(sTmp) - 1)
-                End If
-                If utTabInfo.TabPicture Is Nothing Then
-                    '   Get tab width acc to the text size and border
-                    iTabWidth = TextWidth(sTmp) + iPROP_PAGE_BORDER_AND_TEXT_DISTANCE * 2
+                        '   Shift the text to be drawn after the picture
+                        utFontRect.Right = (utFontRect.Right + 1) - iAdjustedIconSize - 6
+                        '   Call the API for the text drawing
+                        DrawText m_lhDC, sTmp, -1, utFontRect, DT_CENTER Or DT_VCENTER Or DT_SINGLELINE
+                        '   Revert the changes so that the focus rectangle
+                        '   can be drawn for the whole tab's clickable area
+                        utFontRect.Right = (utFontRect.Right - 1) + iAdjustedIconSize + 6
+                    End Select
                 Else
-                    If iTmpHeight - 2 < m_lIconSize Then    '-2 for borders
-                        '   Here we adjust the size of the icon if it does
-                        '   not fit into current tab
-                        iAdjustedIconSize = iTmpHeight - 2
-                    Else
-                        iAdjustedIconSize = m_lIconSize
-                    End If
-                    '   Get tab width based on the text size, border and Image
-                    iTabWidth = TextWidth(sTmp) + (iPROP_PAGE_BORDER_AND_TEXT_DISTANCE * 2) + iAdjustedIconSize + 1
+                    '   Call the API for the text drawing
+                    DrawText m_lhDC, sTmp, -1, utFontRect, DT_CENTER Or DT_VCENTER Or DT_SINGLELINE
                 End If
-                '   Following adjustments are used in case of property pages only.
-                '   We must shift the left (+2) or (-2) to make it look like
-                '   standard XP property pages
-                With utTabInfo.ClickableRect
-                    If iCnt = 0 And iCnt <> m_lActiveTab Then
-                        .Left = iPROP_PAGE_INACTIVE_TOP
-                        .Right = .Left + iTabWidth - iPROP_PAGE_INACTIVE_TOP + 1
+                '   Call the API for the text drawing
+                '   DrawText m_lHDC, sTmp, -1, utFontRect, DT_CENTER Or DT_VCENTER Or DT_SINGLELINE
+                If bUserMode Then    'only if in the run mode
+                    If iCnt = m_lActiveTab And m_IsFocused And ShowFocusRect Then
+                        If m_bUseControlBox Then
+                            OffsetRect utFontRect, 2, 0
+                        End If
+                        '   Draw focus rect
+                        Call DrawFocusRect(m_lhDC, utFontRect)
+                    End If
+                End If
+            End With
+        Next
+        
+        '   Store the larger tab height
+        iCnt = IIf(m_lActiveTabHeight > m_lInActiveTabHeight, m_lActiveTabHeight, m_lInActiveTabHeight)
+        '   Adjust the corners
+        APILine 0, iCnt + 1, 0, iCnt + 4, m_lOuterBorderColor
+        APILine m_lScaleWidth - 1, iCnt + 1, m_lScaleWidth - 1, iCnt + 4, m_lOuterBorderColor
+        '   Draw the line in the empty area after all the property
+        '   pages heads are drawn
+        APILine AryTabs(m_lTabCount - 1).ClickableRect.Right, AryTabs(m_lTabCount - 1).ClickableRect.Bottom + 1, m_lScaleWidth, AryTabs(m_lTabCount - 1).ClickableRect.Bottom + 1, m_lOuterBorderColor
+    Case xThemeWin9X                'xThemeWin9x
+        '   Set the active tab's font as current font (since the TextWidth
+        '   function will use the current font's size)
+        Set Font = ActiveTabFont
+        '   Store the larger height in tmp var
+        iTmpHeight = IIf(m_lActiveTabHeight > m_lInActiveTabHeight, m_lActiveTabHeight, m_lInActiveTabHeight)
+        '   Initialize the clickable items
+        For iCnt = 0 To m_lTabCount - 1
+            utTabInfo = AryTabs(iCnt)
+            sTmp = Replace$(utTabInfo.Caption, "&&", "&")
+            If InStr(1, sTmp, "&") Then
+                '   If still there is one '&' in the string then reduce the
+                '   width by one more character (since the '&' will be conveted
+                '   into an underline when painted)
+                sTmp = Mid$(sTmp, 1, Len(sTmp) - 1)
+            End If
+            If utTabInfo.TabPicture Is Nothing Then
+                '   Get tab width acc to the text size and border
+                iTabWidth = TextWidth(sTmp) + iPROP_PAGE_BORDER_AND_TEXT_DISTANCE * 2
+            Else
+                If iTmpHeight - 6 < m_lIconSize Then    '-6 for borders
+                    '   Here we adjust the size of the icon if it does not
+                    '   fit into current tab
+                    iAdjustedIconSize = iTmpHeight - 6
+                Else
+                    iAdjustedIconSize = m_lIconSize
+                End If
+                '   Get tab width based on the text size, border and Image
+                iTabWidth = TextWidth(sTmp) + (iPROP_PAGE_BORDER_AND_TEXT_DISTANCE * 2) + iAdjustedIconSize + 1
+            End If
+            '   Following adjustments are used in case of property pages only. We must shift
+            '   the left (+2) or (-2) to make it look like standard property pages
+            With utTabInfo.ClickableRect
+                If iCnt = 0 And iCnt <> m_lActiveTab Then
+                    .Left = iPROP_PAGE_INACTIVE_TOP
+                    .Right = .Left + iTabWidth - iPROP_PAGE_INACTIVE_TOP
+                Else
+                    If iCnt = 0 Then
+                        .Left = 0
                     Else
-                        If iCnt = 0 Then
-                          .Left = 0
-                        Else
-                            If iCnt = m_lActiveTab Or iCnt = m_lActiveTab + 1 Then
-                                .Left = AryTabs(iCnt - 1).ClickableRect.Right
-                            Else
-                                '   1 pixel distance between property pages (in XP)
-                                .Left = AryTabs(iCnt - 1).ClickableRect.Right + 1
-                            End If
-                        End If
-                        .Right = .Left + iTabWidth
+                        .Left = AryTabs(iCnt - 1).ClickableRect.Right
                     End If
-                    If m_bUseControlBox Then
-                        If iCnt = m_lActiveTab Then
-                            .Right = .Right + iPROP_CONTROLBOX * 1.75
-                        Else
-                            .Right = .Right + iPROP_CONTROLBOX + 3
-                        End If
-                    End If
+                    .Right = .Left + iTabWidth
+                End If
+                If m_bUseControlBox Then
                     If iCnt = m_lActiveTab Then
-                        If m_lActiveTabHeight > m_lInActiveTabHeight Then
-                            .Top = 0
-                        Else
-                            .Top = m_lInActiveTabHeight - m_lActiveTabHeight
-                        End If
-                        .Bottom = .Top + m_lActiveTabHeight
+                        .Right = .Right + iPROP_CONTROLBOX * 1.25
                     Else
-                        If m_lInActiveTabHeight > m_lActiveTabHeight Then
-                            .Top = 0
-                            .Bottom = .Top + m_lInActiveTabHeight
-                        Else
-                            .Top = m_lActiveTabHeight - m_lInActiveTabHeight
-                            .Bottom = .Top + m_lInActiveTabHeight
-                        End If
+                        .Right = .Right + iPROP_CONTROLBOX
                     End If
-                End With
-                '   Store the ControlBox values for hit testing
-                With utTabInfo.ControlBoxRect
-                    .Left = utTabInfo.ClickableRect.Right - 13
-                    .Top = utTabInfo.ClickableRect.Top + 6
-                    .Right = utTabInfo.ClickableRect.Right - 3
-                    .Bottom = utTabInfo.ClickableRect.Top + 16
-                End With
-                '   Assign the new tab info to the existing one
-                AryTabs(iCnt) = utTabInfo
-            Next
-            '   Fill the tab strip with TabStripBackColor (customizable... so that tab's can easily blend with the background)
-            APIFillRectByCoords 0, 0, m_lScaleWidth, iTmpHeight, TabStripBackColor
-            '   Now Draw Each Tab
-            For iCnt = 0 To m_lTabCount - 1
-                '   Get Local copy
-                utTabInfo = AryTabs(iCnt)
-                With utTabInfo.ClickableRect
-                    '   If we are drawing the active tab
-                    If iCnt = m_lActiveTab Then
+                End If
+                If iCnt = m_lActiveTab Then
+                    If m_lActiveTabHeight > m_lInActiveTabHeight Then
+                        .Top = 0
+                    Else
+                        .Top = m_lInActiveTabHeight - m_lActiveTabHeight
+                    End If
+                    .Bottom = .Top + m_lActiveTabHeight
+                Else
+                    If m_lInActiveTabHeight > m_lActiveTabHeight Then
+                        .Top = 0
+                        .Bottom = .Top + m_lInActiveTabHeight
+                    Else
+                        .Top = m_lActiveTabHeight - m_lInActiveTabHeight
+                        .Bottom = .Top + m_lInActiveTabHeight
+                    End If
+                End If
+            End With
+            '   Store the ControlBox values for hit testing
+            With utTabInfo.ControlBoxRect
+                .Left = utTabInfo.ClickableRect.Right - 14
+                .Top = utTabInfo.ClickableRect.Top + 5
+                .Right = utTabInfo.ClickableRect.Right - 4
+                .Bottom = utTabInfo.ClickableRect.Top + 15
+            End With
+            '   Assign the new tab info to the existing one
+            AryTabs(iCnt) = utTabInfo
+        Next
+        '   Fill the tab strip with TabStripBackColor (customizable... so that tab's can easily blend with the background)
+        APIFillRectByCoords 0, 0, m_lScaleWidth, iTmpHeight, TabStripBackColor
+        '   Now Draw Each Tab
+        For iCnt = 0 To m_lTabCount - 1
+            '   Get local copy
+            utTabInfo = AryTabs(iCnt)
+            With utTabInfo.ClickableRect
+                '   If we are drawing the active tab
+                If iCnt = m_lActiveTab Then
+                    If utTabInfo.Enabled Then
+                        Call pFillCurvedGradient(.Left, .Top, .Right - 1, .Bottom, m_lActiveTabBackStartColor, m_lActiveTabBackEndColor, 2, True, True)
+                    Else
+                        Call pFillCurvedGradient(.Left, .Top, .Right - 1, .Bottom, m_lDisabledTabBackColor, m_lDisabledTabBackColor, 2, True, True)
+                    End If
+                    '   Top-left corner
+                    APILine .Left, .Top + 2, .Left + 3, .Top - 1, m_lTopLeftInnerBorderColor
+                    '   Top line
+                    APILine .Left + 2, .Top, .Right - 2, .Top, m_lTopLeftInnerBorderColor
+                    '   Top-right corner
+                    APILine .Right - 2, .Top + 1, .Right, .Top + 3, m_lOuterBorderColor
+                    '   Right line
+                    APILine .Right - 1, .Top + 2, .Right - 1, .Bottom + 1, m_lOuterBorderColor
+                    APILine .Right - 2, .Top + 2, .Right - 2, .Bottom + 1, m_lBottomRightInnerBorderColor
+                    '   Left line
+                    APILine .Left, .Top + 2, .Left, .Bottom + 1, m_lTopLeftInnerBorderColor
+                    '   Set the active tab font as current font
+                    Set Font = ActiveTabFont
+                    '   Set foreground color (for text drawing)
+                    If utTabInfo.Enabled Then
+                        ForeColor = m_lActiveTabForeColor
+                    Else
+                        ForeColor = m_lDisabledTabForeColor
+                    End If
+                Else
+                    '   We are not drawing active tab, it can be any one
+                    '   from the following
+                    '
+                    '   If we are drawing tab just b4 active tab, then
+                    If iCnt = m_lActiveTab - 1 Then
                         If utTabInfo.Enabled Then
-                            Call pFillCurvedGradientR(utTabInfo.ClickableRect, m_lActiveTabBackStartColor, m_lActiveTabBackEndColor, 2, True, True)
-                        Else
-                            Call pFillCurvedGradientR(utTabInfo.ClickableRect, m_lDisabledTabBackColor, m_lDisabledTabBackColor, 2, True, True)
-                        End If
-                        '   Top-left corner
-                        APILine .Left, .Top + 2, .Left + 3, .Top - 1, m_lOuterBorderColor
-                        '   Top line
-                        APILine .Left + 2, .Top, .Right - 2, .Top, m_lOuterBorderColor
-                        '   Top-right corner
-                        APILine .Right - 2, .Top + 1, .Right, .Top + 3, m_lOuterBorderColor
-                        '   Right line
-                        APILine .Right - 1, .Top + 2, .Right - 1, .Bottom + 1, m_lOuterBorderColor
-                        '   Left line
-                        APILine .Left, .Top + 2, .Left, .Bottom + 1, m_lOuterBorderColor
-                        Set Font = ActiveTabFont 'set the font
-                        '   Set fore ground color
-                        If utTabInfo.Enabled Then
-                            ForeColor = m_lActiveTabForeColor
-                        Else
-                            ForeColor = m_lDisabledTabForeColor
-                        End If
-                    ElseIf iCnt = m_lActiveTab - 1 Then
-                        '   If we are drawing tab just b4 active tab, then
-                        If utTabInfo.Enabled Then
-                            '   Following adjustments are needed if the inactive
-                            '   tab's height is more than active tab's height (the
-                            '   tab's corner should be properly rounded)
+                            '   Following adjustments are needed if the inactive tab's height is more than active tab's height (the tab's corner should be properly rounded)
                             If m_lInActiveTabHeight + 2 > m_lActiveTabHeight Then
                                 Call pFillCurvedGradient(.Left, .Top, .Right, .Bottom, m_lInActiveTabBackStartColor, m_lInActiveTabBackEndColor, 2, True, True)
                             Else
@@ -2892,183 +2600,482 @@ Public Sub DrawTabsPropertyPages()
                             End If
                         End If
                         '   Top-left corner
-                        APILine .Left, .Top + 2, .Left + 3, .Top - 1, m_lOuterBorderColor
-                        '   Following adjustments are needed if the inactive tab's
-                        '   height is more than active tab's height (the tab's corner
-                        '   should be properly rounded)
+                        APILine .Left, .Top + 2, .Left + 3, .Top - 1, m_lTopLeftInnerBorderColor
+                        '   Following adjustments are needed if the inactive tab's height is more than active tab's height (the tab's corner should be properly rounded)
                         If m_lInActiveTabHeight + 2 > m_lActiveTabHeight Then
                             '   Top line
-                            APILine .Left + 2, .Top, .Right - 2, .Top, m_lOuterBorderColor
+                            APILine .Left + 2, .Top, .Right - 2, .Top, m_lTopLeftInnerBorderColor
+                            
                             '   Top-right corner
                             APILine .Right - 2, .Top + 1, .Right, .Top + 3, m_lOuterBorderColor
+                            
                             '   Right line
                             APILine .Right - 1, .Top + 2, .Right - 1, .Bottom + 1, m_lOuterBorderColor
+                            APILine .Right - 2, .Top + 2, .Right - 2, .Bottom + 1, m_lBottomRightInnerBorderColor
                         Else
-                            'Top line
-                            APILine .Left + 2, .Top, .Right, .Top, m_lOuterBorderColor
+                            '   Top line
+                            APILine .Left + 2, .Top, .Right, .Top, m_lTopLeftInnerBorderColor
                         End If
                         '   Bottom line
-                        APILine .Left, .Bottom, .Right + 1, .Bottom, m_lOuterBorderColor
+                        APILine .Left, .Bottom, .Right, .Bottom, m_lTopLeftInnerBorderColor
+                        
                         '   Left Line
-                        APILine .Left, .Top + 2, .Left, .Bottom + 1, m_lOuterBorderColor
-                        '   Set the font
-                        Set Font = InActiveTabFont
+                        APILine .Left, .Top + 2, .Left, .Bottom + 1, m_lTopLeftInnerBorderColor
+                    ElseIf iCnt = m_lActiveTab + 1 Then   'tab just after active tab
                         If utTabInfo.Enabled Then
-                            ForeColor = m_lInActiveTabForeColor
-                        Else
-                            ForeColor = m_lDisabledTabForeColor
-                        End If
-                    ElseIf iCnt = m_lActiveTab + 1 Then
-                        '   If we are drawing tab just after the active tab, then
-                        If utTabInfo.Enabled Then
-                            '   Following adjustments are needed if the inactive
-                            '   tab's height is more than active tab's height (the
-                            '   tab's corner should be properly rounded)
+                            '   Following adjustments are needed if the
+                            '   inactive tab's height is more than active
+                            '   tab's height (the tab's corner should be
+                            '   properly rounded)
                             If m_lInActiveTabHeight + 2 > m_lActiveTabHeight Then
                                 Call pFillCurvedGradient(.Left, .Top, .Right - 1, .Bottom, m_lInActiveTabBackStartColor, m_lInActiveTabBackEndColor, 2, True, True)
                             Else
                                 Call pFillCurvedGradient(.Left, .Top, .Right - 1, .Bottom, m_lInActiveTabBackStartColor, m_lInActiveTabBackEndColor, 2, False, True)
                             End If
                         Else
-                            '   Following adjustments are needed if the inactive
-                            '   tab's height is more than active tab's height (the
-                            '   tab's corner should be properly rounded)
+                            '   Following adjustments are needed if the
+                            '   inactive tab's height is more than active
+                            '   tab's height (the tab's corner should be
+                            '   properly rounded)
                             If m_lInActiveTabHeight + 2 > m_lActiveTabHeight Then
                                 Call pFillCurvedGradient(.Left, .Top, .Right - 1, .Bottom, m_lDisabledTabBackColor, m_lDisabledTabBackColor, 2, True, True)
                             Else
                                 Call pFillCurvedGradient(.Left, .Top, .Right - 1, .Bottom, m_lDisabledTabBackColor, m_lDisabledTabBackColor, 2, False, True)
                             End If
                         End If
-                        '   Following adjustments are needed if the inactive tab's
-                        '   height is more than active tab's height (the tab's corner
-                        '   should be properly rounded)
+                        '   Following adjustments are needed if the inactive
+                        '   tab's height is more than active tab's height
+                        '   (the tab's corner should be properly rounded)
                         If m_lInActiveTabHeight + 2 > m_lActiveTabHeight Then
                             '   Top-left corner
-                            APILine .Left, .Top + 2, .Left + 3, .Top - 1, m_lOuterBorderColor
+                            APILine .Left, .Top + 2, .Left + 3, .Top - 1, m_lTopLeftInnerBorderColor
                             '   Top line
-                            APILine .Left + 2, .Top, .Right - 2, .Top, m_lOuterBorderColor
+                            APILine .Left + 2, .Top, .Right - 2, .Top, m_lTopLeftInnerBorderColor
                             '   Left Line
-                            APILine .Left, .Top + 2, .Left, .Bottom + 1, m_lOuterBorderColor
+                            APILine .Left, .Top + 2, .Left, .Bottom + 1, m_lTopLeftInnerBorderColor
                         Else
                             '   Top line
-                            APILine .Left, .Top, .Right - 2, .Top, m_lOuterBorderColor
+                            APILine .Left, .Top, .Right - 2, .Top, m_lTopLeftInnerBorderColor
                         End If
                         '   Top-right corner
                         APILine .Right - 2, .Top + 1, .Right, .Top + 3, m_lOuterBorderColor
+                        
                         '   Right line
                         APILine .Right - 1, .Top + 2, .Right - 1, .Bottom, m_lOuterBorderColor
+                        APILine .Right - 2, .Top + 2, .Right - 2, .Bottom, m_lBottomRightInnerBorderColor
+                        
                         '   Bottom line
-                        APILine .Left, .Bottom, .Right + 1, .Bottom, m_lOuterBorderColor
-                        '   Set the font
-                        Set Font = InActiveTabFont
-                        If utTabInfo.Enabled Then
-                            ForeColor = m_lInActiveTabForeColor
-                        Else
-                            ForeColor = m_lDisabledTabForeColor
-                        End If
-                  Else
-                        '   Other non active tab (must draw full curves on both
-                        '   the sides)
+                        APILine .Left, .Bottom, .Right, .Bottom, m_lTopLeftInnerBorderColor
+                    Else
+                        '   Other non active tab (must draw full curves on
+                        '   both the sides)
                         If utTabInfo.Enabled Then
                             Call pFillCurvedGradient(.Left, .Top, .Right - 1, .Bottom, m_lInActiveTabBackStartColor, m_lInActiveTabBackEndColor, 2, True, True)
                         Else
                             Call pFillCurvedGradient(.Left, .Top, .Right - 1, .Bottom, m_lDisabledTabBackColor, m_lInActiveTabBackEndColor, 2, True, True)
                         End If
                         '   Top-left corner
-                        APILine .Left, .Top + 2, .Left + 3, .Top - 1, m_lOuterBorderColor
+                        APILine .Left, .Top + 2, .Left + 3, .Top - 1, m_lTopLeftInnerBorderColor
+                        '   Top line
+                        APILine .Left + 2, .Top, .Right - 2, .Top, m_lTopLeftInnerBorderColor
+                        '   Top-right corner
+                        APILine .Right - 2, .Top + 1, .Right, .Top + 3, m_lOuterBorderColor
+                        '   Right line
+                        APILine .Right - 1, .Top + 2, .Right - 1, .Bottom, m_lOuterBorderColor
+                        APILine .Right - 2, .Top + 2, .Right - 2, .Bottom, m_lBottomRightInnerBorderColor
+                        '   Bottom line
+                        APILine .Left, .Bottom, .Right, .Bottom, m_lTopLeftInnerBorderColor
+                        '   Left Line
+                        APILine .Left, .Top + 2, .Left, .Bottom + 1, m_lTopLeftInnerBorderColor
+                    End If
+                    '   Set the font
+                    Set Font = InActiveTabFont
+                    '   Set fore color
+                    If utTabInfo.Enabled Then
+                        ForeColor = m_lInActiveTabForeColor
+                    Else
+                        ForeColor = m_lDisabledTabForeColor
+                    End If
+                End If
+                '   If its left most tab then adjust the bottom line
+                If iCnt = 0 Then
+                    '   Bottom line
+                    APILine .Left - 2, .Bottom, .Left, .Bottom, m_lTopLeftInnerBorderColor
+                End If
+                '   Do the adjustments for the border
+                utFontRect.Left = .Left + 2
+                utFontRect.Top = .Top + 2
+                utFontRect.Bottom = .Bottom
+                utFontRect.Right = .Right - 3
+                If m_bUseControlBox Then
+                    OffsetRect utFontRect, -2, 0
+                End If
+                '   Get the Tab's caption in a local variable
+                sTmp = utTabInfo.Caption
+                If Not utTabInfo.TabPicture Is Nothing Then
+                    If iTmpHeight - 6 < m_lIconSize Then    '-6 for borders
+                        '   Here we adjust the size of the icon if it
+                        '   does not fit into current tab
+                        iAdjustedIconSize = iTmpHeight - 6
+                    Else
+                        iAdjustedIconSize = m_lIconSize
+                    End If
+                    iTmpY = utFontRect.Top + Round((utFontRect.Bottom - utFontRect.Top - iAdjustedIconSize) / 2)
+                    Select Case PictureAlign
+                    Case xAlignLeftEdge, xAlignLeftOfCaption:
+                        If utTabInfo.TabPicture.Type = vbPicTypeBitmap And UseMaskColor Then
+                            Call DrawImage(m_lhDC, utTabInfo.TabPicture.handle, GetRGBFromOLE(PictureMaskColor), utFontRect.Left + 2, iTmpY, iAdjustedIconSize, iAdjustedIconSize)
+                        Else
+                            Call pPaintPicture(utTabInfo.TabPicture, utFontRect.Left + 2, iTmpY, iAdjustedIconSize, iAdjustedIconSize)
+                        End If
+                        '   Shift the text to be drawn after the picture
+                        utFontRect.Left = (utFontRect.Left + iAdjustedIconSize + 1) - iPROP_PAGE_BORDER_AND_TEXT_DISTANCE
+                        '   Call the API for the text drawing
+                        DrawText m_lhDC, sTmp, -1, utFontRect, DT_CENTER Or DT_VCENTER Or DT_SINGLELINE
+                        '   Revert the changes so that the focus rectangle
+                        '   can be drawn for the whole tab's clickable area
+                        utFontRect.Left = (utFontRect.Left - iAdjustedIconSize - 1) + iPROP_PAGE_BORDER_AND_TEXT_DISTANCE
+                    Case xAlignRightEdge, xAlignRightOfCaption:
+                        If utTabInfo.TabPicture.Type = vbPicTypeBitmap And UseMaskColor Then
+                            Call DrawImage(m_lhDC, utTabInfo.TabPicture.handle, GetRGBFromOLE(PictureMaskColor), utFontRect.Right - iAdjustedIconSize - 2, iTmpY, iAdjustedIconSize, iAdjustedIconSize)
+                        Else
+                            Call pPaintPicture(utTabInfo.TabPicture, utFontRect.Right - iAdjustedIconSize, iTmpY, iAdjustedIconSize, iAdjustedIconSize)
+                        End If
+                        '   Shift the text to be drawn after the picture
+                        utFontRect.Right = (utFontRect.Right + 1 + 2) - iAdjustedIconSize
+                        '   Call the API for the text drawing
+                        DrawText m_lhDC, sTmp, -1, utFontRect, DT_CENTER Or DT_VCENTER Or DT_SINGLELINE
+                        '   Revert the changes so that the focus rectangle
+                        '   can be drawn for the whole tab's clickable area
+                        utFontRect.Right = (utFontRect.Right - 1 - 2) + iAdjustedIconSize
+                    End Select
+                Else
+                    '   Call the API for the text drawing
+                    DrawText m_lhDC, sTmp, -1, utFontRect, DT_CENTER Or DT_VCENTER Or DT_SINGLELINE
+                End If
+                If bUserMode Then    'only if in the run mode
+                    If iCnt = m_lActiveTab And m_IsFocused And ShowFocusRect Then
+                        If m_bUseControlBox Then
+                            OffsetRect utFontRect, 2, 0
+                        End If
+                        '   Show the focus rectangle
+                        Call DrawFocusRect(m_lhDC, utFontRect)
+                    End If
+                End If
+            End With
+        Next
+        '   Draw the line in the empty area after all the property pages heads are drawn
+        APILine AryTabs(m_lTabCount - 1).ClickableRect.Right, AryTabs(m_lTabCount - 1).ClickableRect.Bottom, m_lScaleWidth, AryTabs(m_lTabCount - 1).ClickableRect.Bottom, m_lTopLeftInnerBorderColor
+    Case xThemeWinXP, xThemeGalaxy      'xThemeWinXP, xThemeGalaxy
+        '   Set the Inactive tab's font as current font (since the TextWidth function
+        '   Will use the current font's size)
+        Set Font = InActiveTabFont
+        '   Store the larger height in tmp var
+        iTmpHeight = IIf(m_lActiveTabHeight > m_lInActiveTabHeight, m_lActiveTabHeight, m_lInActiveTabHeight)
+        '   Initialize the clickable items
+        For iCnt = 0 To m_lTabCount - 1
+            utTabInfo = AryTabs(iCnt)
+            sTmp = Replace$(utTabInfo.Caption, "&&", "&")
+            If InStr(1, sTmp, "&") Then
+                'if still there is one '&' in the string then reduce the width by one more character (since the '&' will be conveted into an underline when painted)
+                sTmp = Mid$(sTmp, 1, Len(sTmp) - 1)
+            End If
+            If utTabInfo.TabPicture Is Nothing Then
+                '   Get tab width acc to the text size and border
+                iTabWidth = TextWidth(sTmp) + iPROP_PAGE_BORDER_AND_TEXT_DISTANCE * 2
+            Else
+                If iTmpHeight - 2 < m_lIconSize Then    '-2 for borders
+                    '   Here we adjust the size of the icon if it does
+                    '   not fit into current tab
+                    iAdjustedIconSize = iTmpHeight - 2
+                Else
+                    iAdjustedIconSize = m_lIconSize
+                End If
+                '   Get tab width based on the text size, border and Image
+                iTabWidth = TextWidth(sTmp) + (iPROP_PAGE_BORDER_AND_TEXT_DISTANCE * 2) + iAdjustedIconSize + 1
+            End If
+            '   Following adjustments are used in case of property pages only.
+            '   We must shift the left (+2) or (-2) to make it look like
+            '   standard XP property pages
+            With utTabInfo.ClickableRect
+                If iCnt = 0 And iCnt <> m_lActiveTab Then
+                    .Left = iPROP_PAGE_INACTIVE_TOP
+                    .Right = .Left + iTabWidth - iPROP_PAGE_INACTIVE_TOP + 1
+                Else
+                    If iCnt = 0 Then
+                        .Left = 0
+                    Else
+                        If iCnt = m_lActiveTab Or iCnt = m_lActiveTab + 1 Then
+                            .Left = AryTabs(iCnt - 1).ClickableRect.Right
+                        Else
+                            '   1 pixel distance between property pages (in XP)
+                            .Left = AryTabs(iCnt - 1).ClickableRect.Right + 1
+                        End If
+                    End If
+                    .Right = .Left + iTabWidth
+                End If
+                If m_bUseControlBox Then
+                    If iCnt = m_lActiveTab Then
+                        .Right = .Right + iPROP_CONTROLBOX * 1.75
+                    Else
+                        .Right = .Right + iPROP_CONTROLBOX + 3
+                    End If
+                End If
+                If iCnt = m_lActiveTab Then
+                    If m_lActiveTabHeight > m_lInActiveTabHeight Then
+                        .Top = 0
+                    Else
+                        .Top = m_lInActiveTabHeight - m_lActiveTabHeight
+                    End If
+                    .Bottom = .Top + m_lActiveTabHeight
+                Else
+                    If m_lInActiveTabHeight > m_lActiveTabHeight Then
+                        .Top = 0
+                        .Bottom = .Top + m_lInActiveTabHeight
+                    Else
+                        .Top = m_lActiveTabHeight - m_lInActiveTabHeight
+                        .Bottom = .Top + m_lInActiveTabHeight
+                    End If
+                End If
+            End With
+            '   Store the ControlBox values for hit testing
+            With utTabInfo.ControlBoxRect
+                .Left = utTabInfo.ClickableRect.Right - 13
+                .Top = utTabInfo.ClickableRect.Top + 6
+                .Right = utTabInfo.ClickableRect.Right - 3
+                .Bottom = utTabInfo.ClickableRect.Top + 16
+            End With
+            '   Assign the new tab info to the existing one
+            AryTabs(iCnt) = utTabInfo
+        Next
+        '   Fill the tab strip with TabStripBackColor (customizable... so that tab's can easily blend with the background)
+        APIFillRectByCoords 0, 0, m_lScaleWidth, iTmpHeight, TabStripBackColor
+        '   Now Draw Each Tab
+        For iCnt = 0 To m_lTabCount - 1
+            '   Get Local copy
+            utTabInfo = AryTabs(iCnt)
+            With utTabInfo.ClickableRect
+                '   If we are drawing the active tab
+                If iCnt = m_lActiveTab Then
+                    If utTabInfo.Enabled Then
+                        Call pFillCurvedGradientR(utTabInfo.ClickableRect, m_lActiveTabBackStartColor, m_lActiveTabBackEndColor, 2, True, True)
+                    Else
+                        Call pFillCurvedGradientR(utTabInfo.ClickableRect, m_lDisabledTabBackColor, m_lDisabledTabBackColor, 2, True, True)
+                    End If
+                    '   Top-left corner
+                    APILine .Left, .Top + 2, .Left + 3, .Top - 1, m_lOuterBorderColor
+                    '   Top line
+                    APILine .Left + 2, .Top, .Right - 2, .Top, m_lOuterBorderColor
+                    '   Top-right corner
+                    APILine .Right - 2, .Top + 1, .Right, .Top + 3, m_lOuterBorderColor
+                    '   Right line
+                    APILine .Right - 1, .Top + 2, .Right - 1, .Bottom + 1, m_lOuterBorderColor
+                    '   Left line
+                    APILine .Left, .Top + 2, .Left, .Bottom + 1, m_lOuterBorderColor
+                    Set Font = ActiveTabFont 'set the font
+                    '   Set fore ground color
+                    If utTabInfo.Enabled Then
+                        ForeColor = m_lActiveTabForeColor
+                    Else
+                        ForeColor = m_lDisabledTabForeColor
+                    End If
+                ElseIf iCnt = m_lActiveTab - 1 Then
+                    '   If we are drawing tab just b4 active tab, then
+                    If utTabInfo.Enabled Then
+                        '   Following adjustments are needed if the inactive
+                        '   tab's height is more than active tab's height (the
+                        '   tab's corner should be properly rounded)
+                        If m_lInActiveTabHeight + 2 > m_lActiveTabHeight Then
+                            Call pFillCurvedGradient(.Left, .Top, .Right, .Bottom, m_lInActiveTabBackStartColor, m_lInActiveTabBackEndColor, 2, True, True)
+                        Else
+                            Call pFillCurvedGradient(.Left, .Top, .Right, .Bottom, m_lInActiveTabBackStartColor, m_lInActiveTabBackEndColor, 2, True, False)
+                        End If
+                    Else
+                        '   Following adjustments are needed if the inactive tab's height is more than active tab's height (the tab's corner should be properly rounded)
+                        If m_lInActiveTabHeight + 2 > m_lActiveTabHeight Then
+                            Call pFillCurvedGradient(.Left, .Top, .Right, .Bottom, m_lDisabledTabBackColor, m_lDisabledTabBackColor, 2, True, True)
+                        Else
+                            Call pFillCurvedGradient(.Left, .Top, .Right, .Bottom, m_lDisabledTabBackColor, m_lDisabledTabBackColor, 2, True, False)
+                        End If
+                    End If
+                    '   Top-left corner
+                    APILine .Left, .Top + 2, .Left + 3, .Top - 1, m_lOuterBorderColor
+                    '   Following adjustments are needed if the inactive tab's
+                    '   height is more than active tab's height (the tab's corner
+                    '   should be properly rounded)
+                    If m_lInActiveTabHeight + 2 > m_lActiveTabHeight Then
                         '   Top line
                         APILine .Left + 2, .Top, .Right - 2, .Top, m_lOuterBorderColor
                         '   Top-right corner
                         APILine .Right - 2, .Top + 1, .Right, .Top + 3, m_lOuterBorderColor
                         '   Right line
-                        APILine .Right - 1, .Top + 2, .Right - 1, .Bottom, m_lOuterBorderColor
-                        '   Bottom line
-                        APILine .Left, .Bottom, .Right + 1, .Bottom, m_lOuterBorderColor
+                        APILine .Right - 1, .Top + 2, .Right - 1, .Bottom + 1, m_lOuterBorderColor
+                    Else
+                        'Top line
+                        APILine .Left + 2, .Top, .Right, .Top, m_lOuterBorderColor
+                    End If
+                    '   Bottom line
+                    APILine .Left, .Bottom, .Right + 1, .Bottom, m_lOuterBorderColor
+                    '   Left Line
+                    APILine .Left, .Top + 2, .Left, .Bottom + 1, m_lOuterBorderColor
+                    '   Set the font
+                    Set Font = InActiveTabFont
+                    If utTabInfo.Enabled Then
+                        ForeColor = m_lInActiveTabForeColor
+                    Else
+                        ForeColor = m_lDisabledTabForeColor
+                    End If
+                ElseIf iCnt = m_lActiveTab + 1 Then
+                    '   If we are drawing tab just after the active tab, then
+                    If utTabInfo.Enabled Then
+                        '   Following adjustments are needed if the inactive
+                        '   tab's height is more than active tab's height (the
+                        '   tab's corner should be properly rounded)
+                        If m_lInActiveTabHeight + 2 > m_lActiveTabHeight Then
+                            Call pFillCurvedGradient(.Left, .Top, .Right - 1, .Bottom, m_lInActiveTabBackStartColor, m_lInActiveTabBackEndColor, 2, True, True)
+                        Else
+                            Call pFillCurvedGradient(.Left, .Top, .Right - 1, .Bottom, m_lInActiveTabBackStartColor, m_lInActiveTabBackEndColor, 2, False, True)
+                        End If
+                    Else
+                        '   Following adjustments are needed if the inactive
+                        '   tab's height is more than active tab's height (the
+                        '   tab's corner should be properly rounded)
+                        If m_lInActiveTabHeight + 2 > m_lActiveTabHeight Then
+                            Call pFillCurvedGradient(.Left, .Top, .Right - 1, .Bottom, m_lDisabledTabBackColor, m_lDisabledTabBackColor, 2, True, True)
+                        Else
+                            Call pFillCurvedGradient(.Left, .Top, .Right - 1, .Bottom, m_lDisabledTabBackColor, m_lDisabledTabBackColor, 2, False, True)
+                        End If
+                    End If
+                    '   Following adjustments are needed if the inactive tab's
+                    '   height is more than active tab's height (the tab's corner
+                    '   should be properly rounded)
+                    If m_lInActiveTabHeight + 2 > m_lActiveTabHeight Then
+                        '   Top-left corner
+                        APILine .Left, .Top + 2, .Left + 3, .Top - 1, m_lOuterBorderColor
+                        '   Top line
+                        APILine .Left + 2, .Top, .Right - 2, .Top, m_lOuterBorderColor
                         '   Left Line
                         APILine .Left, .Top + 2, .Left, .Bottom + 1, m_lOuterBorderColor
-                        Set Font = InActiveTabFont 'set the font
-                        '   set font color
-                        If utTabInfo.Enabled Then
-                            ForeColor = m_lInActiveTabForeColor
-                        Else
-                            ForeColor = m_lDisabledTabForeColor
-                        End If
-                    End If
-                    '   If its left most tab then adjust the bottom line
-                    If iCnt = 0 Then
-                      ' Bottom line
-                      APILine .Left - 2, .Bottom, .Left, .Bottom, m_lOuterBorderColor
-                    End If
-                    '   Do the adjustments for the border
-                    utFontRect.Left = .Left + 2
-                    utFontRect.Top = .Top + 4
-                    utFontRect.Bottom = .Bottom
-                    utFontRect.Right = .Right - 2
-                    If m_bUseControlBox Then
-                        OffsetRect utFontRect, -2, 0
-                    End If
-                    sTmp = utTabInfo.Caption
-                    If Not utTabInfo.TabPicture Is Nothing Then
-                        If iTmpHeight - 2 < m_lIconSize Then    '-2 for borders
-                          ' Here we adjust the size of the icon if it does not
-                          ' fit into current tab
-                          iAdjustedIconSize = iTmpHeight - 2
-                        Else
-                          iAdjustedIconSize = m_lIconSize
-                        End If
-                        iTmpY = utFontRect.Top + Round((utFontRect.Bottom - utFontRect.Top - iAdjustedIconSize) / 2)
-                        Select Case PictureAlign
-                            Case xAlignLeftEdge, xAlignLeftOfCaption:
-                                If utTabInfo.TabPicture.Type = vbPicTypeBitmap And UseMaskColor Then
-                                    Call DrawImage(m_lhDC, utTabInfo.TabPicture.handle, GetRGBFromOLE(PictureMaskColor), utFontRect.Left + 2, iTmpY, iAdjustedIconSize, iAdjustedIconSize)
-                                Else
-                                    Call pPaintPicture(utTabInfo.TabPicture, utFontRect.Left + 2, iTmpY, iAdjustedIconSize, iAdjustedIconSize)
-                                End If
-                                '   Shift the text to be drawn after the picture
-                                utFontRect.Left = (utFontRect.Left + iAdjustedIconSize + 6) - iPROP_PAGE_BORDER_AND_TEXT_DISTANCE
-                                '   Call the API for the text drawing
-                                DrawText m_lhDC, sTmp, -1, utFontRect, DT_CENTER Or DT_VCENTER Or DT_SINGLELINE
-                                '   Revert the changes so that the focus rectangle
-                                '   can be drawn for the whole tab's clickable area
-                                utFontRect.Left = (utFontRect.Left - iAdjustedIconSize - 6) + iPROP_PAGE_BORDER_AND_TEXT_DISTANCE
-                            Case xAlignRightEdge, xAlignRightOfCaption:
-                                If utTabInfo.TabPicture.Type = vbPicTypeBitmap And UseMaskColor Then
-                                    Call DrawImage(m_lhDC, utTabInfo.TabPicture.handle, GetRGBFromOLE(PictureMaskColor), utFontRect.Right - iAdjustedIconSize - 2, iTmpY, iAdjustedIconSize, iAdjustedIconSize)
-                                Else
-                                    Call pPaintPicture(utTabInfo.TabPicture, utFontRect.Right - iAdjustedIconSize - 2, iTmpY, iAdjustedIconSize, iAdjustedIconSize)
-                                End If
-                                '   Shift the text to be drawn after the picture
-                                utFontRect.Right = (utFontRect.Right + 1) - iAdjustedIconSize - 6
-                                '   Call the API for the text drawing
-                                DrawText m_lhDC, sTmp, -1, utFontRect, DT_CENTER Or DT_VCENTER Or DT_SINGLELINE
-                                '   Revert the changes so that the focus rectangle
-                                '   can be drawn for the whole tab's clickable area
-                                utFontRect.Right = (utFontRect.Right - 1) + iAdjustedIconSize + 6
-                        End Select
-            
                     Else
+                        '   Top line
+                        APILine .Left, .Top, .Right - 2, .Top, m_lOuterBorderColor
+                    End If
+                    '   Top-right corner
+                    APILine .Right - 2, .Top + 1, .Right, .Top + 3, m_lOuterBorderColor
+                    '   Right line
+                    APILine .Right - 1, .Top + 2, .Right - 1, .Bottom, m_lOuterBorderColor
+                    '   Bottom line
+                    APILine .Left, .Bottom, .Right + 1, .Bottom, m_lOuterBorderColor
+                    '   Set the font
+                    Set Font = InActiveTabFont
+                    If utTabInfo.Enabled Then
+                        ForeColor = m_lInActiveTabForeColor
+                    Else
+                        ForeColor = m_lDisabledTabForeColor
+                    End If
+                Else
+                    '   Other non active tab (must draw full curves on both
+                    '   the sides)
+                    If utTabInfo.Enabled Then
+                        Call pFillCurvedGradient(.Left, .Top, .Right - 1, .Bottom, m_lInActiveTabBackStartColor, m_lInActiveTabBackEndColor, 2, True, True)
+                    Else
+                        Call pFillCurvedGradient(.Left, .Top, .Right - 1, .Bottom, m_lDisabledTabBackColor, m_lInActiveTabBackEndColor, 2, True, True)
+                    End If
+                    '   Top-left corner
+                    APILine .Left, .Top + 2, .Left + 3, .Top - 1, m_lOuterBorderColor
+                    '   Top line
+                    APILine .Left + 2, .Top, .Right - 2, .Top, m_lOuterBorderColor
+                    '   Top-right corner
+                    APILine .Right - 2, .Top + 1, .Right, .Top + 3, m_lOuterBorderColor
+                    '   Right line
+                    APILine .Right - 1, .Top + 2, .Right - 1, .Bottom, m_lOuterBorderColor
+                    '   Bottom line
+                    APILine .Left, .Bottom, .Right + 1, .Bottom, m_lOuterBorderColor
+                    '   Left Line
+                    APILine .Left, .Top + 2, .Left, .Bottom + 1, m_lOuterBorderColor
+                    Set Font = InActiveTabFont 'set the font
+                    '   set font color
+                    If utTabInfo.Enabled Then
+                        ForeColor = m_lInActiveTabForeColor
+                    Else
+                        ForeColor = m_lDisabledTabForeColor
+                    End If
+                End If
+                '   If its left most tab then adjust the bottom line
+                If iCnt = 0 Then
+                    ' Bottom line
+                    APILine .Left - 2, .Bottom, .Left, .Bottom, m_lOuterBorderColor
+                End If
+                '   Do the adjustments for the border
+                utFontRect.Left = .Left + 2
+                utFontRect.Top = .Top + 4
+                utFontRect.Bottom = .Bottom
+                utFontRect.Right = .Right - 2
+                If m_bUseControlBox Then
+                    OffsetRect utFontRect, -2, 0
+                End If
+                sTmp = utTabInfo.Caption
+                If Not utTabInfo.TabPicture Is Nothing Then
+                    If iTmpHeight - 2 < m_lIconSize Then    '-2 for borders
+                        ' Here we adjust the size of the icon if it does not
+                        ' fit into current tab
+                        iAdjustedIconSize = iTmpHeight - 2
+                    Else
+                        iAdjustedIconSize = m_lIconSize
+                    End If
+                    iTmpY = utFontRect.Top + Round((utFontRect.Bottom - utFontRect.Top - iAdjustedIconSize) / 2)
+                    Select Case PictureAlign
+                    Case xAlignLeftEdge, xAlignLeftOfCaption:
+                        If utTabInfo.TabPicture.Type = vbPicTypeBitmap And UseMaskColor Then
+                            Call DrawImage(m_lhDC, utTabInfo.TabPicture.handle, GetRGBFromOLE(PictureMaskColor), utFontRect.Left + 2, iTmpY, iAdjustedIconSize, iAdjustedIconSize)
+                        Else
+                            Call pPaintPicture(utTabInfo.TabPicture, utFontRect.Left + 2, iTmpY, iAdjustedIconSize, iAdjustedIconSize)
+                        End If
+                        '   Shift the text to be drawn after the picture
+                        utFontRect.Left = (utFontRect.Left + iAdjustedIconSize + 6) - iPROP_PAGE_BORDER_AND_TEXT_DISTANCE
                         '   Call the API for the text drawing
                         DrawText m_lhDC, sTmp, -1, utFontRect, DT_CENTER Or DT_VCENTER Or DT_SINGLELINE
-                    End If
-                    '   Only if in the run mode
-                    If bUserMode Then
-                        If iCnt = m_lActiveTab And m_IsFocused And ShowFocusRect Then
-                            If m_bUseControlBox Then
-                                OffsetRect utFontRect, 2, 0
-                            End If
-                            '   Draw focus rectangle
-                            Call DrawFocusRect(m_lhDC, utFontRect)
+                        '   Revert the changes so that the focus rectangle
+                        '   can be drawn for the whole tab's clickable area
+                        utFontRect.Left = (utFontRect.Left - iAdjustedIconSize - 6) + iPROP_PAGE_BORDER_AND_TEXT_DISTANCE
+                    Case xAlignRightEdge, xAlignRightOfCaption:
+                        If utTabInfo.TabPicture.Type = vbPicTypeBitmap And UseMaskColor Then
+                            Call DrawImage(m_lhDC, utTabInfo.TabPicture.handle, GetRGBFromOLE(PictureMaskColor), utFontRect.Right - iAdjustedIconSize - 2, iTmpY, iAdjustedIconSize, iAdjustedIconSize)
+                        Else
+                            Call pPaintPicture(utTabInfo.TabPicture, utFontRect.Right - iAdjustedIconSize - 2, iTmpY, iAdjustedIconSize, iAdjustedIconSize)
                         End If
+                        '   Shift the text to be drawn after the picture
+                        utFontRect.Right = (utFontRect.Right + 1) - iAdjustedIconSize - 6
+                        '   Call the API for the text drawing
+                        DrawText m_lhDC, sTmp, -1, utFontRect, DT_CENTER Or DT_VCENTER Or DT_SINGLELINE
+                        '   Revert the changes so that the focus rectangle
+                        '   can be drawn for the whole tab's clickable area
+                        utFontRect.Right = (utFontRect.Right - 1) + iAdjustedIconSize + 6
+                    End Select
+                    
+                Else
+                    '   Call the API for the text drawing
+                    DrawText m_lhDC, sTmp, -1, utFontRect, DT_CENTER Or DT_VCENTER Or DT_SINGLELINE
+                End If
+                '   Only if in the run mode
+                If bUserMode Then
+                    If iCnt = m_lActiveTab And m_IsFocused And ShowFocusRect Then
+                        If m_bUseControlBox Then
+                            OffsetRect utFontRect, 2, 0
+                        End If
+                        '   Draw focus rectangle
+                        Call DrawFocusRect(m_lhDC, utFontRect)
                     End If
-                End With
-            Next
-            '   Draw the line in the empty area after all the property pages heads
-            '   are drawn
-            APILine AryTabs(m_lTabCount - 1).ClickableRect.Right, AryTabs(m_lTabCount - 1).ClickableRect.Bottom, m_lScaleWidth, AryTabs(m_lTabCount - 1).ClickableRect.Bottom, m_lOuterBorderColor
-            '   Force drawing with current hover color
-            m_utRect = AryTabs(m_lActiveTab).ClickableRect
-            '   Draw the Focus Cap for the Tab
-            pDrawOverXOred
+                End If
+            End With
+        Next
+        '   Draw the line in the empty area after all the property pages heads
+        '   are drawn
+        APILine AryTabs(m_lTabCount - 1).ClickableRect.Right, AryTabs(m_lTabCount - 1).ClickableRect.Bottom, m_lScaleWidth, AryTabs(m_lTabCount - 1).ClickableRect.Bottom, m_lOuterBorderColor
+        '   Force drawing with current hover color
+        m_utRect = AryTabs(m_lActiveTab).ClickableRect
+        '   Draw the Focus Cap for the Tab
+        pDrawOverXOred
     End Select
     
 Sub_ErrHandlerExit:
@@ -3094,658 +3101,658 @@ Public Sub DrawTabsTabbedDialog()
     Dim iOrigRight As Long
     Dim iAdjustedIconSize As Long
     Dim lColor As Long
-
+    
     '   Handle Any Errors
     On Error GoTo Sub_ErrHandler
-
+    
     Select Case m_enmTheme
-        Case xThemeRoundTabs            'xThemeRoundTabs
-            '   Remember iTabWidth is an Long ...
-            '   so the result is automatically rounded
-            iTabWidth = m_lScaleWidth / m_lTabCount
-            'initialize the clickable items
-            For iCnt = 0 To m_lTabCount - 1
-                utTabInfo = AryTabs(iCnt)
-                '   No need to calculate the text size
-                '   (like in property pages).... since this
-                '   is a tabbed dialog style
-                With utTabInfo.ClickableRect
-                    .Left = iCnt * iTabWidth
-                    .Right = .Left + iTabWidth
-                    If iCnt = m_lActiveTab Then
-                        If m_lActiveTabHeight > m_lInActiveTabHeight Then
-                            .Top = 0
-                        Else
-                            .Top = m_lInActiveTabHeight - m_lActiveTabHeight
-                        End If
-                        .Bottom = .Top + m_lActiveTabHeight
+    Case xThemeRoundTabs            'xThemeRoundTabs
+        '   Remember iTabWidth is an Long ...
+        '   so the result is automatically rounded
+        iTabWidth = m_lScaleWidth / m_lTabCount
+        'initialize the clickable items
+        For iCnt = 0 To m_lTabCount - 1
+            utTabInfo = AryTabs(iCnt)
+            '   No need to calculate the text size
+            '   (like in property pages).... since this
+            '   is a tabbed dialog style
+            With utTabInfo.ClickableRect
+                .Left = iCnt * iTabWidth
+                .Right = .Left + iTabWidth
+                If iCnt = m_lActiveTab Then
+                    If m_lActiveTabHeight > m_lInActiveTabHeight Then
+                        .Top = 0
                     Else
-                      If m_lInActiveTabHeight > m_lActiveTabHeight Then
-                            .Top = 0
-                      Else
-                            .Top = m_lActiveTabHeight - m_lInActiveTabHeight
-                      End If
-                      .Bottom = .Top + m_lInActiveTabHeight
+                        .Top = m_lInActiveTabHeight - m_lActiveTabHeight
                     End If
-                    .Bottom = .Bottom + 2
-                End With
-                If iCnt = m_lTabCount - 1 Then
-                    '   If the last tab is shorter or longer than the usual size..
-                    '   then adjust it to perfect size
-                    utTabInfo.ClickableRect.Right = m_lScaleWidth - 1
+                    .Bottom = .Top + m_lActiveTabHeight
+                Else
+                    If m_lInActiveTabHeight > m_lActiveTabHeight Then
+                        .Top = 0
+                    Else
+                        .Top = m_lActiveTabHeight - m_lInActiveTabHeight
+                    End If
+                    .Bottom = .Top + m_lInActiveTabHeight
                 End If
-                '   Store the ControlBox values for hit testing
-                With utTabInfo.ControlBoxRect
-                    .Left = utTabInfo.ClickableRect.Right - 13
-                    .Top = utTabInfo.ClickableRect.Top + 6
-                    .Right = utTabInfo.ClickableRect.Right - 3
-                    .Bottom = utTabInfo.ClickableRect.Top + 16
-                End With
-                AryTabs(iCnt) = utTabInfo
-            Next
-            '   Added to prevent lines etc (we are filling the tab strip
-            '   with the tab strip color)
-            APIFillRectByCoords 0, 0, m_lScaleWidth, IIf(m_lActiveTabHeight > m_lInActiveTabHeight, m_lActiveTabHeight, m_lInActiveTabHeight), TabStripBackColor
-            FillStyle = vbFSSolid
+                .Bottom = .Bottom + 2
+            End With
+            If iCnt = m_lTabCount - 1 Then
+                '   If the last tab is shorter or longer than the usual size..
+                '   then adjust it to perfect size
+                utTabInfo.ClickableRect.Right = m_lScaleWidth - 1
+            End If
+            '   Store the ControlBox values for hit testing
+            With utTabInfo.ControlBoxRect
+                .Left = utTabInfo.ClickableRect.Right - 13
+                .Top = utTabInfo.ClickableRect.Top + 6
+                .Right = utTabInfo.ClickableRect.Right - 3
+                .Bottom = utTabInfo.ClickableRect.Top + 16
+            End With
+            AryTabs(iCnt) = utTabInfo
+        Next
+        '   Added to prevent lines etc (we are filling the tab strip
+        '   with the tab strip color)
+        APIFillRectByCoords 0, 0, m_lScaleWidth, IIf(m_lActiveTabHeight > m_lInActiveTabHeight, m_lActiveTabHeight, m_lInActiveTabHeight), TabStripBackColor
+        FillStyle = vbFSSolid
+        ForeColor = m_lOuterBorderColor
+        '   Now Draw Each Tab
+        For iCnt = 0 To m_lTabCount - 1
+            '   Fetch local copy
+            utTabInfo = AryTabs(iCnt)
             ForeColor = m_lOuterBorderColor
-            '   Now Draw Each Tab
-            For iCnt = 0 To m_lTabCount - 1
-                '   Fetch local copy
-                utTabInfo = AryTabs(iCnt)
-                ForeColor = m_lOuterBorderColor
-                With utTabInfo.ClickableRect
-                    '   If we are drawing the active tab then
-                    If iCnt = m_lActiveTab Then
-                        '   We'll use solid colors for background
-                        '   (since we are calling RoundRect API)
-                        If utTabInfo.Enabled Then
-                            FillColor = m_lActiveTabBackStartColor
-                        Else
-                            FillColor = m_lDisabledTabBackColor
-                        End If
-                        '   Draw rounded rectangle
-                        Call RoundRect(m_lhDC, .Left, .Top, .Right, m_lScaleHeight - 1, m_lXRadius, m_lYRadius)
-                        '   Set the font
-                        Set Font = ActiveTabFont
-                        If utTabInfo.Enabled Then
-                            ForeColor = m_lActiveTabForeColor
-                        Else
-                            ForeColor = m_lDisabledTabForeColor
-                        End If
+            With utTabInfo.ClickableRect
+                '   If we are drawing the active tab then
+                If iCnt = m_lActiveTab Then
+                    '   We'll use solid colors for background
+                    '   (since we are calling RoundRect API)
+                    If utTabInfo.Enabled Then
+                        FillColor = m_lActiveTabBackStartColor
                     Else
-                        '   We are drawing inactive tab
-                        '   We'll use solid colors for background
-                        '   (since we are calling RoundRect API)
-                        If utTabInfo.Enabled Then
-                            FillColor = m_lInActiveTabBackStartColor
-                        Else
-                            FillColor = m_lDisabledTabBackColor
-                        End If
-                        '   Draw rounded rectangle
-                        Call RoundRect(m_lhDC, .Left, .Top, .Right, m_lScaleHeight - 1, m_lXRadius, m_lYRadius)
-                        '   Set the font
-                        Set Font = InActiveTabFont
-                        If utTabInfo.Enabled Then
-                            ForeColor = m_lInActiveTabForeColor
-                        Else
-                            ForeColor = m_lDisabledTabForeColor
-                        End If
+                        FillColor = m_lDisabledTabBackColor
                     End If
-                    
-                    '   Do the adjustments for the border
-                    utFontRect.Left = .Left
-                    utFontRect.Top = .Top
-                    utFontRect.Bottom = .Bottom
-                    utFontRect.Right = .Right - 1
-                    
-                    If Not utTabInfo.TabPicture Is Nothing Then
-                        If utFontRect.Top + m_lIconSize > utFontRect.Bottom + 1 Then '+1 for minor adjustments
-                            '   Adjust if going out of current tab's bottom
-                            iAdjustedIconSize = (utFontRect.Bottom - 4) - utFontRect.Top
-                        Else
-                            iAdjustedIconSize = m_lIconSize
-                        End If
-                        iTmpY = utFontRect.Top + Round((utFontRect.Bottom - utFontRect.Top - iAdjustedIconSize) / 2)
-                        Select Case PictureAlign
-                            Case xAlignLeftEdge:
-                                iTmpX = utFontRect.Left + 4
-                                '   If active tab then give a popup effect
-                                If iCnt = m_lActiveTab Then
-                                    iTmpX = iTmpX + 1
-                                    iTmpY = iTmpY - 1
-                                    '   Make sure our adjustment dosen't make it
-                                    '   out of the font area
-                                    If iTmpY < utFontRect.Top Then iTmpY = utFontRect.Top
-                                End If
-                                If utTabInfo.TabPicture.Type = vbPicTypeBitmap And UseMaskColor Then
-                                  Call DrawImage(m_lhDC, utTabInfo.TabPicture.handle, GetRGBFromOLE(PictureMaskColor), iTmpX, iTmpY, iAdjustedIconSize, iAdjustedIconSize)
-                                Else
-                                  Call pPaintPicture(utTabInfo.TabPicture, iTmpX, iTmpY, iAdjustedIconSize, iAdjustedIconSize)
-                                End If
-                            Case xAlignRightEdge:
-                                iTmpX = utFontRect.Right - iAdjustedIconSize - 4
-                                If iCnt = m_lActiveTab Then 'if active tab then give a popup effect
-                                    iTmpX = iTmpX - 1
-                                    iTmpY = iTmpY - 1
-                                    
-                                    '   Make sure our adjustment dosen't make it out
-                                    '   of the font area
-                                    If iTmpY < utFontRect.Top Then iTmpY = utFontRect.Top
-                                End If
-                                If utTabInfo.TabPicture.Type = vbPicTypeBitmap And UseMaskColor Then
-                                    Call DrawImage(m_lhDC, utTabInfo.TabPicture.handle, GetRGBFromOLE(PictureMaskColor), iTmpX, iTmpY, iAdjustedIconSize, iAdjustedIconSize)
-                                Else
-                                    Call pPaintPicture(utTabInfo.TabPicture, iTmpX, iTmpY, iAdjustedIconSize, iAdjustedIconSize)
-                                End If
-                            Case xAlignLeftOfCaption:
-                                iOrigLeft = utFontRect.Left
-                            Case xAlignRightOfCaption:
-                                iOrigRight = utFontRect.Right
-                        End Select
-                    End If
-                    sTmp = utTabInfo.Caption
-                    '   Calculate the rect to draw the text, also modify the
-                    '   string to get ellipsis etc
-                    DrawText m_lhDC, sTmp, -1, utFontRect, DT_CALCRECT Or DT_SINGLELINE Or DT_END_ELLIPSIS Or DT_MODIFYSTRING
-                    iTmpW = utFontRect.Right - utFontRect.Left + iFOCUS_RECT_AND_TEXT_DISTANCE
-                    iTmpH = utFontRect.Bottom - utFontRect.Top + iFOCUS_RECT_AND_TEXT_DISTANCE / 2
-                    '   Do the adjustments to center the text (both vertically
-                    '   and horizontally)
-                    utFontRect.Left = (utFontRect.Left - (iFOCUS_RECT_AND_TEXT_DISTANCE / 2)) + .Right / 2 - utFontRect.Right / 2
-                    utFontRect.Right = utFontRect.Left + iTmpW
-                    utFontRect.Top = utFontRect.Top + .Bottom / 2 - utFontRect.Bottom / 2
-                    utFontRect.Bottom = utFontRect.Top + iTmpH
-                    If Not utTabInfo.TabPicture Is Nothing Then
-                        Select Case PictureAlign
-                            Case xAlignLeftOfCaption:
-                                iTmpX = utFontRect.Left - iAdjustedIconSize - 1
-                                '   Make sure our adjustment dosen't make it out of
-                                '   the font area
-                                If iTmpX < iOrigLeft Then iTmpX = iOrigLeft
-                                If utTabInfo.TabPicture.Type = vbPicTypeBitmap And UseMaskColor Then
-                                    Call DrawImage(m_lhDC, utTabInfo.TabPicture.handle, GetRGBFromOLE(PictureMaskColor), iTmpX, iTmpY, iAdjustedIconSize, iAdjustedIconSize)
-                                Else
-                                    Call pPaintPicture(utTabInfo.TabPicture, iTmpX, iTmpY, iAdjustedIconSize, iAdjustedIconSize)
-                                End If
-                            Case xAlignRightOfCaption:
-                                iTmpX = utFontRect.Right + 1
-                                '   Make sure our adjustment dosen't make it out of
-                                '   the font area
-                                If iTmpX + iAdjustedIconSize > iOrigRight Then iTmpX = iOrigRight - iAdjustedIconSize
-                                If utTabInfo.TabPicture.Type = vbPicTypeBitmap And UseMaskColor Then
-                                    Call DrawImage(m_lhDC, utTabInfo.TabPicture.handle, GetRGBFromOLE(PictureMaskColor), iTmpX, iTmpY, iAdjustedIconSize, iAdjustedIconSize)
-                                Else
-                                    Call pPaintPicture(utTabInfo.TabPicture, iTmpX, iTmpY, iAdjustedIconSize, iAdjustedIconSize)
-                                End If
-                        End Select
-                    End If
-                    '   Now draw the text
-                    DrawText m_lhDC, sTmp, -1, utFontRect, DT_SINGLELINE
-                    If bUserMode Then    'only if in the run mode
-                        If iCnt = m_lActiveTab And m_IsFocused And ShowFocusRect Then
-                            '   Draw focus rectangle
-                            Call DrawFocusRect(m_lhDC, utFontRect)
-                        End If
-                    End If
-                End With
-            Next
-            '   Store the larger tab height
-            iCnt = IIf(m_lActiveTabHeight > m_lInActiveTabHeight, m_lActiveTabHeight, m_lInActiveTabHeight)
-            '   Adjust the corners (whole tab control's corners)
-            APILine 0, iCnt + 1, 0, iCnt + 4, m_lOuterBorderColor
-            APILine m_lScaleWidth - 1, iCnt + 1, m_lScaleWidth - 1, iCnt + 4, m_lOuterBorderColor
-        Case xThemeVisualStudio2003     'xThemeVisualStudio2003
-            '   Call the same function (VS tabs and proeprty pages are same)
-            Call DrawTabsPropertyPages
-        Case xThemeWin9X                'xThemeWin9x
-            '   Remember iTabWidth is an Long ...
-            '   so the result is automatically rounded
-            iTabWidth = m_lScaleWidth / m_lTabCount
-            '   Initialize the clickable items
-            For iCnt = 0 To m_lTabCount - 1
-                utTabInfo = AryTabs(iCnt)
-                '   No need to calculate the text size(like in property pages)....
-                '   since this is a tabbed dialog style
-                With utTabInfo.ClickableRect
-                    .Left = iCnt * iTabWidth
-                    .Right = .Left + iTabWidth
-                  
-                    If iCnt = m_lActiveTab Then
-                        If m_lActiveTabHeight > m_lInActiveTabHeight Then
-                            .Top = 0
-                        Else
-                            .Top = m_lInActiveTabHeight - m_lActiveTabHeight
-                        End If
-                        .Bottom = .Top + m_lActiveTabHeight
+                    '   Draw rounded rectangle
+                    Call RoundRect(m_lhDC, .Left, .Top, .Right, m_lScaleHeight - 1, m_lXRadius, m_lYRadius)
+                    '   Set the font
+                    Set Font = ActiveTabFont
+                    If utTabInfo.Enabled Then
+                        ForeColor = m_lActiveTabForeColor
                     Else
-                        If m_lInActiveTabHeight > m_lActiveTabHeight Then
-                            .Top = 0
-                        Else
-                            .Top = m_lActiveTabHeight - m_lInActiveTabHeight
-                        End If
-                        .Bottom = .Top + m_lInActiveTabHeight
+                        ForeColor = m_lDisabledTabForeColor
                     End If
-                End With
-                If iCnt = m_lTabCount - 1 Then
-                    '   If the last tab is shorter or longer than the usual size..
-                    '   then adjust it to perfect size
-                    utTabInfo.ClickableRect.Right = m_lScaleWidth - 1
+                Else
+                    '   We are drawing inactive tab
+                    '   We'll use solid colors for background
+                    '   (since we are calling RoundRect API)
+                    If utTabInfo.Enabled Then
+                        FillColor = m_lInActiveTabBackStartColor
+                    Else
+                        FillColor = m_lDisabledTabBackColor
+                    End If
+                    '   Draw rounded rectangle
+                    Call RoundRect(m_lhDC, .Left, .Top, .Right, m_lScaleHeight - 1, m_lXRadius, m_lYRadius)
+                    '   Set the font
+                    Set Font = InActiveTabFont
+                    If utTabInfo.Enabled Then
+                        ForeColor = m_lInActiveTabForeColor
+                    Else
+                        ForeColor = m_lDisabledTabForeColor
+                    End If
                 End If
-                '   Store the ControlBox values for hit testing
-                With utTabInfo.ControlBoxRect
-                    .Left = utTabInfo.ClickableRect.Right - 14
-                    .Top = utTabInfo.ClickableRect.Top + 5
-                    .Right = utTabInfo.ClickableRect.Right - 4
-                    .Bottom = utTabInfo.ClickableRect.Top + 15
-                End With
-                AryTabs(iCnt) = utTabInfo
-            Next
-            '   Added to prevent lines etc (we are filling the tab strip with
-            '   the tab strip color)
-            APIFillRectByCoords 0, 0, m_lScaleWidth, IIf(m_lActiveTabHeight > m_lInActiveTabHeight, m_lActiveTabHeight, m_lInActiveTabHeight), TabStripBackColor
-            'Now Draw Each Tab
-            For iCnt = 0 To m_lTabCount - 1
-                utTabInfo = AryTabs(iCnt)
-                With utTabInfo.ClickableRect
-                    '   If we are drawing the active tab then
-                    If iCnt = m_lActiveTab Then
-                        If utTabInfo.Enabled Then
-                            Call pFillCurvedGradient(.Left + 1, .Top, .Right, .Bottom, m_lActiveTabBackStartColor, m_lActiveTabBackEndColor, 4, True, True)
-                        Else
-                            Call pFillCurvedGradient(.Left + 1, .Top, .Right, .Bottom, m_lDisabledTabBackColor, m_lDisabledTabBackColor, 4, True, True)
-                        End If
-                        '   Top-left corner
-                        APILine .Left, .Top + 4, .Left + 4, .Top, m_lOuterBorderColor
-                        APILine .Left + 1, .Top + 4, .Left + 4, .Top + 1, m_lTopLeftInnerBorderColor
-                        APILine .Left + 2, .Top + 4, .Left + 4, .Top + 2, m_lTopLeftInnerBorderColor
-                        '   Top line
-                        APILine .Left + 4, .Top, .Right - 4, .Top, m_lOuterBorderColor
-                        APILine .Left + 4, .Top + 1, .Right - 4, .Top + 1, m_lTopLeftInnerBorderColor
-                        APILine .Left + 4, .Top + 2, .Right - 4, .Top + 2, m_lTopLeftInnerBorderColor
-                        '   Top-right corner
-                        APILine .Right - 4, .Top, .Right, .Top + 4, m_lOuterBorderColor
-                        APILine .Right - 4, .Top + 1, .Right - 1, .Top + 4, m_lBottomRightInnerBorderColor
-                        APILine .Right - 4, .Top + 2, .Right - 2, .Top + 4, m_lBottomRightInnerBorderColor
-                        '   Right line
-                        APILine .Right, .Top + 4, .Right, .Bottom + 1, m_lOuterBorderColor
-                        APILine .Right - 1, .Top + 4, .Right - 1, .Bottom + 2, m_lBottomRightInnerBorderColor
-                        APILine .Right - 2, .Top + 4, .Right - 2, .Bottom + 3, m_lBottomRightInnerBorderColor
-                        If utTabInfo.Enabled Then
-                            '   Bottom line  (actually we must erase the previously
-                            '   drawn background (since this is the active tab)
-                            APILine .Left + 3, .Bottom + 1, .Right - 2, .Bottom + 1, m_lActiveTabBackEndColor
-                            APILine .Left + 3, .Bottom + 2, .Right - 2, .Bottom + 2, m_lActiveTabBackEndColor
-                            APILine .Left + 3, .Bottom + 3, .Right - 2, .Bottom + 3, m_lActiveTabBackEndColor
-                        Else
-                            '   Bottom line  (actually we must erase the previously
-                            '   drawn background (since this is the active tab)
-                            APILine .Left + 3, .Bottom + 1, .Right - 2, .Bottom + 1, m_lDisabledTabBackColor
-                            APILine .Left + 3, .Bottom + 2, .Right - 2, .Bottom + 2, m_lDisabledTabBackColor
-                            APILine .Left + 3, .Bottom + 3, .Right - 2, .Bottom + 3, m_lDisabledTabBackColor
-                        End If
-                        '   Left line
-                        APILine .Left, .Top + 4, .Left, .Bottom + 1, m_lOuterBorderColor
-                        APILine .Left + 1, .Top + 4, .Left + 1, .Bottom + 2, m_lTopLeftInnerBorderColor
-                        APILine .Left + 2, .Top + 4, .Left + 2, .Bottom + 3, m_lTopLeftInnerBorderColor
-                        '   Set the font
-                        Set Font = ActiveTabFont
-                        '   Set foreground color (for text drawing)
-                        If utTabInfo.Enabled Then
-                            ForeColor = m_lActiveTabForeColor
-                        Else
-                            ForeColor = m_lDisabledTabForeColor
-                        End If
+                
+                '   Do the adjustments for the border
+                utFontRect.Left = .Left
+                utFontRect.Top = .Top
+                utFontRect.Bottom = .Bottom
+                utFontRect.Right = .Right - 1
+                
+                If Not utTabInfo.TabPicture Is Nothing Then
+                    If utFontRect.Top + m_lIconSize > utFontRect.Bottom + 1 Then '+1 for minor adjustments
+                        '   Adjust if going out of current tab's bottom
+                        iAdjustedIconSize = (utFontRect.Bottom - 4) - utFontRect.Top
                     Else
-                        '   We are drawing inactive tab
-                        If utTabInfo.Enabled Then
-                          Call pFillCurvedGradient(.Left + 1, .Top, .Right, .Bottom, m_lInActiveTabBackStartColor, m_lInActiveTabBackEndColor, 4, True, True)
-                        Else
-                          Call pFillCurvedGradient(.Left + 1, .Top, .Right, .Bottom, m_lDisabledTabBackColor, m_lDisabledTabBackColor, 4, True, True)
-                        End If
-                        '   Top-left corner
-                        APILine .Left, .Top + 4, .Left + 4, .Top, m_lOuterBorderColor
-                        APILine .Left + 1, .Top + 4, .Left + 4, .Top + 1, m_lTopLeftInnerBorderColor
-                        '   Top line
-                        APILine .Left + 4, .Top, .Right - 4, .Top, m_lOuterBorderColor
-                        APILine .Left + 4, .Top + 1, .Right - 4, .Top + 1, m_lTopLeftInnerBorderColor
-                        '   Top-right corner
-                        APILine .Right - 4, .Top, .Right, .Top + 4, m_lOuterBorderColor
-                        APILine .Right - 4, .Top + 1, .Right - 1, .Top + 4, m_lBottomRightInnerBorderColor
-                        '   Right line
-                        APILine .Right, .Top + 4, .Right, .Bottom + 1, m_lOuterBorderColor
-                        APILine .Right - 1, .Top + 4, .Right - 1, .Bottom + 1, m_lBottomRightInnerBorderColor
-                        '   Bottom line
-                        APILine .Left, .Bottom + 1, .Right + 1, .Bottom + 1, m_lOuterBorderColor
-                        APILine .Left - 1, .Bottom + 2, .Right + 1, .Bottom + 2, m_lTopLeftInnerBorderColor
-                        APILine .Left - 2, .Bottom + 3, .Right + 2, .Bottom + 3, m_lTopLeftInnerBorderColor
-                        '   Left line
-                        APILine .Left, .Top + 4, .Left, .Bottom + 1, m_lOuterBorderColor
-                        APILine .Left + 1, .Top + 4, .Left + 1, .Bottom + 1, m_lTopLeftInnerBorderColor
-                        '   Set the font
-                        Set Font = InActiveTabFont
-                        '   Set forground color
-                        If utTabInfo.Enabled Then
-                            ForeColor = m_lInActiveTabForeColor
-                        Else
-                            ForeColor = m_lDisabledTabForeColor
-                        End If
+                        iAdjustedIconSize = m_lIconSize
                     End If
-                    '   Do the adjustments for the border
-                    utFontRect.Left = .Left + 3
-                    utFontRect.Top = .Top + 3
-                    utFontRect.Bottom = .Bottom
-                    utFontRect.Right = .Right - 2
-                    If Not utTabInfo.TabPicture Is Nothing Then
-                        If utFontRect.Top + m_lIconSize > utFontRect.Bottom + 1 Then '+1 for minor adjustments
-                            '   Adjust if going out of current tab's bottom
-                            iAdjustedIconSize = (utFontRect.Bottom + 1) - utFontRect.Top
+                    iTmpY = utFontRect.Top + Round((utFontRect.Bottom - utFontRect.Top - iAdjustedIconSize) / 2)
+                    Select Case PictureAlign
+                    Case xAlignLeftEdge:
+                        iTmpX = utFontRect.Left + 4
+                        '   If active tab then give a popup effect
+                        If iCnt = m_lActiveTab Then
+                            iTmpX = iTmpX + 1
+                            iTmpY = iTmpY - 1
+                            '   Make sure our adjustment dosen't make it
+                            '   out of the font area
+                            If iTmpY < utFontRect.Top Then iTmpY = utFontRect.Top
+                        End If
+                        If utTabInfo.TabPicture.Type = vbPicTypeBitmap And UseMaskColor Then
+                            Call DrawImage(m_lhDC, utTabInfo.TabPicture.handle, GetRGBFromOLE(PictureMaskColor), iTmpX, iTmpY, iAdjustedIconSize, iAdjustedIconSize)
                         Else
-                            iAdjustedIconSize = m_lIconSize
+                            Call pPaintPicture(utTabInfo.TabPicture, iTmpX, iTmpY, iAdjustedIconSize, iAdjustedIconSize)
                         End If
-                        iTmpY = utFontRect.Top + Round((utFontRect.Bottom - utFontRect.Top - iAdjustedIconSize) / 2)
-                        Select Case PictureAlign
-                            Case xAlignLeftEdge:
-                                iTmpX = utFontRect.Left
-                                '   If active tab then give a popup effect
-                                If iCnt = m_lActiveTab Then
-                                  iTmpX = iTmpX + 1
-                                  iTmpY = iTmpY - 1
-                                  ' Make sure our adjustment dosen't make it out of
-                                  ' the font area
-                                  If iTmpY < utFontRect.Top Then iTmpY = utFontRect.Top
-                                End If
-                                If utTabInfo.TabPicture.Type = vbPicTypeBitmap And UseMaskColor Then
-                                    Call DrawImage(m_lhDC, utTabInfo.TabPicture.handle, GetRGBFromOLE(PictureMaskColor), iTmpX, iTmpY, iAdjustedIconSize, iAdjustedIconSize)
-                                Else
-                                    Call pPaintPicture(utTabInfo.TabPicture, iTmpX, iTmpY, iAdjustedIconSize, iAdjustedIconSize)
-                                End If
-                            Case xAlignRightEdge:
-                                iTmpX = utFontRect.Right - iAdjustedIconSize
-                                '   If active tab then give a popup effect
-                                If iCnt = m_lActiveTab Then
-                                    iTmpX = iTmpX - 1
-                                    iTmpY = iTmpY - 1
-                                    '   Make sure our adjustment dosen't make it out of
-                                    '   the font area
-                                    If iTmpY < utFontRect.Top Then iTmpY = utFontRect.Top
-                                End If
-                                If utTabInfo.TabPicture.Type = vbPicTypeBitmap And UseMaskColor Then
-                                    Call DrawImage(m_lhDC, utTabInfo.TabPicture.handle, GetRGBFromOLE(PictureMaskColor), iTmpX, iTmpY, iAdjustedIconSize, iAdjustedIconSize)
-                                Else
-                                    Call pPaintPicture(utTabInfo.TabPicture, iTmpX, iTmpY, iAdjustedIconSize, iAdjustedIconSize)
-                                End If
-                            Case xAlignLeftOfCaption:
-                                iOrigLeft = utFontRect.Left
-                            Case xAlignRightOfCaption:
-                                iOrigRight = utFontRect.Right
-                        End Select
-                    End If
-                    sTmp = utTabInfo.Caption
-                    '   Calculate the rect to draw the text, also modify the string
-                    '   to get ellipsis etc
-                    DrawText m_lhDC, sTmp, -1, utFontRect, DT_CALCRECT Or DT_SINGLELINE Or DT_END_ELLIPSIS Or DT_MODIFYSTRING
-                    iTmpW = utFontRect.Right - utFontRect.Left + iFOCUS_RECT_AND_TEXT_DISTANCE
-                    iTmpH = utFontRect.Bottom - utFontRect.Top + iFOCUS_RECT_AND_TEXT_DISTANCE / 2
-                    '   Do the adjustments to center the text (both vertically and
-                    '   horizontally)
-                    utFontRect.Left = (utFontRect.Left - (iFOCUS_RECT_AND_TEXT_DISTANCE / 2)) + .Right / 2 - utFontRect.Right / 2
-                    utFontRect.Right = utFontRect.Left + iTmpW
-                    utFontRect.Top = utFontRect.Top + .Bottom / 2 - utFontRect.Bottom / 2
-                    utFontRect.Bottom = utFontRect.Top + iTmpH
-                    If Not utTabInfo.TabPicture Is Nothing Then
-                        Select Case PictureAlign
-                            Case xAlignLeftOfCaption:
-                                iTmpX = utFontRect.Left - iAdjustedIconSize - 1
-                                '   Make sure our adjustment dosen't make it out of
-                                '   the font area
-                                If iTmpX < iOrigLeft Then iTmpX = iOrigLeft
-                                If utTabInfo.TabPicture.Type = vbPicTypeBitmap And UseMaskColor Then
-                                  Call DrawImage(m_lhDC, utTabInfo.TabPicture.handle, GetRGBFromOLE(PictureMaskColor), iTmpX, iTmpY, iAdjustedIconSize, iAdjustedIconSize)
-                                Else
-                                  Call pPaintPicture(utTabInfo.TabPicture, iTmpX, iTmpY, iAdjustedIconSize, iAdjustedIconSize)
-                                End If
-                            Case xAlignRightOfCaption:
-                                iTmpX = utFontRect.Right + 1
-                                '   Make sure our adjustment dosen't make it out of
-                                '   the font area
-                                If iTmpX + iAdjustedIconSize > iOrigRight Then iTmpX = iOrigRight - iAdjustedIconSize
-                                If utTabInfo.TabPicture.Type = vbPicTypeBitmap And UseMaskColor Then
-                                    Call DrawImage(m_lhDC, utTabInfo.TabPicture.handle, GetRGBFromOLE(PictureMaskColor), iTmpX, iTmpY, iAdjustedIconSize, iAdjustedIconSize)
-                                Else
-                                    Call pPaintPicture(utTabInfo.TabPicture, iTmpX, iTmpY, iAdjustedIconSize, iAdjustedIconSize)
-                                End If
-                        End Select
-                    End If
-                    '   Now draw the text
-                    DrawText m_lhDC, sTmp, -1, utFontRect, DT_SINGLELINE
-                    If bUserMode Then    'only if in the run mode
-                        If iCnt = m_lActiveTab And m_IsFocused And ShowFocusRect Then
-                            '   Draw focus rectangle
-                            Call DrawFocusRect(m_lhDC, utFontRect)
+                    Case xAlignRightEdge:
+                        iTmpX = utFontRect.Right - iAdjustedIconSize - 4
+                        If iCnt = m_lActiveTab Then 'if active tab then give a popup effect
+                            iTmpX = iTmpX - 1
+                            iTmpY = iTmpY - 1
+                            
+                            '   Make sure our adjustment dosen't make it out
+                            '   of the font area
+                            If iTmpY < utFontRect.Top Then iTmpY = utFontRect.Top
                         End If
-                    End If
-                End With
-            Next
-            '   Store the larger tab height
-            iCnt = IIf(m_lActiveTabHeight > m_lInActiveTabHeight, m_lActiveTabHeight, m_lInActiveTabHeight)
-            '   Adjust the corners (whole tab control's corners)
-            APILine 0, iCnt + 1, 0, iCnt + 4, m_lOuterBorderColor
-            APILine m_lScaleWidth - 1, iCnt + 1, m_lScaleWidth - 1, iCnt + 4, m_lOuterBorderColor
-            APILine m_lScaleWidth - 2, iCnt + 2, m_lScaleWidth - 2, iCnt + 4, m_lBottomRightInnerBorderColor
-            APILine m_lScaleWidth - 3, iCnt + 3, m_lScaleWidth - 3, iCnt + 4, m_lBottomRightInnerBorderColor
-        Case xThemeWinXP, xThemeGalaxy  'xThemeWinXP, xThemeGalaxy
-            '   Remember iTabWidth is an Long ...
-            '   So the result is automatically rounded
-            iTabWidth = m_lScaleWidth / m_lTabCount
-            '   Initialize the clickable items
-            For iCnt = 0 To m_lTabCount - 1
-                utTabInfo = AryTabs(iCnt)
-                '   No need to calculate the text size(like in property pages)....
-                '   since this is a tabbed dialog style
-                With utTabInfo.ClickableRect
-                    .Left = iCnt * iTabWidth
-                    .Right = .Left + iTabWidth
-                    If iCnt = m_lActiveTab Then
-                        If m_lActiveTabHeight > m_lInActiveTabHeight Then
-                            .Top = 0
+                        If utTabInfo.TabPicture.Type = vbPicTypeBitmap And UseMaskColor Then
+                            Call DrawImage(m_lhDC, utTabInfo.TabPicture.handle, GetRGBFromOLE(PictureMaskColor), iTmpX, iTmpY, iAdjustedIconSize, iAdjustedIconSize)
                         Else
-                            .Top = m_lInActiveTabHeight - m_lActiveTabHeight
+                            Call pPaintPicture(utTabInfo.TabPicture, iTmpX, iTmpY, iAdjustedIconSize, iAdjustedIconSize)
                         End If
-                        .Bottom = .Top + m_lActiveTabHeight
-                    Else
-                        If m_lInActiveTabHeight > m_lActiveTabHeight Then
-                            .Top = 0
-                        Else
-                            .Top = m_lActiveTabHeight - m_lInActiveTabHeight
-                        End If
-                        .Bottom = .Top + m_lInActiveTabHeight
-                    End If
-                End With
-                If iCnt = m_lTabCount - 1 Then
-                    '   If the last tab is shorter or longer than the usual size..
-                    '   then adjust it to perfect size
-                    utTabInfo.ClickableRect.Right = m_lScaleWidth - 1
+                    Case xAlignLeftOfCaption:
+                        iOrigLeft = utFontRect.Left
+                    Case xAlignRightOfCaption:
+                        iOrigRight = utFontRect.Right
+                    End Select
                 End If
-                '   Store the ControlBox values for hit testing
-                With utTabInfo.ControlBoxRect
-                    .Left = utTabInfo.ClickableRect.Right - 13
-                    .Top = utTabInfo.ClickableRect.Top + 6
-                    .Right = utTabInfo.ClickableRect.Right - 3
-                    .Bottom = utTabInfo.ClickableRect.Top + 16
-                End With
-                AryTabs(iCnt) = utTabInfo
-            Next
-            '   Added to prevent lines etc (we are filling the tab strip with
-            '   the tab strip color)
-            APIFillRectByCoords 0, 0, m_lScaleWidth, IIf(m_lActiveTabHeight > m_lInActiveTabHeight, m_lActiveTabHeight, m_lInActiveTabHeight), TabStripBackColor
-            '   Now Draw Each Tab
-            For iCnt = 0 To m_lTabCount - 1
-                '   Fetch local copy
-                utTabInfo = AryTabs(iCnt)
-                With utTabInfo.ClickableRect
-                    '   If we are drawing active tab then
-                    If iCnt = m_lActiveTab Then
-                        If utTabInfo.Enabled Then
-                            pFillCurvedGradient .Left, .Top, .Right, .Bottom, m_lActiveTabBackStartColor, m_lActiveTabBackEndColor, 4, True, True
+                sTmp = utTabInfo.Caption
+                '   Calculate the rect to draw the text, also modify the
+                '   string to get ellipsis etc
+                DrawText m_lhDC, sTmp, -1, utFontRect, DT_CALCRECT Or DT_SINGLELINE Or DT_END_ELLIPSIS Or DT_MODIFYSTRING
+                iTmpW = utFontRect.Right - utFontRect.Left + iFOCUS_RECT_AND_TEXT_DISTANCE
+                iTmpH = utFontRect.Bottom - utFontRect.Top + iFOCUS_RECT_AND_TEXT_DISTANCE / 2
+                '   Do the adjustments to center the text (both vertically
+                '   and horizontally)
+                utFontRect.Left = (utFontRect.Left - (iFOCUS_RECT_AND_TEXT_DISTANCE / 2)) + .Right / 2 - utFontRect.Right / 2
+                utFontRect.Right = utFontRect.Left + iTmpW
+                utFontRect.Top = utFontRect.Top + .Bottom / 2 - utFontRect.Bottom / 2
+                utFontRect.Bottom = utFontRect.Top + iTmpH
+                If Not utTabInfo.TabPicture Is Nothing Then
+                    Select Case PictureAlign
+                    Case xAlignLeftOfCaption:
+                        iTmpX = utFontRect.Left - iAdjustedIconSize - 1
+                        '   Make sure our adjustment dosen't make it out of
+                        '   the font area
+                        If iTmpX < iOrigLeft Then iTmpX = iOrigLeft
+                        If utTabInfo.TabPicture.Type = vbPicTypeBitmap And UseMaskColor Then
+                            Call DrawImage(m_lhDC, utTabInfo.TabPicture.handle, GetRGBFromOLE(PictureMaskColor), iTmpX, iTmpY, iAdjustedIconSize, iAdjustedIconSize)
                         Else
-                            pFillCurvedGradient .Left, .Top, .Right, .Bottom, m_lDisabledTabBackColor, m_lDisabledTabBackColor, 4, True, True
+                            Call pPaintPicture(utTabInfo.TabPicture, iTmpX, iTmpY, iAdjustedIconSize, iAdjustedIconSize)
                         End If
-                        '   Top-left corner
-                        APILine .Left, .Top + 4, .Left + 4, .Top, m_lOuterBorderColor
-                        '   Top line
-                        APILine .Left + 4, .Top, .Right - 4, .Top, m_lOuterBorderColor
-                        '   Top-right corner
-                        APILine .Right - 4, .Top, .Right, .Top + 4, m_lOuterBorderColor
-                        '   Right line
-                        APILine .Right, .Top + 4, .Right, .Bottom + 1, m_lOuterBorderColor
-                        If utTabInfo.Enabled Then
-                            APILine .Left + 1, .Bottom + 1, .Right, .Bottom + 1, m_lActiveTabBackEndColor
+                    Case xAlignRightOfCaption:
+                        iTmpX = utFontRect.Right + 1
+                        '   Make sure our adjustment dosen't make it out of
+                        '   the font area
+                        If iTmpX + iAdjustedIconSize > iOrigRight Then iTmpX = iOrigRight - iAdjustedIconSize
+                        If utTabInfo.TabPicture.Type = vbPicTypeBitmap And UseMaskColor Then
+                            Call DrawImage(m_lhDC, utTabInfo.TabPicture.handle, GetRGBFromOLE(PictureMaskColor), iTmpX, iTmpY, iAdjustedIconSize, iAdjustedIconSize)
                         Else
-                            APILine .Left + 1, .Bottom + 1, .Right, .Bottom + 1, m_lDisabledTabBackColor
+                            Call pPaintPicture(utTabInfo.TabPicture, iTmpX, iTmpY, iAdjustedIconSize, iAdjustedIconSize)
                         End If
-                        '   Left line
-                        APILine .Left, .Top + 4, .Left, .Bottom + 1, m_lOuterBorderColor
-                        Set Font = ActiveTabFont       'set the font
-                        If utTabInfo.Enabled Then
-                            ForeColor = m_lActiveTabForeColor
-                        Else
-                            ForeColor = m_lDisabledTabForeColor
-                        End If
-                    Else      ' We are drawing inactive tab
-                        If utTabInfo.Enabled Then
-                            Call pFillCurvedGradient(.Left, .Top, .Right, .Bottom, m_lInActiveTabBackStartColor, m_lInActiveTabBackEndColor, 4, True, True)
-                        Else
-                            Call pFillCurvedGradient(.Left, .Top, .Right, .Bottom, m_lDisabledTabBackColor, m_lDisabledTabBackColor, 4, True, True)
-                        End If
-                        '   Top-left corner
-                        APILine .Left, .Top + 4, .Left + 4, .Top, m_lOuterBorderColor
-                        '   Top line
-                        APILine .Left + 4, .Top, .Right - 4, .Top, m_lOuterBorderColor
-                        '   Top-right corner
-                        APILine .Right - 4, .Top, .Right, .Top + 4, m_lOuterBorderColor
-                        '   Right line
-                        APILine .Right, .Top + 4, .Right, .Bottom + 1, m_lOuterBorderColor
-                        '   Bottom line
-                        APILine .Left, .Bottom + 1, .Right + 1, .Bottom + 1, m_lOuterBorderColor
-                        '   Left line
-                        APILine .Left, .Top + 4, .Left, .Bottom + 1, m_lOuterBorderColor
-                        '   Set the font
-                        Set Font = InActiveTabFont
-                        '   Set foreground color
-                        If utTabInfo.Enabled Then
-                            ForeColor = m_lInActiveTabForeColor
-                        Else
-                            ForeColor = m_lDisabledTabForeColor
-                        End If
+                    End Select
+                End If
+                '   Now draw the text
+                DrawText m_lhDC, sTmp, -1, utFontRect, DT_SINGLELINE
+                If bUserMode Then    'only if in the run mode
+                    If iCnt = m_lActiveTab And m_IsFocused And ShowFocusRect Then
+                        '   Draw focus rectangle
+                        Call DrawFocusRect(m_lhDC, utFontRect)
                     End If
-                    '   Do the adjustments for the border
-                    utFontRect.Left = .Left + 3
-                    utFontRect.Top = .Top + 3
-                    utFontRect.Bottom = .Bottom
-                    utFontRect.Right = .Right - 2
-                    If Not utTabInfo.TabPicture Is Nothing Then
-                        If utFontRect.Top + m_lIconSize > utFontRect.Bottom + 1 Then '+1 for minor adjustments
-                            '   Adjust if going out of current tab's bottom
-                            iAdjustedIconSize = (utFontRect.Bottom + 1) - utFontRect.Top
+                End If
+            End With
+        Next
+        '   Store the larger tab height
+        iCnt = IIf(m_lActiveTabHeight > m_lInActiveTabHeight, m_lActiveTabHeight, m_lInActiveTabHeight)
+        '   Adjust the corners (whole tab control's corners)
+        APILine 0, iCnt + 1, 0, iCnt + 4, m_lOuterBorderColor
+        APILine m_lScaleWidth - 1, iCnt + 1, m_lScaleWidth - 1, iCnt + 4, m_lOuterBorderColor
+    Case xThemeVisualStudio2003     'xThemeVisualStudio2003
+        '   Call the same function (VS tabs and proeprty pages are same)
+        Call DrawTabsPropertyPages
+    Case xThemeWin9X                'xThemeWin9x
+        '   Remember iTabWidth is an Long ...
+        '   so the result is automatically rounded
+        iTabWidth = m_lScaleWidth / m_lTabCount
+        '   Initialize the clickable items
+        For iCnt = 0 To m_lTabCount - 1
+            utTabInfo = AryTabs(iCnt)
+            '   No need to calculate the text size(like in property pages)....
+            '   since this is a tabbed dialog style
+            With utTabInfo.ClickableRect
+                .Left = iCnt * iTabWidth
+                .Right = .Left + iTabWidth
+                
+                If iCnt = m_lActiveTab Then
+                    If m_lActiveTabHeight > m_lInActiveTabHeight Then
+                        .Top = 0
+                    Else
+                        .Top = m_lInActiveTabHeight - m_lActiveTabHeight
+                    End If
+                    .Bottom = .Top + m_lActiveTabHeight
+                Else
+                    If m_lInActiveTabHeight > m_lActiveTabHeight Then
+                        .Top = 0
+                    Else
+                        .Top = m_lActiveTabHeight - m_lInActiveTabHeight
+                    End If
+                    .Bottom = .Top + m_lInActiveTabHeight
+                End If
+            End With
+            If iCnt = m_lTabCount - 1 Then
+                '   If the last tab is shorter or longer than the usual size..
+                '   then adjust it to perfect size
+                utTabInfo.ClickableRect.Right = m_lScaleWidth - 1
+            End If
+            '   Store the ControlBox values for hit testing
+            With utTabInfo.ControlBoxRect
+                .Left = utTabInfo.ClickableRect.Right - 14
+                .Top = utTabInfo.ClickableRect.Top + 5
+                .Right = utTabInfo.ClickableRect.Right - 4
+                .Bottom = utTabInfo.ClickableRect.Top + 15
+            End With
+            AryTabs(iCnt) = utTabInfo
+        Next
+        '   Added to prevent lines etc (we are filling the tab strip with
+        '   the tab strip color)
+        APIFillRectByCoords 0, 0, m_lScaleWidth, IIf(m_lActiveTabHeight > m_lInActiveTabHeight, m_lActiveTabHeight, m_lInActiveTabHeight), TabStripBackColor
+        'Now Draw Each Tab
+        For iCnt = 0 To m_lTabCount - 1
+            utTabInfo = AryTabs(iCnt)
+            With utTabInfo.ClickableRect
+                '   If we are drawing the active tab then
+                If iCnt = m_lActiveTab Then
+                    If utTabInfo.Enabled Then
+                        Call pFillCurvedGradient(.Left + 1, .Top, .Right, .Bottom, m_lActiveTabBackStartColor, m_lActiveTabBackEndColor, 4, True, True)
+                    Else
+                        Call pFillCurvedGradient(.Left + 1, .Top, .Right, .Bottom, m_lDisabledTabBackColor, m_lDisabledTabBackColor, 4, True, True)
+                    End If
+                    '   Top-left corner
+                    APILine .Left, .Top + 4, .Left + 4, .Top, m_lOuterBorderColor
+                    APILine .Left + 1, .Top + 4, .Left + 4, .Top + 1, m_lTopLeftInnerBorderColor
+                    APILine .Left + 2, .Top + 4, .Left + 4, .Top + 2, m_lTopLeftInnerBorderColor
+                    '   Top line
+                    APILine .Left + 4, .Top, .Right - 4, .Top, m_lOuterBorderColor
+                    APILine .Left + 4, .Top + 1, .Right - 4, .Top + 1, m_lTopLeftInnerBorderColor
+                    APILine .Left + 4, .Top + 2, .Right - 4, .Top + 2, m_lTopLeftInnerBorderColor
+                    '   Top-right corner
+                    APILine .Right - 4, .Top, .Right, .Top + 4, m_lOuterBorderColor
+                    APILine .Right - 4, .Top + 1, .Right - 1, .Top + 4, m_lBottomRightInnerBorderColor
+                    APILine .Right - 4, .Top + 2, .Right - 2, .Top + 4, m_lBottomRightInnerBorderColor
+                    '   Right line
+                    APILine .Right, .Top + 4, .Right, .Bottom + 1, m_lOuterBorderColor
+                    APILine .Right - 1, .Top + 4, .Right - 1, .Bottom + 2, m_lBottomRightInnerBorderColor
+                    APILine .Right - 2, .Top + 4, .Right - 2, .Bottom + 3, m_lBottomRightInnerBorderColor
+                    If utTabInfo.Enabled Then
+                        '   Bottom line  (actually we must erase the previously
+                        '   drawn background (since this is the active tab)
+                        APILine .Left + 3, .Bottom + 1, .Right - 2, .Bottom + 1, m_lActiveTabBackEndColor
+                        APILine .Left + 3, .Bottom + 2, .Right - 2, .Bottom + 2, m_lActiveTabBackEndColor
+                        APILine .Left + 3, .Bottom + 3, .Right - 2, .Bottom + 3, m_lActiveTabBackEndColor
+                    Else
+                        '   Bottom line  (actually we must erase the previously
+                        '   drawn background (since this is the active tab)
+                        APILine .Left + 3, .Bottom + 1, .Right - 2, .Bottom + 1, m_lDisabledTabBackColor
+                        APILine .Left + 3, .Bottom + 2, .Right - 2, .Bottom + 2, m_lDisabledTabBackColor
+                        APILine .Left + 3, .Bottom + 3, .Right - 2, .Bottom + 3, m_lDisabledTabBackColor
+                    End If
+                    '   Left line
+                    APILine .Left, .Top + 4, .Left, .Bottom + 1, m_lOuterBorderColor
+                    APILine .Left + 1, .Top + 4, .Left + 1, .Bottom + 2, m_lTopLeftInnerBorderColor
+                    APILine .Left + 2, .Top + 4, .Left + 2, .Bottom + 3, m_lTopLeftInnerBorderColor
+                    '   Set the font
+                    Set Font = ActiveTabFont
+                    '   Set foreground color (for text drawing)
+                    If utTabInfo.Enabled Then
+                        ForeColor = m_lActiveTabForeColor
+                    Else
+                        ForeColor = m_lDisabledTabForeColor
+                    End If
+                Else
+                    '   We are drawing inactive tab
+                    If utTabInfo.Enabled Then
+                        Call pFillCurvedGradient(.Left + 1, .Top, .Right, .Bottom, m_lInActiveTabBackStartColor, m_lInActiveTabBackEndColor, 4, True, True)
+                    Else
+                        Call pFillCurvedGradient(.Left + 1, .Top, .Right, .Bottom, m_lDisabledTabBackColor, m_lDisabledTabBackColor, 4, True, True)
+                    End If
+                    '   Top-left corner
+                    APILine .Left, .Top + 4, .Left + 4, .Top, m_lOuterBorderColor
+                    APILine .Left + 1, .Top + 4, .Left + 4, .Top + 1, m_lTopLeftInnerBorderColor
+                    '   Top line
+                    APILine .Left + 4, .Top, .Right - 4, .Top, m_lOuterBorderColor
+                    APILine .Left + 4, .Top + 1, .Right - 4, .Top + 1, m_lTopLeftInnerBorderColor
+                    '   Top-right corner
+                    APILine .Right - 4, .Top, .Right, .Top + 4, m_lOuterBorderColor
+                    APILine .Right - 4, .Top + 1, .Right - 1, .Top + 4, m_lBottomRightInnerBorderColor
+                    '   Right line
+                    APILine .Right, .Top + 4, .Right, .Bottom + 1, m_lOuterBorderColor
+                    APILine .Right - 1, .Top + 4, .Right - 1, .Bottom + 1, m_lBottomRightInnerBorderColor
+                    '   Bottom line
+                    APILine .Left, .Bottom + 1, .Right + 1, .Bottom + 1, m_lOuterBorderColor
+                    APILine .Left - 1, .Bottom + 2, .Right + 1, .Bottom + 2, m_lTopLeftInnerBorderColor
+                    APILine .Left - 2, .Bottom + 3, .Right + 2, .Bottom + 3, m_lTopLeftInnerBorderColor
+                    '   Left line
+                    APILine .Left, .Top + 4, .Left, .Bottom + 1, m_lOuterBorderColor
+                    APILine .Left + 1, .Top + 4, .Left + 1, .Bottom + 1, m_lTopLeftInnerBorderColor
+                    '   Set the font
+                    Set Font = InActiveTabFont
+                    '   Set forground color
+                    If utTabInfo.Enabled Then
+                        ForeColor = m_lInActiveTabForeColor
+                    Else
+                        ForeColor = m_lDisabledTabForeColor
+                    End If
+                End If
+                '   Do the adjustments for the border
+                utFontRect.Left = .Left + 3
+                utFontRect.Top = .Top + 3
+                utFontRect.Bottom = .Bottom
+                utFontRect.Right = .Right - 2
+                If Not utTabInfo.TabPicture Is Nothing Then
+                    If utFontRect.Top + m_lIconSize > utFontRect.Bottom + 1 Then '+1 for minor adjustments
+                        '   Adjust if going out of current tab's bottom
+                        iAdjustedIconSize = (utFontRect.Bottom + 1) - utFontRect.Top
+                    Else
+                        iAdjustedIconSize = m_lIconSize
+                    End If
+                    iTmpY = utFontRect.Top + Round((utFontRect.Bottom - utFontRect.Top - iAdjustedIconSize) / 2)
+                    Select Case PictureAlign
+                    Case xAlignLeftEdge:
+                        iTmpX = utFontRect.Left
+                        '   If active tab then give a popup effect
+                        If iCnt = m_lActiveTab Then
+                            iTmpX = iTmpX + 1
+                            iTmpY = iTmpY - 1
+                            ' Make sure our adjustment dosen't make it out of
+                            ' the font area
+                            If iTmpY < utFontRect.Top Then iTmpY = utFontRect.Top
+                        End If
+                        If utTabInfo.TabPicture.Type = vbPicTypeBitmap And UseMaskColor Then
+                            Call DrawImage(m_lhDC, utTabInfo.TabPicture.handle, GetRGBFromOLE(PictureMaskColor), iTmpX, iTmpY, iAdjustedIconSize, iAdjustedIconSize)
                         Else
-                            iAdjustedIconSize = m_lIconSize
+                            Call pPaintPicture(utTabInfo.TabPicture, iTmpX, iTmpY, iAdjustedIconSize, iAdjustedIconSize)
                         End If
-                        iTmpY = utFontRect.Top + Round((utFontRect.Bottom - utFontRect.Top - iAdjustedIconSize) / 2)
-                        Select Case PictureAlign
-                            Case xAlignLeftEdge:
-                                iTmpX = utFontRect.Left
-                                '   If active tab then give a popup effect
-                                If iCnt = m_lActiveTab Then
-                                    iTmpX = iTmpX + 1
-                                    iTmpY = iTmpY - 1
-                                    '   Make sure our adjustment dosen't make it
-                                    '   out of the font area
-                                    If iTmpY < utFontRect.Top Then iTmpY = utFontRect.Top
-                                End If
-                                If utTabInfo.TabPicture.Type = vbPicTypeBitmap And UseMaskColor Then
-                                    Call DrawImage(m_lhDC, utTabInfo.TabPicture.handle, GetRGBFromOLE(PictureMaskColor), iTmpX, iTmpY, iAdjustedIconSize, iAdjustedIconSize)
-                                Else
-                                    Call pPaintPicture(utTabInfo.TabPicture, iTmpX, iTmpY, iAdjustedIconSize, iAdjustedIconSize)
-                                End If
-                            Case xAlignRightEdge:
-                                iTmpX = utFontRect.Right - iAdjustedIconSize
-                                '   If active tab then give a popup effect
-                                If iCnt = m_lActiveTab Then
-                                    iTmpX = iTmpX - 1
-                                    iTmpY = iTmpY - 1
-                                    '   Make sure our adjustment dosen't make it
-                                    '   out of the font area
-                                    If iTmpY < utFontRect.Top Then iTmpY = utFontRect.Top
-                                End If
-                                If utTabInfo.TabPicture.Type = vbPicTypeBitmap And UseMaskColor Then
-                                    Call DrawImage(m_lhDC, utTabInfo.TabPicture.handle, GetRGBFromOLE(PictureMaskColor), iTmpX, iTmpY, iAdjustedIconSize, iAdjustedIconSize)
-                                Else
-                                    Call pPaintPicture(utTabInfo.TabPicture, iTmpX, iTmpY, iAdjustedIconSize, iAdjustedIconSize)
-                                End If
-                            Case xAlignLeftOfCaption:
-                                iOrigLeft = utFontRect.Left
-                            Case xAlignRightOfCaption:
-                                iOrigRight = utFontRect.Right
-                        End Select
-                    End If
-                    sTmp = utTabInfo.Caption
-                    '   Calculate the rect to draw the text, also modify the string
-                    '   to get ellipsis etc
-                    DrawText m_lhDC, sTmp, -1, utFontRect, DT_CALCRECT Or DT_SINGLELINE Or DT_END_ELLIPSIS Or DT_MODIFYSTRING
-                    iTmpW = utFontRect.Right - utFontRect.Left + iFOCUS_RECT_AND_TEXT_DISTANCE
-                    iTmpH = utFontRect.Bottom - utFontRect.Top + iFOCUS_RECT_AND_TEXT_DISTANCE / 2
-                    '   Do the adjustments to center the text (both vertically and
-                    '   horizontally)
-                    utFontRect.Left = (utFontRect.Left - (iFOCUS_RECT_AND_TEXT_DISTANCE / 2)) + .Right / 2 - utFontRect.Right / 2
-                    utFontRect.Right = utFontRect.Left + iTmpW
-                    utFontRect.Top = utFontRect.Top + .Bottom / 2 - utFontRect.Bottom / 2
-                    utFontRect.Bottom = utFontRect.Top + iTmpH
-                    If Not utTabInfo.TabPicture Is Nothing Then
-                        Select Case PictureAlign
-                            Case xAlignLeftOfCaption:
-                                iTmpX = utFontRect.Left - iAdjustedIconSize - 1
-                                '   Make sure our adjustment dosen't make it out of
-                                '   the font area
-                                If iTmpX < iOrigLeft Then iTmpX = iOrigLeft
-                                If utTabInfo.TabPicture.Type = vbPicTypeBitmap And UseMaskColor Then
-                                    Call DrawImage(m_lhDC, utTabInfo.TabPicture.handle, GetRGBFromOLE(PictureMaskColor), iTmpX, iTmpY, iAdjustedIconSize, iAdjustedIconSize)
-                                Else
-                                    Call pPaintPicture(utTabInfo.TabPicture, iTmpX, iTmpY, iAdjustedIconSize, iAdjustedIconSize)
-                                End If
-                            Case xAlignRightOfCaption:
-                                iTmpX = utFontRect.Right + 1
-                                '   Make sure our adjustment dosen't make it out of
-                                '   the font area
-                                If iTmpX + iAdjustedIconSize > iOrigRight Then iTmpX = iOrigRight - iAdjustedIconSize
-                                If utTabInfo.TabPicture.Type = vbPicTypeBitmap And UseMaskColor Then
-                                    Call DrawImage(m_lhDC, utTabInfo.TabPicture.handle, GetRGBFromOLE(PictureMaskColor), iTmpX, iTmpY, iAdjustedIconSize, iAdjustedIconSize)
-                                Else
-                                    Call pPaintPicture(utTabInfo.TabPicture, iTmpX, iTmpY, iAdjustedIconSize, iAdjustedIconSize)
-                                End If
-                        End Select
-                    End If
-                    '   Now draw the text
-                    DrawText m_lhDC, sTmp, -1, utFontRect, DT_SINGLELINE
-                    If bUserMode Then    'only if in the run mode
-                        If iCnt = m_lActiveTab And m_IsFocused And ShowFocusRect Then
-                            '   Draw focus rectangle
-                            Call DrawFocusRect(m_lhDC, utFontRect)
+                    Case xAlignRightEdge:
+                        iTmpX = utFontRect.Right - iAdjustedIconSize
+                        '   If active tab then give a popup effect
+                        If iCnt = m_lActiveTab Then
+                            iTmpX = iTmpX - 1
+                            iTmpY = iTmpY - 1
+                            '   Make sure our adjustment dosen't make it out of
+                            '   the font area
+                            If iTmpY < utFontRect.Top Then iTmpY = utFontRect.Top
                         End If
+                        If utTabInfo.TabPicture.Type = vbPicTypeBitmap And UseMaskColor Then
+                            Call DrawImage(m_lhDC, utTabInfo.TabPicture.handle, GetRGBFromOLE(PictureMaskColor), iTmpX, iTmpY, iAdjustedIconSize, iAdjustedIconSize)
+                        Else
+                            Call pPaintPicture(utTabInfo.TabPicture, iTmpX, iTmpY, iAdjustedIconSize, iAdjustedIconSize)
+                        End If
+                    Case xAlignLeftOfCaption:
+                        iOrigLeft = utFontRect.Left
+                    Case xAlignRightOfCaption:
+                        iOrigRight = utFontRect.Right
+                    End Select
+                End If
+                sTmp = utTabInfo.Caption
+                '   Calculate the rect to draw the text, also modify the string
+                '   to get ellipsis etc
+                DrawText m_lhDC, sTmp, -1, utFontRect, DT_CALCRECT Or DT_SINGLELINE Or DT_END_ELLIPSIS Or DT_MODIFYSTRING
+                iTmpW = utFontRect.Right - utFontRect.Left + iFOCUS_RECT_AND_TEXT_DISTANCE
+                iTmpH = utFontRect.Bottom - utFontRect.Top + iFOCUS_RECT_AND_TEXT_DISTANCE / 2
+                '   Do the adjustments to center the text (both vertically and
+                '   horizontally)
+                utFontRect.Left = (utFontRect.Left - (iFOCUS_RECT_AND_TEXT_DISTANCE / 2)) + .Right / 2 - utFontRect.Right / 2
+                utFontRect.Right = utFontRect.Left + iTmpW
+                utFontRect.Top = utFontRect.Top + .Bottom / 2 - utFontRect.Bottom / 2
+                utFontRect.Bottom = utFontRect.Top + iTmpH
+                If Not utTabInfo.TabPicture Is Nothing Then
+                    Select Case PictureAlign
+                    Case xAlignLeftOfCaption:
+                        iTmpX = utFontRect.Left - iAdjustedIconSize - 1
+                        '   Make sure our adjustment dosen't make it out of
+                        '   the font area
+                        If iTmpX < iOrigLeft Then iTmpX = iOrigLeft
+                        If utTabInfo.TabPicture.Type = vbPicTypeBitmap And UseMaskColor Then
+                            Call DrawImage(m_lhDC, utTabInfo.TabPicture.handle, GetRGBFromOLE(PictureMaskColor), iTmpX, iTmpY, iAdjustedIconSize, iAdjustedIconSize)
+                        Else
+                            Call pPaintPicture(utTabInfo.TabPicture, iTmpX, iTmpY, iAdjustedIconSize, iAdjustedIconSize)
+                        End If
+                    Case xAlignRightOfCaption:
+                        iTmpX = utFontRect.Right + 1
+                        '   Make sure our adjustment dosen't make it out of
+                        '   the font area
+                        If iTmpX + iAdjustedIconSize > iOrigRight Then iTmpX = iOrigRight - iAdjustedIconSize
+                        If utTabInfo.TabPicture.Type = vbPicTypeBitmap And UseMaskColor Then
+                            Call DrawImage(m_lhDC, utTabInfo.TabPicture.handle, GetRGBFromOLE(PictureMaskColor), iTmpX, iTmpY, iAdjustedIconSize, iAdjustedIconSize)
+                        Else
+                            Call pPaintPicture(utTabInfo.TabPicture, iTmpX, iTmpY, iAdjustedIconSize, iAdjustedIconSize)
+                        End If
+                    End Select
+                End If
+                '   Now draw the text
+                DrawText m_lhDC, sTmp, -1, utFontRect, DT_SINGLELINE
+                If bUserMode Then    'only if in the run mode
+                    If iCnt = m_lActiveTab And m_IsFocused And ShowFocusRect Then
+                        '   Draw focus rectangle
+                        Call DrawFocusRect(m_lhDC, utFontRect)
                     End If
-                End With
-            Next
-            
-            '   Store the larger tab height
-            iCnt = IIf(m_lActiveTabHeight > m_lInActiveTabHeight, m_lActiveTabHeight, m_lInActiveTabHeight)
-            
-            'Adjust the corners (whole tab control's corners)
-            APILine 0, iCnt + 1, 0, iCnt + 4, m_lOuterBorderColor
-            APILine m_lScaleWidth - 1, iCnt + 1, m_lScaleWidth - 1, iCnt + 4, m_lOuterBorderColor
-            
-            '   Force drawing with current hover color
-            m_utRect = AryTabs(m_lActiveTab).ClickableRect
-            '   Draw Tab Focused Color Cap
-            pDrawOverXOred
+                End If
+            End With
+        Next
+        '   Store the larger tab height
+        iCnt = IIf(m_lActiveTabHeight > m_lInActiveTabHeight, m_lActiveTabHeight, m_lInActiveTabHeight)
+        '   Adjust the corners (whole tab control's corners)
+        APILine 0, iCnt + 1, 0, iCnt + 4, m_lOuterBorderColor
+        APILine m_lScaleWidth - 1, iCnt + 1, m_lScaleWidth - 1, iCnt + 4, m_lOuterBorderColor
+        APILine m_lScaleWidth - 2, iCnt + 2, m_lScaleWidth - 2, iCnt + 4, m_lBottomRightInnerBorderColor
+        APILine m_lScaleWidth - 3, iCnt + 3, m_lScaleWidth - 3, iCnt + 4, m_lBottomRightInnerBorderColor
+    Case xThemeWinXP, xThemeGalaxy  'xThemeWinXP, xThemeGalaxy
+        '   Remember iTabWidth is an Long ...
+        '   So the result is automatically rounded
+        iTabWidth = m_lScaleWidth / m_lTabCount
+        '   Initialize the clickable items
+        For iCnt = 0 To m_lTabCount - 1
+            utTabInfo = AryTabs(iCnt)
+            '   No need to calculate the text size(like in property pages)....
+            '   since this is a tabbed dialog style
+            With utTabInfo.ClickableRect
+                .Left = iCnt * iTabWidth
+                .Right = .Left + iTabWidth
+                If iCnt = m_lActiveTab Then
+                    If m_lActiveTabHeight > m_lInActiveTabHeight Then
+                        .Top = 0
+                    Else
+                        .Top = m_lInActiveTabHeight - m_lActiveTabHeight
+                    End If
+                    .Bottom = .Top + m_lActiveTabHeight
+                Else
+                    If m_lInActiveTabHeight > m_lActiveTabHeight Then
+                        .Top = 0
+                    Else
+                        .Top = m_lActiveTabHeight - m_lInActiveTabHeight
+                    End If
+                    .Bottom = .Top + m_lInActiveTabHeight
+                End If
+            End With
+            If iCnt = m_lTabCount - 1 Then
+                '   If the last tab is shorter or longer than the usual size..
+                '   then adjust it to perfect size
+                utTabInfo.ClickableRect.Right = m_lScaleWidth - 1
+            End If
+            '   Store the ControlBox values for hit testing
+            With utTabInfo.ControlBoxRect
+                .Left = utTabInfo.ClickableRect.Right - 13
+                .Top = utTabInfo.ClickableRect.Top + 6
+                .Right = utTabInfo.ClickableRect.Right - 3
+                .Bottom = utTabInfo.ClickableRect.Top + 16
+            End With
+            AryTabs(iCnt) = utTabInfo
+        Next
+        '   Added to prevent lines etc (we are filling the tab strip with
+        '   the tab strip color)
+        APIFillRectByCoords 0, 0, m_lScaleWidth, IIf(m_lActiveTabHeight > m_lInActiveTabHeight, m_lActiveTabHeight, m_lInActiveTabHeight), TabStripBackColor
+        '   Now Draw Each Tab
+        For iCnt = 0 To m_lTabCount - 1
+            '   Fetch local copy
+            utTabInfo = AryTabs(iCnt)
+            With utTabInfo.ClickableRect
+                '   If we are drawing active tab then
+                If iCnt = m_lActiveTab Then
+                    If utTabInfo.Enabled Then
+                        pFillCurvedGradient .Left, .Top, .Right, .Bottom, m_lActiveTabBackStartColor, m_lActiveTabBackEndColor, 4, True, True
+                    Else
+                        pFillCurvedGradient .Left, .Top, .Right, .Bottom, m_lDisabledTabBackColor, m_lDisabledTabBackColor, 4, True, True
+                    End If
+                    '   Top-left corner
+                    APILine .Left, .Top + 4, .Left + 4, .Top, m_lOuterBorderColor
+                    '   Top line
+                    APILine .Left + 4, .Top, .Right - 4, .Top, m_lOuterBorderColor
+                    '   Top-right corner
+                    APILine .Right - 4, .Top, .Right, .Top + 4, m_lOuterBorderColor
+                    '   Right line
+                    APILine .Right, .Top + 4, .Right, .Bottom + 1, m_lOuterBorderColor
+                    If utTabInfo.Enabled Then
+                        APILine .Left + 1, .Bottom + 1, .Right, .Bottom + 1, m_lActiveTabBackEndColor
+                    Else
+                        APILine .Left + 1, .Bottom + 1, .Right, .Bottom + 1, m_lDisabledTabBackColor
+                    End If
+                    '   Left line
+                    APILine .Left, .Top + 4, .Left, .Bottom + 1, m_lOuterBorderColor
+                    Set Font = ActiveTabFont       'set the font
+                    If utTabInfo.Enabled Then
+                        ForeColor = m_lActiveTabForeColor
+                    Else
+                        ForeColor = m_lDisabledTabForeColor
+                    End If
+                Else      ' We are drawing inactive tab
+                    If utTabInfo.Enabled Then
+                        Call pFillCurvedGradient(.Left, .Top, .Right, .Bottom, m_lInActiveTabBackStartColor, m_lInActiveTabBackEndColor, 4, True, True)
+                    Else
+                        Call pFillCurvedGradient(.Left, .Top, .Right, .Bottom, m_lDisabledTabBackColor, m_lDisabledTabBackColor, 4, True, True)
+                    End If
+                    '   Top-left corner
+                    APILine .Left, .Top + 4, .Left + 4, .Top, m_lOuterBorderColor
+                    '   Top line
+                    APILine .Left + 4, .Top, .Right - 4, .Top, m_lOuterBorderColor
+                    '   Top-right corner
+                    APILine .Right - 4, .Top, .Right, .Top + 4, m_lOuterBorderColor
+                    '   Right line
+                    APILine .Right, .Top + 4, .Right, .Bottom + 1, m_lOuterBorderColor
+                    '   Bottom line
+                    APILine .Left, .Bottom + 1, .Right + 1, .Bottom + 1, m_lOuterBorderColor
+                    '   Left line
+                    APILine .Left, .Top + 4, .Left, .Bottom + 1, m_lOuterBorderColor
+                    '   Set the font
+                    Set Font = InActiveTabFont
+                    '   Set foreground color
+                    If utTabInfo.Enabled Then
+                        ForeColor = m_lInActiveTabForeColor
+                    Else
+                        ForeColor = m_lDisabledTabForeColor
+                    End If
+                End If
+                '   Do the adjustments for the border
+                utFontRect.Left = .Left + 3
+                utFontRect.Top = .Top + 3
+                utFontRect.Bottom = .Bottom
+                utFontRect.Right = .Right - 2
+                If Not utTabInfo.TabPicture Is Nothing Then
+                    If utFontRect.Top + m_lIconSize > utFontRect.Bottom + 1 Then '+1 for minor adjustments
+                        '   Adjust if going out of current tab's bottom
+                        iAdjustedIconSize = (utFontRect.Bottom + 1) - utFontRect.Top
+                    Else
+                        iAdjustedIconSize = m_lIconSize
+                    End If
+                    iTmpY = utFontRect.Top + Round((utFontRect.Bottom - utFontRect.Top - iAdjustedIconSize) / 2)
+                    Select Case PictureAlign
+                    Case xAlignLeftEdge:
+                        iTmpX = utFontRect.Left
+                        '   If active tab then give a popup effect
+                        If iCnt = m_lActiveTab Then
+                            iTmpX = iTmpX + 1
+                            iTmpY = iTmpY - 1
+                            '   Make sure our adjustment dosen't make it
+                            '   out of the font area
+                            If iTmpY < utFontRect.Top Then iTmpY = utFontRect.Top
+                        End If
+                        If utTabInfo.TabPicture.Type = vbPicTypeBitmap And UseMaskColor Then
+                            Call DrawImage(m_lhDC, utTabInfo.TabPicture.handle, GetRGBFromOLE(PictureMaskColor), iTmpX, iTmpY, iAdjustedIconSize, iAdjustedIconSize)
+                        Else
+                            Call pPaintPicture(utTabInfo.TabPicture, iTmpX, iTmpY, iAdjustedIconSize, iAdjustedIconSize)
+                        End If
+                    Case xAlignRightEdge:
+                        iTmpX = utFontRect.Right - iAdjustedIconSize
+                        '   If active tab then give a popup effect
+                        If iCnt = m_lActiveTab Then
+                            iTmpX = iTmpX - 1
+                            iTmpY = iTmpY - 1
+                            '   Make sure our adjustment dosen't make it
+                            '   out of the font area
+                            If iTmpY < utFontRect.Top Then iTmpY = utFontRect.Top
+                        End If
+                        If utTabInfo.TabPicture.Type = vbPicTypeBitmap And UseMaskColor Then
+                            Call DrawImage(m_lhDC, utTabInfo.TabPicture.handle, GetRGBFromOLE(PictureMaskColor), iTmpX, iTmpY, iAdjustedIconSize, iAdjustedIconSize)
+                        Else
+                            Call pPaintPicture(utTabInfo.TabPicture, iTmpX, iTmpY, iAdjustedIconSize, iAdjustedIconSize)
+                        End If
+                    Case xAlignLeftOfCaption:
+                        iOrigLeft = utFontRect.Left
+                    Case xAlignRightOfCaption:
+                        iOrigRight = utFontRect.Right
+                    End Select
+                End If
+                sTmp = utTabInfo.Caption
+                '   Calculate the rect to draw the text, also modify the string
+                '   to get ellipsis etc
+                DrawText m_lhDC, sTmp, -1, utFontRect, DT_CALCRECT Or DT_SINGLELINE Or DT_END_ELLIPSIS Or DT_MODIFYSTRING
+                iTmpW = utFontRect.Right - utFontRect.Left + iFOCUS_RECT_AND_TEXT_DISTANCE
+                iTmpH = utFontRect.Bottom - utFontRect.Top + iFOCUS_RECT_AND_TEXT_DISTANCE / 2
+                '   Do the adjustments to center the text (both vertically and
+                '   horizontally)
+                utFontRect.Left = (utFontRect.Left - (iFOCUS_RECT_AND_TEXT_DISTANCE / 2)) + .Right / 2 - utFontRect.Right / 2
+                utFontRect.Right = utFontRect.Left + iTmpW
+                utFontRect.Top = utFontRect.Top + .Bottom / 2 - utFontRect.Bottom / 2
+                utFontRect.Bottom = utFontRect.Top + iTmpH
+                If Not utTabInfo.TabPicture Is Nothing Then
+                    Select Case PictureAlign
+                    Case xAlignLeftOfCaption:
+                        iTmpX = utFontRect.Left - iAdjustedIconSize - 1
+                        '   Make sure our adjustment dosen't make it out of
+                        '   the font area
+                        If iTmpX < iOrigLeft Then iTmpX = iOrigLeft
+                        If utTabInfo.TabPicture.Type = vbPicTypeBitmap And UseMaskColor Then
+                            Call DrawImage(m_lhDC, utTabInfo.TabPicture.handle, GetRGBFromOLE(PictureMaskColor), iTmpX, iTmpY, iAdjustedIconSize, iAdjustedIconSize)
+                        Else
+                            Call pPaintPicture(utTabInfo.TabPicture, iTmpX, iTmpY, iAdjustedIconSize, iAdjustedIconSize)
+                        End If
+                    Case xAlignRightOfCaption:
+                        iTmpX = utFontRect.Right + 1
+                        '   Make sure our adjustment dosen't make it out of
+                        '   the font area
+                        If iTmpX + iAdjustedIconSize > iOrigRight Then iTmpX = iOrigRight - iAdjustedIconSize
+                        If utTabInfo.TabPicture.Type = vbPicTypeBitmap And UseMaskColor Then
+                            Call DrawImage(m_lhDC, utTabInfo.TabPicture.handle, GetRGBFromOLE(PictureMaskColor), iTmpX, iTmpY, iAdjustedIconSize, iAdjustedIconSize)
+                        Else
+                            Call pPaintPicture(utTabInfo.TabPicture, iTmpX, iTmpY, iAdjustedIconSize, iAdjustedIconSize)
+                        End If
+                    End Select
+                End If
+                '   Now draw the text
+                DrawText m_lhDC, sTmp, -1, utFontRect, DT_SINGLELINE
+                If bUserMode Then    'only if in the run mode
+                    If iCnt = m_lActiveTab And m_IsFocused And ShowFocusRect Then
+                        '   Draw focus rectangle
+                        Call DrawFocusRect(m_lhDC, utFontRect)
+                    End If
+                End If
+            End With
+        Next
+        
+        '   Store the larger tab height
+        iCnt = IIf(m_lActiveTabHeight > m_lInActiveTabHeight, m_lActiveTabHeight, m_lInActiveTabHeight)
+        
+        'Adjust the corners (whole tab control's corners)
+        APILine 0, iCnt + 1, 0, iCnt + 4, m_lOuterBorderColor
+        APILine m_lScaleWidth - 1, iCnt + 1, m_lScaleWidth - 1, iCnt + 4, m_lOuterBorderColor
+        
+        '   Force drawing with current hover color
+        m_utRect = AryTabs(m_lActiveTab).ClickableRect
+        '   Draw Tab Focused Color Cap
+        pDrawOverXOred
     End Select
     
 Sub_ErrHandlerExit:
@@ -3756,12 +3763,12 @@ Sub_ErrHandler:
 End Sub
 
 Public Property Get Enabled() As Boolean
-
+    
     '   TabEnable Poperty is for individual tab's
     '   and this is for the whole control
     '   Handle Any Errors
     On Error GoTo Prop_ErrHandler
-
+    
     Enabled = UserControl.Enabled
     
 Prop_ErrHandlerExit:
@@ -3772,12 +3779,12 @@ Prop_ErrHandler:
 End Property
 
 Public Property Let Enabled(ByVal bNewValue As Boolean)
-
+    
     '   TabEnable Poperty is for individual tab's
     '   and this is for the whole control
     '   Handle Any Errors
     On Error GoTo Prop_ErrHandler
-
+    
     UserControl.Enabled() = bNewValue
     '   Redraw
     Refresh
@@ -3791,10 +3798,10 @@ Prop_ErrHandler:
 End Property
 
 Public Property Get FocusedColor() As OLE_COLOR
-
+    
     '   Handle Any Errors
     On Error GoTo Prop_ErrHandler
-
+    
     FocusedColor = m_lFocusedColor
     
 Prop_ErrHandlerExit:
@@ -3805,10 +3812,10 @@ Prop_ErrHandler:
 End Property
 
 Public Property Let FocusedColor(ByVal lNewValue As OLE_COLOR)
-
+    
     '   Handle Any Errors
     On Error GoTo Prop_ErrHandler
-
+    
     m_lFocusedColor = lNewValue
     '   Redraw
     Refresh
@@ -3828,10 +3835,10 @@ Prop_ErrHandler:
 End Property
 
 Public Property Set Font(ByVal oNewFont As StdFont)
-
+    
     '   Handle Any Errors
     On Error GoTo Prop_ErrHandler
-
+    
     Set UserControl.Font = oNewFont
     
 Prop_ErrHandlerExit:
@@ -3842,10 +3849,10 @@ Prop_ErrHandler:
 End Property
 
 Public Property Get ForeColor() As OLE_COLOR
-
+    
     '   Handle Any Errors
     On Error GoTo Prop_ErrHandler
-
+    
     ForeColor = UserControl.ForeColor
     
 Prop_ErrHandlerExit:
@@ -3856,10 +3863,10 @@ Prop_ErrHandler:
 End Property
 
 Public Property Let ForeColor(ByVal lNewValue As OLE_COLOR)
-
+    
     '   Handle Any Errors
     On Error GoTo Prop_ErrHandler
-
+    
     UserControl.ForeColor = lNewValue
     Refresh
     PropertyChanged "ForeColor"
@@ -3874,7 +3881,7 @@ End Property
 Public Function GetRGBFromOLE(ByVal lOleColor As Long) As Long
     '   Handle Any Errors
     On Error GoTo Func_ErrHandler
-
+    
     ' Convert the OLE color into equivalent RGB Combination
     ' i.e. Convert vbButtonFace into ==> Light Grey
     Dim lRGBColor As Long
@@ -3896,7 +3903,7 @@ Public Function GetThemeInfo() As String
     
     '   Handle Any Errors
     On Error GoTo Func_ErrHandler
-
+    
     If IsWinXP Then
         '   Allocate Space
         sFileName = Space(255)
@@ -3941,7 +3948,7 @@ Private Sub HandleContainedControls(ByVal New_ActiveTab As Long)
     '
     Dim Ctl As Control
     Dim MoveVal As Long
- 
+    
     On Error Resume Next
     '   The difference between what was the active
     '   Tab and the newly set activetab
@@ -3954,16 +3961,16 @@ Private Sub HandleContainedControls(ByVal New_ActiveTab As Long)
     '   This is what creates the illusion of
     '   Changing the Tab of a tab control
     For Each Ctl In UserControl.ContainedControls
-         Ctl.Left = (Ctl.Left + MoveVal)
+        Ctl.Left = (Ctl.Left + MoveVal)
     Next Ctl
-
+    
 End Sub
 
 Public Property Get hDC() As Long
-
+    
     '   Handle Any Errors
     On Error GoTo Prop_ErrHandler
-
+    
     hDC = UserControl.hDC
     m_lhDC = UserControl.hDC
     
@@ -3975,10 +3982,10 @@ Prop_ErrHandler:
 End Property
 
 Public Property Get HoverColor() As OLE_COLOR
-
+    
     '   Handle Any Errors
     On Error GoTo Prop_ErrHandler
-
+    
     HoverColor = m_lHoverColor
     
 Prop_ErrHandlerExit:
@@ -3989,10 +3996,10 @@ Prop_ErrHandler:
 End Property
 
 Public Property Let HoverColor(ByVal lNewValue As OLE_COLOR)
-
+    
     '   Handle Any Errors
     On Error GoTo Prop_ErrHandler
-
+    
     m_lHoverColor = lNewValue
     '   Redraw
     Refresh
@@ -4006,10 +4013,10 @@ Prop_ErrHandler:
 End Property
 
 Public Property Get hwnd() As Long
-
+    
     '   Handle Any Errors
     On Error GoTo Prop_ErrHandler
-
+    
     hwnd = UserControl.hwnd
     m_lhWnd = UserControl.hwnd
     
@@ -4021,10 +4028,10 @@ Prop_ErrHandler:
 End Property
 
 Public Property Get InActiveTabBackEndColor() As OLE_COLOR
-
+    
     '   Handle Any Errors
     On Error GoTo Prop_ErrHandler
-
+    
     InActiveTabBackEndColor = m_lInActiveTabBackEndColor
     
 Prop_ErrHandlerExit:
@@ -4035,10 +4042,10 @@ Prop_ErrHandler:
 End Property
 
 Public Property Let InActiveTabBackEndColor(ByVal lNewValue As OLE_COLOR)
-
+    
     '   Handle Any Errors
     On Error GoTo Prop_ErrHandler
-
+    
     m_lInActiveTabBackEndColor = lNewValue
     '   Redraw
     Refresh
@@ -4052,10 +4059,10 @@ Prop_ErrHandler:
 End Property
 
 Public Property Get InActiveTabBackStartColor() As OLE_COLOR
-
+    
     '   Handle Any Errors
     On Error GoTo Prop_ErrHandler
-
+    
     InActiveTabBackStartColor = m_lInActiveTabBackStartColor
     
 Prop_ErrHandlerExit:
@@ -4066,10 +4073,10 @@ Prop_ErrHandler:
 End Property
 
 Public Property Let InActiveTabBackStartColor(ByVal lNewValue As OLE_COLOR)
-
+    
     '   Handle Any Errors
     On Error GoTo Prop_ErrHandler
-
+    
     m_lInActiveTabBackStartColor = lNewValue
     '   Redraw
     Refresh
@@ -4083,10 +4090,10 @@ Prop_ErrHandler:
 End Property
 
 Public Property Get InActiveTabFont() As StdFont
-
+    
     '   Handle Any Errors
     On Error GoTo Prop_ErrHandler
-
+    
     Set InActiveTabFont = m_oInActiveTabFont
     
 Prop_ErrHandlerExit:
@@ -4097,10 +4104,10 @@ Prop_ErrHandler:
 End Property
 
 Public Property Set InActiveTabFont(ByVal oNewFnt As StdFont)
-
+    
     '   Handle Any Errors
     On Error GoTo Prop_ErrHandler
-
+    
     Set m_oInActiveTabFont = oNewFnt
     '   Redraw
     Refresh
@@ -4114,10 +4121,10 @@ Prop_ErrHandler:
 End Property
 
 Public Property Get InActiveTabForeColor() As OLE_COLOR
-
+    
     '   Handle Any Errors
     On Error GoTo Prop_ErrHandler
-
+    
     InActiveTabForeColor = m_lInActiveTabForeColor
     
 Prop_ErrHandlerExit:
@@ -4128,10 +4135,10 @@ Prop_ErrHandler:
 End Property
 
 Public Property Let InActiveTabForeColor(ByVal lNewValue As OLE_COLOR)
-
+    
     '   Handle Any Errors
     On Error GoTo Prop_ErrHandler
-
+    
     m_lInActiveTabForeColor = lNewValue
     '   Redraw
     Refresh
@@ -4145,10 +4152,10 @@ Prop_ErrHandler:
 End Property
 
 Public Property Get InActiveTabHeight() As Long
-
+    
     '   Handle Any Errors
     On Error GoTo Prop_ErrHandler
-
+    
     InActiveTabHeight = m_lInActiveTabHeight
     
 Prop_ErrHandlerExit:
@@ -4159,10 +4166,10 @@ Prop_ErrHandler:
 End Property
 
 Public Property Let InActiveTabHeight(ByVal lNewValue As Long)
-
+    
     '   Handle Any Errors
     On Error GoTo Prop_ErrHandler
-
+    
     m_lInActiveTabHeight = lNewValue
     '   Redraw
     Refresh
@@ -4235,7 +4242,7 @@ Public Sub InsertTab(ByVal lAfterIndex As Long, Optional sCaption As String = "N
     '   Unlock the window
     LockWindowUpdate 0&
     RaiseEvent TabInsert(lAfterIndex)
-
+    
 Sub_ErrHandlerExit:
     Exit Sub
 Sub_ErrHandler:
@@ -4244,10 +4251,10 @@ Sub_ErrHandler:
 End Sub
 
 Private Property Get IsFocused() As Boolean
-
+    
     '   Handle Any Errors
     On Error GoTo Prop_ErrHandler
-
+    
     IsFocused = m_IsFocused
     
 Prop_ErrHandlerExit:
@@ -4258,10 +4265,10 @@ Prop_ErrHandler:
 End Property
 
 Private Property Let IsFocused(ByVal bNewValue As Boolean)
-
+    
     '   Handle Any Errors
     On Error GoTo Prop_ErrHandler
-
+    
     m_IsFocused = bNewValue
     Refresh
     
@@ -4278,15 +4285,15 @@ Public Function IsWinXP() As Boolean
     ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
     'returns True if running Windows XP
     Dim OSV As OSVERSIONINFO
-
+    
     '   Handle Any Errors
     On Error GoTo Func_ErrHandler
-
+    
     OSV.OSVSize = Len(OSV)
     If GetVersionEx(OSV) = 1 Then
         IsWinXP = (OSV.PlatformID = VER_PLATFORM_WIN32_NT) And _
-            (OSV.dwVerMajor = 5 And OSV.dwVerMinor = 1) And _
-            (OSV.dwBuildNumber >= 2600)
+        (OSV.dwVerMajor = 5 And OSV.dwVerMinor = 1) And _
+        (OSV.dwBuildNumber >= 2600)
     End If
     
 Func_ErrHandlerExit:
@@ -4297,10 +4304,10 @@ Func_ErrHandler:
 End Function
 
 Public Property Get LastActiveTab() As Long
-
+    
     '   Handle Any Errors
     On Error GoTo Prop_ErrHandler
-
+    
     'Note: Read Only Property: returns the last active tab index
     LastActiveTab = m_lLastActiveTab
     
@@ -4319,7 +4326,7 @@ Private Function OffsetColor(lColor As OLE_COLOR, lOffset As Long) As OLE_COLOR
     
     '   Handle Any Errors
     On Error GoTo Func_ErrHandler
-
+    
     '   Translate the color first to make sure it is on our palette
     lColor = GetRGBFromOLE(lColor)
     '   Now split the colors into RGB
@@ -4346,10 +4353,10 @@ Func_ErrHandler:
 End Function
 
 Public Property Get OuterBorderColor() As OLE_COLOR
-
+    
     '   Handle Any Errors
     On Error GoTo Prop_ErrHandler
-
+    
     OuterBorderColor = m_lOuterBorderColor
     
 Prop_ErrHandlerExit:
@@ -4360,10 +4367,10 @@ Prop_ErrHandler:
 End Property
 
 Public Property Let OuterBorderColor(ByVal lNewValue As OLE_COLOR)
-
+    
     '   Handle Any Errors
     On Error GoTo Prop_ErrHandler
-
+    
     m_lOuterBorderColor = lNewValue
     '   Redraw
     Refresh
@@ -4422,7 +4429,7 @@ Private Sub pAssignAccessKeys()
     
     '   Handle Any Errors
     On Error GoTo Sub_ErrHandler
-
+    
     For iCnt = 0 To m_lTabCount - 1
         If m_aryTabs(iCnt).AccessKey <> 0 Then
             sTmp = sTmp & Chr$(m_aryTabs(iCnt).AccessKey)
@@ -4450,10 +4457,10 @@ Private Sub pDestroyResources()
 End Sub
 
 Private Sub pDrawMe()
-
+    
     '   Handle Any Errors
     On Error GoTo Sub_ErrHandler
-
+    
     '   Start by Clearing things
     UserControl.Cls
     ' Function draws both Background and the Tabs
@@ -4468,10 +4475,10 @@ Sub_ErrHandler:
 End Sub
 
 Private Sub pDrawOnMouseOverProperty()
-
+    
     '   Handle Any Errors
     On Error GoTo Sub_ErrHandler
-
+    
     '   Function called when mouse hovers over the tab (Property Style)
     m_bIsMouseOver = True
     m_utRect = AryTabs(m_lMouseOverTabIndex).ClickableRect
@@ -4488,7 +4495,7 @@ Sub_ErrHandler:
 End Sub
 
 Private Sub pDrawOnMouseOverTabbed()
-
+    
     '   Handle Any Errors
     On Error GoTo Sub_ErrHandler
     
@@ -4509,13 +4516,13 @@ Private Sub pDrawOverXOred()
     
     '   Handle Any Errors
     On Error GoTo Sub_ErrHandler
-
+    
     '   Used to draw the top of the tab Xored with Hover color
     Select Case TabStyle
-        Case xStyleTabbedDialog:
-            pDrawOverXOredTabbed
-        Case xStylePropertyPages:
-            pDrawOverXOredProperty
+    Case xStyleTabbedDialog:
+        pDrawOverXOredTabbed
+    Case xStylePropertyPages:
+        pDrawOverXOredProperty
     End Select
     
 Sub_ErrHandlerExit:
@@ -4613,7 +4620,7 @@ Private Sub pDrawOverXOredProperty()
         ElseIf m_lMouseOverTabIndex = m_lActiveTab - 1 Then
             '   Only draw this if the colors are not the same as the tab backcolors
             If (m_lHoverColor <> m_lActiveTabBackStartColor) And _
-               (m_lHoverColor <> m_lInActiveTabBackStartColor) Then
+                (m_lHoverColor <> m_lInActiveTabBackStartColor) Then
                 pFillCurvedSolid .Left - 1, .Top + 1, .Right, .Top + 3, XORColor, 2, True, False
                 '   Now fill the top edge with an offset color
                 XORColor = m_lOuterBorderColor Xor OffsetColor(m_lHoverColor, -&H15)
@@ -4646,7 +4653,7 @@ Private Sub pDrawOverXOredProperty()
             End If
         ElseIf m_lMouseOverTabIndex = m_lActiveTab + 1 Then
             If (m_lHoverColor <> m_lActiveTabBackStartColor) And _
-               (m_lHoverColor <> m_lInActiveTabBackStartColor) Then
+                (m_lHoverColor <> m_lInActiveTabBackStartColor) Then
                 pFillCurvedSolid .Left - 1, .Top + 1, .Right, .Top + 3, XORColor, 2, False, True
                 '   Now fill the top edge with an offset color
                 XORColor = m_lOuterBorderColor Xor OffsetColor(m_lHoverColor, -&H15)
@@ -4679,7 +4686,7 @@ Private Sub pDrawOverXOredProperty()
             End If
         Else
             If (m_lHoverColor <> m_lActiveTabBackStartColor) And _
-               (m_lHoverColor <> m_lInActiveTabBackStartColor) Then
+                (m_lHoverColor <> m_lInActiveTabBackStartColor) Then
                 pFillCurvedSolid .Left - 1, .Top + 1, .Right, .Top + 3, XORColor, 2, True, True
                 '   Now fill the top edge with an offset color
                 XORColor = m_lOuterBorderColor Xor OffsetColor(m_lHoverColor, -&H15)
@@ -4742,7 +4749,7 @@ Private Sub pDrawOverXOredTabbed()
     '   color of a control by XOR means...As such, this routine converts
     '   the Hover/Focused color to the XOR equivalant value, so we do not
     '   have to guess what an XORed color would look like....
-
+    
     DrawMode = vbXorPen
     '   Compute the Xor Value for the color
     If (m_lMouseOverTabIndex = m_lActiveTab) And (m_bUseFocusedColor) Then
@@ -4803,7 +4810,7 @@ Private Sub pDrawOverXOredTabbed()
     Else
         '   Only draw this if the colors are not the same as the tab backcolors
         If (m_lHoverColor <> m_lActiveTabBackStartColor) And _
-           (m_lHoverColor <> m_lInActiveTabBackStartColor) Then
+            (m_lHoverColor <> m_lInActiveTabBackStartColor) Then
             '   Compute the Xor Value for the color
             If m_lMouseOverTabIndex = m_lActiveTab Then
                 XORColor = m_lActiveTabBackStartColor Xor m_lHoverColor
@@ -4860,7 +4867,7 @@ Private Sub pDrawOverXOredTabbed()
         End If
     End If
     DrawMode = vbCopyPen
-      
+    
     
 Sub_ErrHandlerExit:
     Exit Sub
@@ -4876,13 +4883,13 @@ Private Sub pFillCurvedGradient(ByVal lLeft As Long, ByVal lTop As Long, ByVal l
     
     '   Handle Any Errors
     On Error GoTo Sub_ErrHandler
-
+    
     utRect.Left = lLeft
     utRect.Top = lTop
     utRect.Right = lRight
     utRect.Bottom = lBottom
     Call pFillCurvedGradientR(utRect, lStartcolor, lEndColor, iCurveValue, bCurveLeft, bCurveRight)
-
+    
 Sub_ErrHandlerExit:
     Exit Sub
 Sub_ErrHandler:
@@ -4901,7 +4908,7 @@ Private Sub pFillCurvedGradientR(utRect As RECT, ByVal lStartcolor As Long, ByVa
     
     '   Handle Any Errors
     On Error GoTo Sub_ErrHandler
-
+    
     lStartcolor = GetRGBFromOLE(lStartcolor)
     lEndColor = GetRGBFromOLE(lEndColor)
     sngRedInc = (pGetRValue(lEndColor) - pGetRValue(lStartcolor)) / (utRect.Bottom - utRect.Top)
@@ -4966,13 +4973,13 @@ Private Sub pFillCurvedSolid(ByVal lLeft As Long, ByVal lTop As Long, ByVal lRig
     
     '   Handle Any Errors
     On Error GoTo Sub_ErrHandler
-
+    
     utRect.Left = lLeft
     utRect.Top = lTop
     utRect.Right = lRight
     utRect.Bottom = lBottom
     Call pFillCurvedSolidR(utRect, lColor, iCurveValue, bCurveLeft, bCurveRight)
-
+    
 Sub_ErrHandlerExit:
     Exit Sub
 Sub_ErrHandler:
@@ -4989,7 +4996,7 @@ Private Sub pFillCurvedSolidR(utRect As RECT, ByVal lColor As Long, Optional ByV
     
     '   Handle Any Errors
     On Error GoTo Sub_ErrHandler
-
+    
     If iCurveValue = -1 Then
         For intCnt = utRect.Top To utRect.Bottom
             Call APILine(utRect.Left, intCnt, utRect.Right, intCnt, lColor)
@@ -5027,10 +5034,10 @@ Sub_ErrHandler:
 End Sub
 
 Private Function pGetBValue(ByVal RGBValue As Long) As Long
-
+    
     '   Handle Any Errors
     On Error GoTo Func_ErrHandler
-
+    
     '   Extract Blue component from a color
     pGetBValue = ((RGBValue And &HFF0000) / &H10000) And &HFF
     
@@ -5042,10 +5049,10 @@ Func_ErrHandler:
 End Function
 
 Private Sub pGetCachedProperties()
-
+    
     '   Handle Any Errors
     On Error GoTo Sub_ErrHandler
-
+    
     '   Get the Current Cached properties from the control
     '   (this prevents trips to again and again fetch properties
     '   from the user control)
@@ -5059,18 +5066,18 @@ Private Sub pGetCachedProperties()
     m_lTabCount = TabCount
     m_IsFocused = IsFocused
     m_lOuterBorderColor = OuterBorderColor
-
+    
     m_lActiveTabForeColor = ActiveTabForeColor
     m_lActiveTabBackStartColor = ActiveTabBackStartColor
     m_lActiveTabBackEndColor = ActiveTabBackEndColor
-
+    
     m_lInActiveTabForeColor = InActiveTabForeColor
     m_lInActiveTabBackStartColor = InActiveTabBackStartColor
     m_lInActiveTabBackEndColor = InActiveTabBackEndColor
     m_lHoverColor = HoverColor
     m_lDisabledTabBackColor = DisabledTabBackColor
     m_lDisabledTabForeColor = DisabledTabForeColor
-
+    
     '   Get System's default size for a Icon.
     If PictureSize = xSizeSmall Then
         m_lIconSize = GetSystemMetrics(SM_CXSMICON)
@@ -5100,10 +5107,10 @@ End Function
 Private Function pGetGValue(ByVal RGBValue As Long) As Long
     '   Handle Any Errors
     On Error GoTo Func_ErrHandler
-
+    
     '   Extract Green component from a color
     pGetGValue = ((RGBValue And &HFF00) / &H100) And &HFF
-
+    
 Func_ErrHandlerExit:
     Exit Function
 Func_ErrHandler:
@@ -5114,10 +5121,10 @@ End Function
 Private Function pGetRValue(ByVal RGBValue As Long) As Long
     '   Handle Any Errors
     On Error GoTo Func_ErrHandler
-
+    
     '   Extract Red component from a color
     pGetRValue = RGBValue And &HFF
-
+    
 Func_ErrHandlerExit:
     Exit Function
 Func_ErrHandler:
@@ -5135,15 +5142,15 @@ Private Sub pHandleMouseDown(iButton As Integer, iShift As Integer, sngX As Sing
     
     '   Handle Any Errors
     On Error GoTo Sub_ErrHandler
-
+    
     Select Case m_enmTheme
-        Case xThemeWinXP, xThemeGalaxy  'xThemeWinXP, xThemeGalaxy
-            '   If the mouse is already over then stop the timer and reset the
-            '   over flag
-            If m_bIsMouseOver Then
-                m_bIsMouseOver = False
-                Call pSetTimer(0)
-            End If
+    Case xThemeWinXP, xThemeGalaxy  'xThemeWinXP, xThemeGalaxy
+        '   If the mouse is already over then stop the timer and reset the
+        '   over flag
+        If m_bIsMouseOver Then
+            m_bIsMouseOver = False
+            Call pSetTimer(0)
+        End If
     End Select
     iX = CInt(sngX)
     iY = CInt(sngY)
@@ -5158,7 +5165,7 @@ Private Sub pHandleMouseDown(iButton As Integer, iShift As Integer, sngX As Sing
     For iCnt = 0 To m_lTabCount - 1
         utTabInfo = AryTabs(iCnt)
         If iX >= utTabInfo.ClickableRect.Left And iX <= utTabInfo.ClickableRect.Right And _
-           iY >= utTabInfo.ClickableRect.Top And iY <= utTabInfo.ClickableRect.Bottom And utTabInfo.Enabled Then
+            iY >= utTabInfo.ClickableRect.Top And iY <= utTabInfo.ClickableRect.Bottom And utTabInfo.Enabled Then
             '   If its the active tab then no need to switch
             If m_lActiveTab <> iCnt Then
                 ActiveTab = iCnt
@@ -5184,40 +5191,40 @@ Private Sub pHandleMouseMove(iButton As Integer, iShift As Integer, sngX As Sing
     
     '   Handle Any Errors
     On Error GoTo Sub_ErrHandler
-
+    
     Select Case m_enmTheme
-        Case xThemeWin9X, xThemeVisualStudio2003, xThemeRoundTabs
-            '   Nothing
-        Case xThemeWinXP, xThemeGalaxy
-            iX = CInt(sngX)
-            iY = CInt(sngY)
-            '   No use going in if already mouse is over
-            If m_bIsMouseOver Then
+    Case xThemeWin9X, xThemeVisualStudio2003, xThemeRoundTabs
+        '   Nothing
+    Case xThemeWinXP, xThemeGalaxy
+        iX = CInt(sngX)
+        iY = CInt(sngY)
+        '   No use going in if already mouse is over
+        If m_bIsMouseOver Then
+            Exit Sub
+        End If
+        If iY > IIf(m_lInActiveTabHeight > m_lActiveTabHeight, m_lInActiveTabHeight, m_lActiveTabHeight) Then
+            '   If lower than the larger tab height then exit sub since
+            '   anything lower than larger tab's height will not result
+            '   in a tab switch
+            Exit Sub
+        End If
+        '   Get the current cached properties
+        Call pGetCachedProperties
+        For iCnt = 0 To m_lTabCount - 1
+            If iX >= AryTabs(iCnt).ClickableRect.Left And iX <= AryTabs(iCnt).ClickableRect.Right And AryTabs(iCnt).Enabled Then
+                '   No need to draw for the active tab
+                If iCnt = m_lActiveTab Then Exit Sub
+                '   Store the index of the tab on which the mouse is over
+                m_lMouseOverTabIndex = iCnt
+                Select Case TabStyle
+                Case xStyleTabbedDialog:
+                    Call pDrawOnMouseOverTabbed
+                Case xStylePropertyPages:
+                    Call pDrawOnMouseOverProperty
+                End Select
                 Exit Sub
             End If
-            If iY > IIf(m_lInActiveTabHeight > m_lActiveTabHeight, m_lInActiveTabHeight, m_lActiveTabHeight) Then
-                '   If lower than the larger tab height then exit sub since
-                '   anything lower than larger tab's height will not result
-                '   in a tab switch
-                Exit Sub
-            End If
-            '   Get the current cached properties
-            Call pGetCachedProperties
-            For iCnt = 0 To m_lTabCount - 1
-                If iX >= AryTabs(iCnt).ClickableRect.Left And iX <= AryTabs(iCnt).ClickableRect.Right And AryTabs(iCnt).Enabled Then
-                    '   No need to draw for the active tab
-                    If iCnt = m_lActiveTab Then Exit Sub
-                    '   Store the index of the tab on which the mouse is over
-                    m_lMouseOverTabIndex = iCnt
-                    Select Case TabStyle
-                        Case xStyleTabbedDialog:
-                            Call pDrawOnMouseOverTabbed
-                        Case xStylePropertyPages:
-                            Call pDrawOnMouseOverProperty
-                    End Select
-                    Exit Sub
-                End If
-            Next
+        Next
     End Select
     
 Sub_ErrHandlerExit:
@@ -5233,7 +5240,7 @@ Private Sub pHandleTabCount()
     
     '   Handle Any Errors
     On Error GoTo Sub_ErrHandler
-
+    
     If (m_lTabCount - 1) > UBound(m_aryTabs) Then
         '   Tabs added
         iCnt = UBound(m_aryTabs) + 1
@@ -5264,10 +5271,10 @@ Sub_ErrHandler:
 End Sub
 
 Public Property Get PictureAlign() As PictureAlign
-
+    
     '   Handle Any Errors
     On Error GoTo Prop_ErrHandler
-
+    
     PictureAlign = m_enmPictureAlign
     
 Prop_ErrHandlerExit:
@@ -5278,10 +5285,10 @@ Prop_ErrHandler:
 End Property
 
 Public Property Let PictureAlign(ByVal iNewValue As PictureAlign)
-
+    
     '   Handle Any Errors
     On Error GoTo Prop_ErrHandler
-
+    
     m_enmPictureAlign = iNewValue
     '   Redraw
     Refresh
@@ -5295,10 +5302,10 @@ Prop_ErrHandler:
 End Property
 
 Public Property Get PictureMaskColor() As OLE_COLOR
-
+    
     '   Handle Any Errors
     On Error GoTo Prop_ErrHandler
-
+    
     PictureMaskColor = UserControl.MaskColor
     
 Prop_ErrHandlerExit:
@@ -5309,10 +5316,10 @@ Prop_ErrHandler:
 End Property
 
 Public Property Let PictureMaskColor(ByVal lNewColor As OLE_COLOR)
-
+    
     '   Handle Any Errors
     On Error GoTo Prop_ErrHandler
-
+    
     UserControl.MaskColor = lNewColor
     '   Redraw
     Refresh
@@ -5326,10 +5333,10 @@ Prop_ErrHandler:
 End Property
 
 Public Property Get PictureSize() As PictureSize
-
+    
     '   Handle Any Errors
     On Error GoTo Prop_ErrHandler
-
+    
     PictureSize = m_enmPictureSize
     
 Prop_ErrHandlerExit:
@@ -5340,10 +5347,10 @@ Prop_ErrHandler:
 End Property
 
 Public Property Let PictureSize(ByVal iNewSize As PictureSize)
-
+    
     '   Handle Any Errors
     On Error GoTo Prop_ErrHandler
-
+    
     m_enmPictureSize = iNewSize
     '   Redraw
     Refresh
@@ -5417,7 +5424,7 @@ Private Sub pSetTimer(ByVal lInterval As Long)
 End Sub
 
 Private Sub pShowHideFocus()
-
+    
     '   Handle Any Errors
     On Error GoTo Sub_ErrHandler
     
@@ -5447,9 +5454,9 @@ Sub_ErrHandler:
 End Sub
 
 Private Sub pStoreOriginalTabStopValues()
-   'TODO: Update this routine to take advantage of the new UDT
-   '      and wire this to the main Tab functionality
-
+    'TODO: Update this routine to take advantage of the new UDT
+    '      and wire this to the main Tab functionality
+    
     Dim oCtl As Control
     Dim iCnt As Long
     Dim sControlId As String
@@ -5457,9 +5464,9 @@ Private Sub pStoreOriginalTabStopValues()
     ' called only once to initialize the tab stop values
     ' that is store the original tab stop values for the controls
     ' and set there tab stop to false
-
+    
     On Error Resume Next    'used to prevent errors (
-
+    
     For Each oCtl In ContainedControls
         sControlId = pGetControlId(oCtl)  'Get Control's Id (i.e. Control Name & Control Index)
         For iCnt = 0 To m_lTabCount - 1
@@ -5509,10 +5516,10 @@ Public Sub Refresh()
     If m_bUseThemeDetection Then
         AutoTheme = GetThemeInfo
         Select Case AutoTheme
-            Case "None"
-                m_enmTheme = xThemeWin9X
-            Case Else
-                m_enmTheme = xThemeWinXP
+        Case "None"
+            m_enmTheme = xThemeWin9X
+        Case Else
+            m_enmTheme = xThemeWinXP
         End Select
     End If
     '   Now draw ourselves
@@ -5521,7 +5528,7 @@ Public Sub Refresh()
         AutoRedraw = False
     End If
     m_bIsRecursive = False
-
+    
     
 Sub_ErrHandlerExit:
     Exit Sub
@@ -5598,7 +5605,7 @@ Public Sub RemoveTab(ByVal lIndex As Long)
     '   Unlock the window
     LockWindowUpdate 0&
     RaiseEvent TabRemove(lIndex)
-
+    
 Sub_ErrHandlerExit:
     Exit Sub
 Sub_ErrHandler:
@@ -5628,7 +5635,7 @@ Finally:
 End Sub
 
 Public Sub ResetAllColors()
-
+    
     '   Handle Any Errors
     On Error GoTo Sub_ErrHandler
     
@@ -5653,95 +5660,95 @@ Sub_ErrHandler:
 End Sub
 
 Public Sub ResetColorsToDefault()
-
+    
     '   Handle Any Errors
     On Error GoTo Sub_ErrHandler
     
     AutoRedraw = False
     '   Function used to replace all the colors with the system colors
     Select Case m_enmTheme
-        Case xThemeRoundTabs            'xThemeRoundTabs
-            With Me
-                m_lActiveTabBackStartColor = &HF8F8F8
-                m_lActiveTabForeColor = &HA76D50
-                m_lInActiveTabBackStartColor = &HE5E5E5
-                m_lInActiveTabForeColor = &H909090
-                m_lTabStripBackColor = vbButtonFace
-                m_lDisabledTabBackColor = vbButtonFace
-                m_lDisabledTabForeColor = vb3DDKShadow
-                m_lOuterBorderColor = &H909090
-            End With
-        Case xThemeVisualStudio2003     'xThemeVisualStudio2003
-            With Me
-                m_lActiveTabBackStartColor = vbButtonFace
-                m_lActiveTabBackEndColor = vbButtonFace
-                m_lActiveTabForeColor = vbButtonText
-                m_lInActiveTabBackStartColor = vb3DLight
-                m_lInActiveTabBackEndColor = vb3DLight
-                m_lInActiveTabForeColor = &H80000011
-                m_lTabStripBackColor = vb3DLight
-                m_lDisabledTabBackColor = vbButtonFace
-                m_lDisabledTabForeColor = vb3DDKShadow
-                m_lOuterBorderColor = vb3DHighlight
-                m_lBottomRightInnerBorderColor = vb3DShadow
-            End With
-        Case xThemeWin9X                'xThemeWin9x
-            With Me
-                On Error Resume Next
-                m_lActiveTabBackStartColor = vbButtonFace
-                m_lActiveTabBackEndColor = vbButtonFace
-                m_lActiveTabForeColor = vbButtonText
-                m_lInActiveTabBackStartColor = vbButtonFace
-                m_lInActiveTabBackEndColor = vbButtonFace
-                m_lInActiveTabForeColor = vbButtonText
-                m_lTabStripBackColor = IIf(TabStripBackColor <> Ambient.BackColor, TabStripBackColor, Ambient.BackColor)
-                m_lDisabledTabBackColor = vbButtonFace
-                m_lDisabledTabForeColor = vb3DDKShadow
-                m_lTopLeftInnerBorderColor = vb3DHighlight
-                m_lOuterBorderColor = vb3DDKShadow
-                m_lBottomRightInnerBorderColor = vb3DShadow
-            End With
-        Case xThemeWinXP                'xThemeWinXP
-            With Me
-                m_lActiveTabBackStartColor = &HFBFDFB
-                m_lActiveTabBackEndColor = &HFBFDFB
-                m_lActiveTabForeColor = vbButtonText
-                m_lInActiveTabBackStartColor = &HFFFFFF
-                m_lInActiveTabBackEndColor = &HEAF0F0
-                m_lInActiveTabForeColor = vbButtonText
-                On Error Resume Next
-                m_lTabStripBackColor = IIf(TabStripBackColor <> Ambient.BackColor, TabStripBackColor, Ambient.BackColor)
-                m_lDisabledTabBackColor = vbButtonFace
-                m_lDisabledTabForeColor = &HA0A0A0
-                m_lOuterBorderColor = &H9B9C91
-                '   Color drawn in XOR mode to achive the hover effect
-                m_lHoverColor = m_def_lHoverColor
-                m_lFocusedColor = m_def_lFocusedColor
-            End With
-        Case xThemeGalaxy               'xThemeGalaxy
-            With Me                     '(Similar to isButton Galaxy Colors)
-                m_lActiveTabBackEndColor = &HDCEDF0
-                m_lActiveTabBackStartColor = &HE7F8FB
-                m_lActiveTabForeColor = &H80000012
-                m_lBottomRightInnerBorderColor = &H80000010
-                m_lDisabledTabBackColor = &H8000000F
-                m_lDisabledTabForeColor = &HA0A0A0
-                m_lFocusedColor = OffsetColor(&H80000003, -&H10) '&HFFCDCF
-                '   Color drawn in XOR mode to achive the hover effect
-                m_lHoverColor = OffsetColor(&H80000003, &H10)
-                m_lInActiveTabBackEndColor = &HCBDCDF
-                m_lInActiveTabBackStartColor = &HDCEDF0
-                m_lInActiveTabForeColor = &H80000012
-                m_lOuterBorderColor = &HA8B9BC
-                UserControl.MaskColor = &HFF00FF
-                m_enmPictureSize = xSizeSmall
-                On Error Resume Next
-                m_lTabStripBackColor = IIf(TabStripBackColor <> Ambient.BackColor, TabStripBackColor, Ambient.BackColor)
-                m_lTopLeftInnerBorderColor = &H80000014
-                m_bUseFocusedColor = True
-                m_bUseMaskColor = True
-                m_bUseThemeDetection = False
-            End With
+    Case xThemeRoundTabs            'xThemeRoundTabs
+        With Me
+            m_lActiveTabBackStartColor = &HF8F8F8
+            m_lActiveTabForeColor = &HA76D50
+            m_lInActiveTabBackStartColor = &HE5E5E5
+            m_lInActiveTabForeColor = &H909090
+            m_lTabStripBackColor = vbButtonFace
+            m_lDisabledTabBackColor = vbButtonFace
+            m_lDisabledTabForeColor = vb3DDKShadow
+            m_lOuterBorderColor = &H909090
+        End With
+    Case xThemeVisualStudio2003     'xThemeVisualStudio2003
+        With Me
+            m_lActiveTabBackStartColor = vbButtonFace
+            m_lActiveTabBackEndColor = vbButtonFace
+            m_lActiveTabForeColor = vbButtonText
+            m_lInActiveTabBackStartColor = vb3DLight
+            m_lInActiveTabBackEndColor = vb3DLight
+            m_lInActiveTabForeColor = &H80000011
+            m_lTabStripBackColor = vb3DLight
+            m_lDisabledTabBackColor = vbButtonFace
+            m_lDisabledTabForeColor = vb3DDKShadow
+            m_lOuterBorderColor = vb3DHighlight
+            m_lBottomRightInnerBorderColor = vb3DShadow
+        End With
+    Case xThemeWin9X                'xThemeWin9x
+        With Me
+            On Error Resume Next
+            m_lActiveTabBackStartColor = vbButtonFace
+            m_lActiveTabBackEndColor = vbButtonFace
+            m_lActiveTabForeColor = vbButtonText
+            m_lInActiveTabBackStartColor = vbButtonFace
+            m_lInActiveTabBackEndColor = vbButtonFace
+            m_lInActiveTabForeColor = vbButtonText
+            m_lTabStripBackColor = IIf(TabStripBackColor <> Ambient.BackColor, TabStripBackColor, Ambient.BackColor)
+            m_lDisabledTabBackColor = vbButtonFace
+            m_lDisabledTabForeColor = vb3DDKShadow
+            m_lTopLeftInnerBorderColor = vb3DHighlight
+            m_lOuterBorderColor = vb3DDKShadow
+            m_lBottomRightInnerBorderColor = vb3DShadow
+        End With
+    Case xThemeWinXP                'xThemeWinXP
+        With Me
+            m_lActiveTabBackStartColor = &HFBFDFB
+            m_lActiveTabBackEndColor = &HFBFDFB
+            m_lActiveTabForeColor = vbButtonText
+            m_lInActiveTabBackStartColor = &HFFFFFF
+            m_lInActiveTabBackEndColor = &HEAF0F0
+            m_lInActiveTabForeColor = vbButtonText
+            On Error Resume Next
+            m_lTabStripBackColor = IIf(TabStripBackColor <> Ambient.BackColor, TabStripBackColor, Ambient.BackColor)
+            m_lDisabledTabBackColor = vbButtonFace
+            m_lDisabledTabForeColor = &HA0A0A0
+            m_lOuterBorderColor = &H9B9C91
+            '   Color drawn in XOR mode to achive the hover effect
+            m_lHoverColor = m_def_lHoverColor
+            m_lFocusedColor = m_def_lFocusedColor
+        End With
+    Case xThemeGalaxy               'xThemeGalaxy
+        With Me                     '(Similar to isButton Galaxy Colors)
+            m_lActiveTabBackEndColor = &HDCEDF0
+            m_lActiveTabBackStartColor = &HE7F8FB
+            m_lActiveTabForeColor = &H80000012
+            m_lBottomRightInnerBorderColor = &H80000010
+            m_lDisabledTabBackColor = &H8000000F
+            m_lDisabledTabForeColor = &HA0A0A0
+            m_lFocusedColor = OffsetColor(&H80000003, -&H10) '&HFFCDCF
+            '   Color drawn in XOR mode to achive the hover effect
+            m_lHoverColor = OffsetColor(&H80000003, &H10)
+            m_lInActiveTabBackEndColor = &HCBDCDF
+            m_lInActiveTabBackStartColor = &HDCEDF0
+            m_lInActiveTabForeColor = &H80000012
+            m_lOuterBorderColor = &HA8B9BC
+            UserControl.MaskColor = &HFF00FF
+            m_enmPictureSize = xSizeSmall
+            On Error Resume Next
+            m_lTabStripBackColor = IIf(TabStripBackColor <> Ambient.BackColor, TabStripBackColor, Ambient.BackColor)
+            m_lTopLeftInnerBorderColor = &H80000014
+            m_bUseFocusedColor = True
+            m_bUseMaskColor = True
+            m_bUseThemeDetection = False
+        End With
     End Select
     
 Sub_ErrHandlerExit:
@@ -5752,10 +5759,10 @@ Sub_ErrHandler:
 End Sub
 
 Public Property Get ScaleHeight() As Long
-
+    
     '   Handle Any Errors
     On Error GoTo Prop_ErrHandler
-
+    
     ScaleHeight = UserControl.ScaleHeight
     
 Prop_ErrHandlerExit:
@@ -5766,10 +5773,10 @@ Prop_ErrHandler:
 End Property
 
 Public Property Get ScaleWidth() As Long
-
+    
     '   Handle Any Errors
     On Error GoTo Prop_ErrHandler
-
+    
     ScaleWidth = UserControl.ScaleWidth
     
 Prop_ErrHandlerExit:
@@ -5780,10 +5787,10 @@ Prop_ErrHandler:
 End Property
 
 Private Sub ScrollTabs(lDirection As Long)
-
+    
     '   Handle Any Errors
     On Error GoTo Sub_ErrHandler
-
+    
     If lDirection < 0 Then
         '   Scroll Up the Tab Order
         If m_lActiveTab < m_lTabCount Then
@@ -5838,10 +5845,10 @@ Public Function ShowFileOpenDialog(lhWndOwner As Long, Optional ByVal sInitDir A
 End Function
 
 Public Property Get ShowFocusRect() As Boolean
-
+    
     '   Handle Any Errors
     On Error GoTo Prop_ErrHandler
-
+    
     ShowFocusRect = m_bShowFocusRect
     
 Prop_ErrHandlerExit:
@@ -5852,10 +5859,10 @@ Prop_ErrHandler:
 End Property
 
 Public Property Let ShowFocusRect(ByVal bNewValue As Boolean)
-
+    
     '   Handle Any Errors
     On Error GoTo Prop_ErrHandler
-
+    
     m_bShowFocusRect = bNewValue
     Refresh
     PropertyChanged ShowFocusRect
@@ -5871,17 +5878,17 @@ Public Sub ShowHideFocus()
     
     '   Handle Any Errors
     On Error GoTo Sub_ErrHandler
-
+    
     '   Called when User control Get's or looses the focus
     '   This way we are able to prevent complete control redrawing
     '   only the focus rect is drawn or erased. Thus preventing flicker
     '   Get local copy for control properties
     Call pGetCachedProperties
     Select Case TabStyle
-        Case xStylePropertyPages
-            ShowHideFocusPropertyPages
-        Case xStyleTabbedDialog
-            ShowHideFocusTabbedDialog
+    Case xStylePropertyPages
+        ShowHideFocusPropertyPages
+    Case xStyleTabbedDialog
+        ShowHideFocusTabbedDialog
     End Select
     
 Sub_ErrHandlerExit:
@@ -5903,144 +5910,144 @@ Private Sub ShowHideFocusPropertyPages()
     
     '   Handle Any Errors
     On Error GoTo Sub_ErrHandler
-
+    
     Select Case m_enmTheme
-        Case xThemeRoundTabs            'xThemeRoundTabs
-            '   Only if in the run mode
-            If Not bUserMode Then
-                Exit Sub
-            End If
-            '   Only if Show Focus Rect is true for the control
-            If Not ShowFocusRect Then
-                Exit Sub
-            End If
-            utTabInfo = AryTabs(m_lActiveTab)
-            With utTabInfo.ClickableRect
-                '   Do the adjustments for the border
-                utFontRect.Left = .Left
-                utFontRect.Top = .Top
-                utFontRect.Bottom = .Bottom
-                utFontRect.Right = .Right - 1
-                sTmp = utTabInfo.Caption
-                If Not utTabInfo.TabPicture Is Nothing Then
-                    If utFontRect.Top + m_lIconSize > utFontRect.Bottom + 1 Then '+1 for minor adjustments
-                        '   Adjust if going out of current tab's bottom
-                        iAdjustedIconSize = (utFontRect.Bottom + 1) - utFontRect.Top
-                    Else
-                        iAdjustedIconSize = m_lIconSize
-                    End If
-                    Select Case PictureAlign
-                        Case xAlignLeftEdge, xAlignLeftOfCaption:
-                            iOrigLeft = utFontRect.Left
-                            utFontRect.Left = utFontRect.Left + iAdjustedIconSize - 1
-                    End Select
-                End If
-                '   Set the active tab font as current font...
-                '   used to get proper values when calculating text size
-                Set Font = ActiveTabFont
-                '   Calculate the rect to draw the text, and get proper string
-                '   (including ellipsis etc)
-                DrawText m_lhDC, sTmp, -1, utFontRect, DT_CALCRECT Or DT_SINGLELINE Or DT_END_ELLIPSIS Or DT_MODIFYSTRING
-                iTmpW = utFontRect.Right - utFontRect.Left + iFOCUS_RECT_AND_TEXT_DISTANCE
-                iTmpH = utFontRect.Bottom - utFontRect.Top + iFOCUS_RECT_AND_TEXT_DISTANCE / 2
-                '   Do the adjustments to center the text
-                '   (both vertically andhorizontally)
-                utFontRect.Left = (utFontRect.Left + iPROP_PAGE_BORDER_AND_TEXT_DISTANCE)
-                utFontRect.Right = utFontRect.Left + iTmpW
-                utFontRect.Top = utFontRect.Top + .Bottom / 2 - utFontRect.Bottom / 2
-                utFontRect.Bottom = utFontRect.Top + iTmpH
-                '   Done to allow proper drawing of focus rect
-                If utTabInfo.Enabled Then
-                    ForeColor = m_lActiveTabForeColor
+    Case xThemeRoundTabs            'xThemeRoundTabs
+        '   Only if in the run mode
+        If Not bUserMode Then
+            Exit Sub
+        End If
+        '   Only if Show Focus Rect is true for the control
+        If Not ShowFocusRect Then
+            Exit Sub
+        End If
+        utTabInfo = AryTabs(m_lActiveTab)
+        With utTabInfo.ClickableRect
+            '   Do the adjustments for the border
+            utFontRect.Left = .Left
+            utFontRect.Top = .Top
+            utFontRect.Bottom = .Bottom
+            utFontRect.Right = .Right - 1
+            sTmp = utTabInfo.Caption
+            If Not utTabInfo.TabPicture Is Nothing Then
+                If utFontRect.Top + m_lIconSize > utFontRect.Bottom + 1 Then '+1 for minor adjustments
+                    '   Adjust if going out of current tab's bottom
+                    iAdjustedIconSize = (utFontRect.Bottom + 1) - utFontRect.Top
                 Else
-                    ForeColor = m_lDisabledTabForeColor
+                    iAdjustedIconSize = m_lIconSize
                 End If
                 Select Case PictureAlign
-                    Case xAlignRightEdge, xAlignRightOfCaption:
-                        'utFontRect.Right = utFontRect.Right - 2
+                Case xAlignLeftEdge, xAlignLeftOfCaption:
+                    iOrigLeft = utFontRect.Left
+                    utFontRect.Left = utFontRect.Left + iAdjustedIconSize - 1
                 End Select
-                '   Show/hide the focus rectangle
-                '   (drawn in XOR mode, so calling it again with same coords will erase it)
-                Call DrawFocusRect(m_lhDC, utFontRect)
-            End With
-        Case xThemeVisualStudio2003     'xThemeVisualStudio2003
-            '   Only if in the run mode
-            If Not bUserMode Then
-                Exit Sub
             End If
-            '   Only if Show Focus Rect is true for the control
-            If Not ShowFocusRect Then
-                Exit Sub
+            '   Set the active tab font as current font...
+            '   used to get proper values when calculating text size
+            Set Font = ActiveTabFont
+            '   Calculate the rect to draw the text, and get proper string
+            '   (including ellipsis etc)
+            DrawText m_lhDC, sTmp, -1, utFontRect, DT_CALCRECT Or DT_SINGLELINE Or DT_END_ELLIPSIS Or DT_MODIFYSTRING
+            iTmpW = utFontRect.Right - utFontRect.Left + iFOCUS_RECT_AND_TEXT_DISTANCE
+            iTmpH = utFontRect.Bottom - utFontRect.Top + iFOCUS_RECT_AND_TEXT_DISTANCE / 2
+            '   Do the adjustments to center the text
+            '   (both vertically andhorizontally)
+            utFontRect.Left = (utFontRect.Left + iPROP_PAGE_BORDER_AND_TEXT_DISTANCE)
+            utFontRect.Right = utFontRect.Left + iTmpW
+            utFontRect.Top = utFontRect.Top + .Bottom / 2 - utFontRect.Bottom / 2
+            utFontRect.Bottom = utFontRect.Top + iTmpH
+            '   Done to allow proper drawing of focus rect
+            If utTabInfo.Enabled Then
+                ForeColor = m_lActiveTabForeColor
+            Else
+                ForeColor = m_lDisabledTabForeColor
             End If
-            utTabInfo = AryTabs(m_lActiveTab)
-            With utTabInfo.ClickableRect
-                '   Do the adjustments for the border
-                utFontRect.Left = .Left + 2
-                utFontRect.Top = .Top + 2
-                utFontRect.Bottom = .Bottom
-                utFontRect.Right = .Right - 1
-                '   Done to allow proper drawing of focus rect
-                If utTabInfo.Enabled Then
-                    ForeColor = m_lActiveTabForeColor
-                Else
-                    ForeColor = m_lDisabledTabForeColor
-                End If
-                '   Show/hide the focus rectangle (drawn in XOR mode,
-                '   so calling it again with same coords will erase it)
-                Call DrawFocusRect(m_lhDC, utFontRect)
-            End With
-        Case xThemeWin9X                'xThemeWin9x
-            '   Only if in the run mode
-            If Not bUserMode Then
-                Exit Sub
+            Select Case PictureAlign
+            Case xAlignRightEdge, xAlignRightOfCaption:
+                'utFontRect.Right = utFontRect.Right - 2
+            End Select
+            '   Show/hide the focus rectangle
+            '   (drawn in XOR mode, so calling it again with same coords will erase it)
+            Call DrawFocusRect(m_lhDC, utFontRect)
+        End With
+    Case xThemeVisualStudio2003     'xThemeVisualStudio2003
+        '   Only if in the run mode
+        If Not bUserMode Then
+            Exit Sub
+        End If
+        '   Only if Show Focus Rect is true for the control
+        If Not ShowFocusRect Then
+            Exit Sub
+        End If
+        utTabInfo = AryTabs(m_lActiveTab)
+        With utTabInfo.ClickableRect
+            '   Do the adjustments for the border
+            utFontRect.Left = .Left + 2
+            utFontRect.Top = .Top + 2
+            utFontRect.Bottom = .Bottom
+            utFontRect.Right = .Right - 1
+            '   Done to allow proper drawing of focus rect
+            If utTabInfo.Enabled Then
+                ForeColor = m_lActiveTabForeColor
+            Else
+                ForeColor = m_lDisabledTabForeColor
             End If
-            '   Only if Show Focus Rect is true for the control
-            If Not ShowFocusRect Then
-                Exit Sub
+            '   Show/hide the focus rectangle (drawn in XOR mode,
+            '   so calling it again with same coords will erase it)
+            Call DrawFocusRect(m_lhDC, utFontRect)
+        End With
+    Case xThemeWin9X                'xThemeWin9x
+        '   Only if in the run mode
+        If Not bUserMode Then
+            Exit Sub
+        End If
+        '   Only if Show Focus Rect is true for the control
+        If Not ShowFocusRect Then
+            Exit Sub
+        End If
+        utTabInfo = AryTabs(m_lActiveTab)
+        With utTabInfo.ClickableRect
+            '   Do the adjustments for the border
+            utFontRect.Left = .Left + 2
+            utFontRect.Top = .Top + 2
+            utFontRect.Bottom = .Bottom
+            utFontRect.Right = .Right - 3
+            '   Done to allow proper drawing of focus rect
+            If utTabInfo.Enabled Then
+                ForeColor = m_lActiveTabForeColor
+            Else
+                ForeColor = m_lDisabledTabForeColor
             End If
-            utTabInfo = AryTabs(m_lActiveTab)
-            With utTabInfo.ClickableRect
-                '   Do the adjustments for the border
-                utFontRect.Left = .Left + 2
-                utFontRect.Top = .Top + 2
-                utFontRect.Bottom = .Bottom
-                utFontRect.Right = .Right - 3
-                '   Done to allow proper drawing of focus rect
-                If utTabInfo.Enabled Then
-                    ForeColor = m_lActiveTabForeColor
-                Else
-                    ForeColor = m_lDisabledTabForeColor
-                End If
-                '   Show/hide the focus rectangle (drawn in XOR mode,
-                '   so calling it again with same coords will erase it)
-                Call DrawFocusRect(m_lhDC, utFontRect)
-            End With
-        Case xThemeWinXP, xThemeGalaxy  'xThemeWinXP, xThemeGalaxy
-            '   Only if in the run mode
-            If Not bUserMode Then
-                Exit Sub
+            '   Show/hide the focus rectangle (drawn in XOR mode,
+            '   so calling it again with same coords will erase it)
+            Call DrawFocusRect(m_lhDC, utFontRect)
+        End With
+    Case xThemeWinXP, xThemeGalaxy  'xThemeWinXP, xThemeGalaxy
+        '   Only if in the run mode
+        If Not bUserMode Then
+            Exit Sub
+        End If
+        '   Only if Show Focus Rect is true for the control
+        If Not ShowFocusRect Then
+            Exit Sub
+        End If
+        utTabInfo = AryTabs(m_lActiveTab)
+        With utTabInfo.ClickableRect
+            '   Do the adjustments for the border
+            utFontRect.Left = .Left + 2
+            utFontRect.Top = .Top + 4
+            utFontRect.Bottom = .Bottom
+            utFontRect.Right = .Right - 2
+            '   Done to allow proper drawing of focus rect
+            If utTabInfo.Enabled Then
+                ForeColor = m_lActiveTabForeColor
+            Else
+                ForeColor = m_lDisabledTabForeColor
             End If
-            '   Only if Show Focus Rect is true for the control
-            If Not ShowFocusRect Then
-                Exit Sub
-            End If
-            utTabInfo = AryTabs(m_lActiveTab)
-            With utTabInfo.ClickableRect
-                '   Do the adjustments for the border
-                utFontRect.Left = .Left + 2
-                utFontRect.Top = .Top + 4
-                utFontRect.Bottom = .Bottom
-                utFontRect.Right = .Right - 2
-                '   Done to allow proper drawing of focus rect
-                If utTabInfo.Enabled Then
-                    ForeColor = m_lActiveTabForeColor
-                Else
-                    ForeColor = m_lDisabledTabForeColor
-                End If
-                '   Show/hide the focus rectangle (drawn in XOR mode,
-                '   so calling it again with same coords will erase it)
-                Call DrawFocusRect(m_lhDC, utFontRect)
-            End With
+            '   Show/hide the focus rectangle (drawn in XOR mode,
+            '   so calling it again with same coords will erase it)
+            Call DrawFocusRect(m_lhDC, utFontRect)
+        End With
     End Select
     
 Sub_ErrHandlerExit:
@@ -6060,116 +6067,116 @@ Private Sub ShowHideFocusTabbedDialog()
     
     '   Handle Any Errors
     On Error GoTo Sub_ErrHandler
-
+    
     Select Case m_enmTheme
-        Case xThemeRoundTabs            'xThemeRoundTabs
-            '   Only if in the run mode
-            If Not bUserMode Then
-                Exit Sub
+    Case xThemeRoundTabs            'xThemeRoundTabs
+        '   Only if in the run mode
+        If Not bUserMode Then
+            Exit Sub
+        End If
+        '   Only if Show Focus Rect is true for the control
+        If Not ShowFocusRect Then
+            Exit Sub
+        End If
+        utTabInfo = AryTabs(m_lActiveTab)
+        With utTabInfo.ClickableRect
+            '   Do the adjustments for the border
+            utFontRect.Left = .Left
+            utFontRect.Top = .Top
+            utFontRect.Bottom = .Bottom
+            utFontRect.Right = .Right - 1
+            sTmp = utTabInfo.Caption
+            '   Set the active tab font as current font...
+            '   used to get proper values when calculating text size
+            Set Font = ActiveTabFont
+            '   Calculate the rect to draw the text, and get proper
+            '   string (including ellipsis etc)
+            DrawText m_lhDC, sTmp, -1, utFontRect, DT_CALCRECT Or DT_SINGLELINE Or DT_END_ELLIPSIS Or DT_MODIFYSTRING
+            iTmpW = utFontRect.Right - utFontRect.Left + iFOCUS_RECT_AND_TEXT_DISTANCE
+            iTmpH = utFontRect.Bottom - utFontRect.Top + iFOCUS_RECT_AND_TEXT_DISTANCE / 2
+            '   Do the adjustments to center the text (both vertically
+            '   and horizontally)
+            utFontRect.Left = (utFontRect.Left - (iFOCUS_RECT_AND_TEXT_DISTANCE / 2)) + .Right / 2 - utFontRect.Right / 2
+            utFontRect.Right = utFontRect.Left + iTmpW
+            utFontRect.Top = utFontRect.Top + .Bottom / 2 - utFontRect.Bottom / 2
+            utFontRect.Bottom = utFontRect.Top + iTmpH
+            '   Done to allow proper drawing of focus rect
+            If utTabInfo.Enabled Then
+                ForeColor = m_lActiveTabForeColor
+            Else
+                ForeColor = m_lDisabledTabForeColor
             End If
-            '   Only if Show Focus Rect is true for the control
-            If Not ShowFocusRect Then
-                Exit Sub
+            '   Show/hide the focus rectangle (drawn in XOR mode,
+            '   so calling it again with same coords will erase it)
+            Call DrawFocusRect(m_lhDC, utFontRect)
+        End With
+    Case xThemeVisualStudio2003     'xThemeVisualStudio2003
+        ShowHideFocusPropertyPages
+    Case xThemeWin9X                'xThemeWin9x
+        '   Only if in the run mode
+        If Not bUserMode Then
+            Exit Sub
+        End If
+        '   Only if Show Focus Rect is true for the control
+        If Not ShowFocusRect Then
+            Exit Sub
+        End If
+        utTabInfo = AryTabs(m_lActiveTab)
+        With utTabInfo.ClickableRect
+            '   Do the adjustments for the border
+            utFontRect.Left = .Left + 2
+            utFontRect.Top = .Top + 2
+            utFontRect.Bottom = .Bottom
+            utFontRect.Right = .Right - 3
+            '   Done to allow proper drawing of focus rect
+            If utTabInfo.Enabled Then
+                ForeColor = m_lActiveTabForeColor
+            Else
+                ForeColor = m_lDisabledTabForeColor
             End If
-            utTabInfo = AryTabs(m_lActiveTab)
-            With utTabInfo.ClickableRect
-                '   Do the adjustments for the border
-                utFontRect.Left = .Left
-                utFontRect.Top = .Top
-                utFontRect.Bottom = .Bottom
-                utFontRect.Right = .Right - 1
-                sTmp = utTabInfo.Caption
-                '   Set the active tab font as current font...
-                '   used to get proper values when calculating text size
-                Set Font = ActiveTabFont
-                '   Calculate the rect to draw the text, and get proper
-                '   string (including ellipsis etc)
-                DrawText m_lhDC, sTmp, -1, utFontRect, DT_CALCRECT Or DT_SINGLELINE Or DT_END_ELLIPSIS Or DT_MODIFYSTRING
-                iTmpW = utFontRect.Right - utFontRect.Left + iFOCUS_RECT_AND_TEXT_DISTANCE
-                iTmpH = utFontRect.Bottom - utFontRect.Top + iFOCUS_RECT_AND_TEXT_DISTANCE / 2
-                '   Do the adjustments to center the text (both vertically
-                '   and horizontally)
-                utFontRect.Left = (utFontRect.Left - (iFOCUS_RECT_AND_TEXT_DISTANCE / 2)) + .Right / 2 - utFontRect.Right / 2
-                utFontRect.Right = utFontRect.Left + iTmpW
-                utFontRect.Top = utFontRect.Top + .Bottom / 2 - utFontRect.Bottom / 2
-                utFontRect.Bottom = utFontRect.Top + iTmpH
-                '   Done to allow proper drawing of focus rect
-                If utTabInfo.Enabled Then
-                    ForeColor = m_lActiveTabForeColor
-                Else
-                    ForeColor = m_lDisabledTabForeColor
-                End If
-                '   Show/hide the focus rectangle (drawn in XOR mode,
-                '   so calling it again with same coords will erase it)
-                Call DrawFocusRect(m_lhDC, utFontRect)
-            End With
-        Case xThemeVisualStudio2003     'xThemeVisualStudio2003
-            ShowHideFocusPropertyPages
-        Case xThemeWin9X                'xThemeWin9x
-            '   Only if in the run mode
-            If Not bUserMode Then
-                Exit Sub
+            '   Show/hide the focus rectangle (drawn in XOR mode,
+            '   so calling it again with same coords will erase it)
+            Call DrawFocusRect(m_lhDC, utFontRect)
+        End With
+    Case xThemeWinXP, xThemeGalaxy      'xThemeWinXP, xThemeGalaxy
+        '   Only if in the run mode
+        If Not bUserMode Then
+            Exit Sub
+        End If
+        '   Only if Show Focus Rect is true for the control
+        If Not ShowFocusRect Then
+            Exit Sub
+        End If
+        utTabInfo = AryTabs(m_lActiveTab)
+        With utTabInfo.ClickableRect
+            '   Do the adjustments for the border
+            utFontRect.Left = .Left + 3
+            utFontRect.Top = .Top + 3
+            utFontRect.Bottom = .Bottom
+            utFontRect.Right = .Right - 2
+            sTmp = utTabInfo.Caption
+            Set Font = ActiveTabFont
+            '   Calculate the rect to draw the text, and get proper
+            '   string (including ellipsis etc)
+            DrawText m_lhDC, sTmp, -1, utFontRect, DT_CALCRECT Or DT_SINGLELINE Or DT_END_ELLIPSIS Or DT_MODIFYSTRING
+            iTmpW = utFontRect.Right - utFontRect.Left + iFOCUS_RECT_AND_TEXT_DISTANCE
+            iTmpH = utFontRect.Bottom - utFontRect.Top + iFOCUS_RECT_AND_TEXT_DISTANCE / 2
+            '   Do the adjustments to center the text (both vertically
+            '   and horizontally)
+            utFontRect.Left = (utFontRect.Left - (iFOCUS_RECT_AND_TEXT_DISTANCE / 2)) + .Right / 2 - utFontRect.Right / 2
+            utFontRect.Right = utFontRect.Left + iTmpW
+            utFontRect.Top = utFontRect.Top + .Bottom / 2 - utFontRect.Bottom / 2
+            utFontRect.Bottom = utFontRect.Top + iTmpH
+            '   Done to allow proper drawing of focus rect
+            If utTabInfo.Enabled Then
+                ForeColor = m_lActiveTabForeColor
+            Else
+                ForeColor = m_lDisabledTabForeColor
             End If
-            '   Only if Show Focus Rect is true for the control
-            If Not ShowFocusRect Then
-                Exit Sub
-            End If
-            utTabInfo = AryTabs(m_lActiveTab)
-            With utTabInfo.ClickableRect
-                '   Do the adjustments for the border
-                utFontRect.Left = .Left + 2
-                utFontRect.Top = .Top + 2
-                utFontRect.Bottom = .Bottom
-                utFontRect.Right = .Right - 3
-                '   Done to allow proper drawing of focus rect
-                If utTabInfo.Enabled Then
-                    ForeColor = m_lActiveTabForeColor
-                Else
-                    ForeColor = m_lDisabledTabForeColor
-                End If
-                '   Show/hide the focus rectangle (drawn in XOR mode,
-                '   so calling it again with same coords will erase it)
-                Call DrawFocusRect(m_lhDC, utFontRect)
-            End With
-        Case xThemeWinXP, xThemeGalaxy      'xThemeWinXP, xThemeGalaxy
-            '   Only if in the run mode
-            If Not bUserMode Then
-                Exit Sub
-            End If
-            '   Only if Show Focus Rect is true for the control
-            If Not ShowFocusRect Then
-                Exit Sub
-            End If
-            utTabInfo = AryTabs(m_lActiveTab)
-            With utTabInfo.ClickableRect
-                '   Do the adjustments for the border
-                utFontRect.Left = .Left + 3
-                utFontRect.Top = .Top + 3
-                utFontRect.Bottom = .Bottom
-                utFontRect.Right = .Right - 2
-                sTmp = utTabInfo.Caption
-                Set Font = ActiveTabFont
-                '   Calculate the rect to draw the text, and get proper
-                '   string (including ellipsis etc)
-                DrawText m_lhDC, sTmp, -1, utFontRect, DT_CALCRECT Or DT_SINGLELINE Or DT_END_ELLIPSIS Or DT_MODIFYSTRING
-                iTmpW = utFontRect.Right - utFontRect.Left + iFOCUS_RECT_AND_TEXT_DISTANCE
-                iTmpH = utFontRect.Bottom - utFontRect.Top + iFOCUS_RECT_AND_TEXT_DISTANCE / 2
-                '   Do the adjustments to center the text (both vertically
-                '   and horizontally)
-                utFontRect.Left = (utFontRect.Left - (iFOCUS_RECT_AND_TEXT_DISTANCE / 2)) + .Right / 2 - utFontRect.Right / 2
-                utFontRect.Right = utFontRect.Left + iTmpW
-                utFontRect.Top = utFontRect.Top + .Bottom / 2 - utFontRect.Bottom / 2
-                utFontRect.Bottom = utFontRect.Top + iTmpH
-                '   Done to allow proper drawing of focus rect
-                If utTabInfo.Enabled Then
-                    ForeColor = m_lActiveTabForeColor
-                Else
-                    ForeColor = m_lDisabledTabForeColor
-                End If
-                '   Show/hide the focus rectangle (drawn in XOR mode, so calling
-                '   it again with same coords will erase it)
-                Call DrawFocusRect(m_lhDC, utFontRect)
-            End With
+            '   Show/hide the focus rectangle (drawn in XOR mode, so calling
+            '   it again with same coords will erase it)
+            Call DrawFocusRect(m_lhDC, utFontRect)
+        End With
     End Select
     
 Sub_ErrHandlerExit:
@@ -6180,10 +6187,10 @@ Sub_ErrHandler:
 End Sub
 
 Public Property Get TabCaption(ByVal iTabIndex As Long) As String
-
+    
     '   Handle Any Errors
     On Error GoTo Prop_ErrHandler
-
+    
     If iTabIndex > -1 And iTabIndex < m_lTabCount Then
         TabCaption = m_aryTabs(iTabIndex).Caption
     End If
@@ -6201,7 +6208,7 @@ Public Property Let TabCaption(ByVal iTabIndex As Long, sTabCaption As String)
     
     '   Handle Any Errors
     On Error GoTo Prop_ErrHandler
-
+    
     If iTabIndex > -1 And iTabIndex < m_lTabCount Then
         '   First get the existing caption's access key and remove it from the
         '   current "AccessKeys" property for the control
@@ -6243,10 +6250,10 @@ Public Property Get TabCount() As Long
     
     '   Handle Any Errors
     On Error GoTo Prop_ErrHandler
-
+    
     '   The number of tabs
     TabCount = m_lTabCount
-
+    
 Prop_ErrHandlerExit:
     Exit Property
 Prop_ErrHandler:
@@ -6255,10 +6262,10 @@ Prop_ErrHandler:
 End Property
 
 Public Property Let TabCount(ByVal lNewValue As Long)
-
+    
     '   Handle Any Errors
     On Error GoTo Prop_ErrHandler
-
+    
     If lNewValue < 1 Then
         '   Invalid property value
         err.Raise 380
@@ -6280,10 +6287,10 @@ Prop_ErrHandler:
 End Property
 
 Public Property Get TabEnabled(ByVal lTabIndex As Long) As Boolean
-
+    
     '   Handle Any Errors
     On Error GoTo Prop_ErrHandler
-
+    
     If (lTabIndex > -1) And (lTabIndex < m_lTabCount) Then
         TabEnabled = m_aryTabs(lTabIndex).Enabled
     End If
@@ -6296,10 +6303,10 @@ Prop_ErrHandler:
 End Property
 
 Public Property Let TabEnabled(ByVal lTabIndex As Long, bNewValue As Boolean)
-
+    
     '   Handle Any Errors
     On Error GoTo Prop_ErrHandler
-
+    
     If (lTabIndex > -1) And (lTabIndex < m_lTabCount) Then
         m_aryTabs(lTabIndex).Enabled = bNewValue
         PropertyChanged "TabEnabled"
@@ -6319,10 +6326,10 @@ Prop_ErrHandler:
 End Property
 
 Public Property Get TabPicture(ByVal lTabIndex As Long) As StdPicture
-
+    
     '   Handle Any Errors
     On Error GoTo Prop_ErrHandler
-
+    
     If (lTabIndex > -1) And (lTabIndex < m_lTabCount) Then
         Set TabPicture = m_aryTabs(lTabIndex).TabPicture
     Else
@@ -6342,7 +6349,7 @@ Public Property Set TabPicture(ByVal lTabIndex As Long, oTabPicture As StdPictur
     
     '   Handle Any Errors
     On Error GoTo Prop_ErrHandler
-
+    
     If (lTabIndex > -1) And (lTabIndex < m_lTabCount) Then
         Set m_aryTabs(lTabIndex).TabPicture = oTabPicture
         '   Redraw
@@ -6362,10 +6369,10 @@ Prop_ErrHandler:
 End Property
 
 Public Property Get TabStripBackColor() As OLE_COLOR
-
+    
     '   Handle Any Errors
     On Error GoTo Prop_ErrHandler
-
+    
     TabStripBackColor = m_lTabStripBackColor
     
 Prop_ErrHandlerExit:
@@ -6376,10 +6383,10 @@ Prop_ErrHandler:
 End Property
 
 Public Property Let TabStripBackColor(ByVal lNewValue As OLE_COLOR)
-
+    
     '   Handle Any Errors
     On Error GoTo Prop_ErrHandler
-
+    
     m_lTabStripBackColor = lNewValue
     '   Redraw
     Refresh
@@ -6393,13 +6400,13 @@ Prop_ErrHandler:
 End Property
 
 Public Property Get TabStyle() As Style
-
+    
     '   Handle Any Errors
     On Error GoTo Prop_ErrHandler
     
     '   Style for the tab
     TabStyle = m_enmStyle
-
+    
 Prop_ErrHandlerExit:
     Exit Property
 Prop_ErrHandler:
@@ -6408,10 +6415,10 @@ Prop_ErrHandler:
 End Property
 
 Public Property Let TabStyle(ByVal enmNewStyle As Style)
-
+    
     '   Handle Any Errors
     On Error GoTo Prop_ErrHandler
-
+    
     m_enmStyle = enmNewStyle
     '   Redraw
     Refresh
@@ -6425,10 +6432,10 @@ Prop_ErrHandler:
 End Property
 
 Public Property Get TabTheme() As Theme
-
+    
     '   Handle Any Errors
     On Error GoTo Prop_ErrHandler
-
+    
     TabTheme = m_enmTheme
     
 Prop_ErrHandlerExit:
@@ -6439,10 +6446,10 @@ Prop_ErrHandler:
 End Property
 
 Public Property Let TabTheme(enmNewTheme As Theme)
-
+    
     '   Handle Any Errors
     On Error GoTo Prop_ErrHandler
-
+    
     m_enmTheme = enmNewTheme
     '   Set initial theme defaults based on m_enmTheme
     Call ResetColorsToDefault
@@ -6461,26 +6468,26 @@ End Property
 Public Sub TimerEvent()
     '   Handle Any Errors
     On Error GoTo Sub_ErrHandler
-
+    
     '   Called when the user control's timer event occurs
     Select Case m_enmTheme
-        Case xThemeWin9X, xThemeVisualStudio2003, xThemeRoundTabs
-            '   Nothing
-        Case xThemeWinXP, xThemeGalaxy  'xThemeWinXP, xThemeGalaxy
-            '   Get cusror position
-            Call GetCursorPos(m_Pnt)
-            '   Convert coordinates
-            Call ScreenToClient(m_lhWnd, m_Pnt)
-            '   Check if the mouse is out of the clickable region
-            If (m_Pnt.X < m_utRect.Left Or m_Pnt.X > m_utRect.Right) Or _
-                (m_Pnt.Y < m_utRect.Top Or m_Pnt.Y > m_utRect.Bottom) Then
-                '   Disable the timer
-                Call pSetTimer(0)
-                '   Indicate mouse up
-                m_bIsMouseOver = False
-                '   Draw the changes to clear the hover effect
-                Call pDrawOverXOred
-            End If
+    Case xThemeWin9X, xThemeVisualStudio2003, xThemeRoundTabs
+        '   Nothing
+    Case xThemeWinXP, xThemeGalaxy  'xThemeWinXP, xThemeGalaxy
+        '   Get cusror position
+        Call GetCursorPos(m_Pnt)
+        '   Convert coordinates
+        Call ScreenToClient(m_lhWnd, m_Pnt)
+        '   Check if the mouse is out of the clickable region
+        If (m_Pnt.X < m_utRect.Left Or m_Pnt.X > m_utRect.Right) Or _
+            (m_Pnt.Y < m_utRect.Top Or m_Pnt.Y > m_utRect.Bottom) Then
+            '   Disable the timer
+            Call pSetTimer(0)
+            '   Indicate mouse up
+            m_bIsMouseOver = False
+            '   Draw the changes to clear the hover effect
+            Call pDrawOverXOred
+        End If
     End Select
     
 Sub_ErrHandlerExit:
@@ -6491,10 +6498,10 @@ Sub_ErrHandler:
 End Sub
 
 Public Property Get TopLeftInnerBorderColor() As OLE_COLOR
-
+    
     '   Handle Any Errors
     On Error GoTo Prop_ErrHandler
-
+    
     TopLeftInnerBorderColor = m_lTopLeftInnerBorderColor
     
 Prop_ErrHandlerExit:
@@ -6505,10 +6512,10 @@ Prop_ErrHandler:
 End Property
 
 Public Property Let TopLeftInnerBorderColor(ByVal lNewValue As OLE_COLOR)
-
+    
     '   Handle Any Errors
     On Error GoTo Prop_ErrHandler
-
+    
     m_lTopLeftInnerBorderColor = lNewValue
     '   Redraw
     Refresh
@@ -6522,12 +6529,12 @@ Prop_ErrHandler:
 End Property
 
 Public Property Get UseControlBox() As Boolean
-
+    
     '   Handle Any Errors
     On Error GoTo Prop_ErrHandler
-
+    
     UseControlBox = m_bUseControlBox
-
+    
 Prop_ErrHandlerExit:
     Exit Property
 Prop_ErrHandler:
@@ -6552,10 +6559,10 @@ Prop_ErrHandler:
 End Property
 
 Public Property Get UseFocusedColor() As Boolean
-
+    
     '   Handle Any Errors
     On Error GoTo Prop_ErrHandler
-
+    
     UseFocusedColor = m_bUseFocusedColor
     
 Prop_ErrHandlerExit:
@@ -6566,10 +6573,10 @@ Prop_ErrHandler:
 End Property
 
 Public Property Let UseFocusedColor(ByVal bNewValue As Boolean)
-
+    
     '   Handle Any Errors
     On Error GoTo Prop_ErrHandler
-
+    
     m_bUseFocusedColor = bNewValue
     '   Redraw
     Refresh
@@ -6583,10 +6590,10 @@ Prop_ErrHandler:
 End Property
 
 Public Property Get UseMaskColor() As Boolean
-
+    
     '   Handle Any Errors
     On Error GoTo Prop_ErrHandler
-
+    
     UseMaskColor = m_bUseMaskColor
     
 Prop_ErrHandlerExit:
@@ -6597,10 +6604,10 @@ Prop_ErrHandler:
 End Property
 
 Public Property Let UseMaskColor(bNewValue As Boolean)
-
+    
     '   Handle Any Errors
     On Error GoTo Prop_ErrHandler
-
+    
     m_bUseMaskColor = bNewValue
     '   Redraw
     Refresh
@@ -6614,10 +6621,10 @@ Prop_ErrHandler:
 End Property
 
 Public Property Get UseMouseWheelScroll() As Boolean
-
+    
     '   Handle Any Errors
     On Error GoTo Prop_ErrHandler
-
+    
     UseMouseWheelScroll = m_bUseMouseWheelScroll
     
 Prop_ErrHandlerExit:
@@ -6628,10 +6635,10 @@ Prop_ErrHandler:
 End Property
 
 Public Property Let UseMouseWheelScroll(bValue As Boolean)
-
+    
     '   Handle Any Errors
     On Error GoTo Prop_ErrHandler
-
+    
     m_bUseMouseWheelScroll = bValue
     PropertyChanged "UseMouseWheelScroll"
     
@@ -6647,7 +6654,7 @@ Private Sub UserControl_AccessKeyPress(KeyAscii As Integer)
     
     '   Handle Any Errors
     On Error GoTo Sub_ErrHandler
-
+    
     '   Since we are using the access keys in uppercase, convert
     '   any lowercase keys to uppercase before comparision
     If KeyAscii >= 97 And KeyAscii <= 122 Then
@@ -6677,10 +6684,10 @@ Sub_ErrHandler:
 End Sub
 
 Private Sub UserControl_Click()
-
+    
     '   Handle Any Errors
     On Error GoTo Sub_ErrHandler
-
+    
     RaiseEvent Click
     
 Sub_ErrHandlerExit:
@@ -6691,10 +6698,10 @@ Sub_ErrHandler:
 End Sub
 
 Private Sub UserControl_DblClick()
-
+    
     '   Handle Any Errors
     On Error GoTo Sub_ErrHandler
-
+    
     RaiseEvent DblClick
     
 Sub_ErrHandlerExit:
@@ -6705,10 +6712,10 @@ Sub_ErrHandler:
 End Sub
 
 Private Sub UserControl_GotFocus()
-
+    
     '   Handle Any Errors
     On Error GoTo Sub_ErrHandler
-
+    
     m_lMouseOverTabIndex = m_lActiveTab
     m_lMouseOverTabIndex = ActiveTab
     m_IsFocused = True
@@ -6727,7 +6734,7 @@ Private Sub UserControl_InitProperties()
     
     '   Handle Any Errors
     On Error GoTo Sub_ErrHandler
-
+    
     '   Initialize all properties
     m_bShowFocusRect = m_def_bShowFocusRect
     m_bUseFocusedColor = m_def_bUseFocusedColor
@@ -6834,7 +6841,7 @@ Private Sub UserControl_KeyDown(KeyCode As Integer, Shift As Integer)
     '   Raise event, note: Byref arguments user can change there value to
     '   Control how tabs behave on key down
     RaiseEvent KeyDown(KeyCode, Shift)
-
+    
 Sub_ErrHandlerExit:
     Exit Sub
 Sub_ErrHandler:
@@ -6843,10 +6850,10 @@ Sub_ErrHandler:
 End Sub
 
 Private Sub UserControl_KeyPress(KeyAscii As Integer)
-
+    
     '   Handle Any Errors
     On Error GoTo Sub_ErrHandler
-
+    
     RaiseEvent KeyPress(KeyAscii)
     
 Sub_ErrHandlerExit:
@@ -6857,10 +6864,10 @@ Sub_ErrHandler:
 End Sub
 
 Private Sub UserControl_KeyUp(KeyCode As Integer, Shift As Integer)
-
+    
     '   Handle Any Errors
     On Error GoTo Sub_ErrHandler
-
+    
     RaiseEvent KeyUp(KeyCode, Shift)
     
 Sub_ErrHandlerExit:
@@ -6871,10 +6878,10 @@ Sub_ErrHandler:
 End Sub
 
 Private Sub UserControl_LostFocus()
-
+    
     '   Handle Any Errors
     On Error GoTo Sub_ErrHandler
-
+    
     m_lMouseOverTabIndex = m_lActiveTab
     m_IsFocused = False
     Call pShowHideFocus
@@ -6887,14 +6894,14 @@ Sub_ErrHandler:
 End Sub
 
 Private Sub UserControl_MouseDown(Button As Integer, Shift As Integer, X As Single, Y As Single)
-        '   Handle Any Errors
+    '   Handle Any Errors
     On Error GoTo Sub_ErrHandler
-
+    
     '   This routine delegates the Handling of the Mouse Events to a Private Sub
     '
     '   Prevent recursion
     If m_bIsRecursive Then Exit Sub
-
+    
     '   Raise event, for MouseDown
     RaiseEvent MouseDown(Button, Shift, X, Y)
     '   Only if left mouse down
@@ -6917,7 +6924,7 @@ End Sub
 Private Sub UserControl_MouseMove(Button As Integer, Shift As Integer, X As Single, Y As Single)
     '   Handle Any Errors
     On Error GoTo Sub_ErrHandler
-
+    
     '   This routine delegates the Handling of the Mouse Events to a Private Sub
     '   raise event, for MouseMove
     RaiseEvent MouseMove(Button, Shift, X, Y)
@@ -6934,12 +6941,12 @@ End Sub
 Private Sub UserControl_MouseUp(Button As Integer, Shift As Integer, X As Single, Y As Single)
     '   Handle Any Errors
     On Error GoTo Sub_ErrHandler
-
+    
     '   This routine delegates the Handling of the Mouse Events to a Private Sub
     If m_bIsRecursive Then Exit Sub
     '   Raise event, for Mouse Up
     RaiseEvent MouseUp(Button, Shift, X, Y)
-
+    
 Sub_ErrHandlerExit:
     Exit Sub
 Sub_ErrHandler:
@@ -6948,10 +6955,10 @@ Sub_ErrHandler:
 End Sub
 
 Private Sub UserControl_Paint()
-
+    
     '   Handle Any Errors
     On Error GoTo Sub_ErrHandler
-
+    
     Refresh
     
 Sub_ErrHandlerExit:
@@ -7065,7 +7072,7 @@ Private Sub UserControl_ReadProperties(PropBag As PropertyBag)
             
         End If
     End If
-
+    
 Sub_ErrHandlerExit:
     Exit Sub
 Sub_ErrHandler:
@@ -7074,15 +7081,15 @@ Sub_ErrHandler:
 End Sub
 
 Private Sub UserControl_Show()
-
+    
     '   Repaint the UserControl before it
     '   show in either thr IDE or at RunTime
     '   Handle Any Errors
     On Error GoTo Sub_ErrHandler
     
-
+    
     Refresh
-'    UserControl.Refresh
+    '    UserControl.Refresh
     
 Sub_ErrHandlerExit:
     Exit Sub
@@ -7107,7 +7114,7 @@ Private Sub UserControl_WriteProperties(PropBag As PropertyBag)
     
     '   Handle Any Errors
     On Error GoTo Sub_ErrHandler
-
+    
     With PropBag
         Call .WriteProperty("TabCount", m_lTabCount, m_def_lTabCount)
         For iCnt = 0 To m_lTabCount - 1
@@ -7161,10 +7168,10 @@ Sub_ErrHandler:
 End Sub
 
 Public Property Get UseThemeDetection() As Boolean
-
+    
     '   Handle Any Errors
     On Error GoTo Prop_ErrHandler
-
+    
     UseThemeDetection = m_bUseThemeDetection
     
 Prop_ErrHandlerExit:
@@ -7175,10 +7182,10 @@ Prop_ErrHandler:
 End Property
 
 Public Property Let UseThemeDetection(bNewValue As Boolean)
-
+    
     '   Handle Any Errors
     On Error GoTo Prop_ErrHandler
-
+    
     m_bUseThemeDetection = bNewValue
     If IsWinXP And bNewValue Then
         TabTheme = xThemeWinXP
@@ -7200,7 +7207,7 @@ Public Function Version(ByVal bDateTime As Boolean) As String
     
     '   Handle Any Errors
     On Error GoTo Func_ErrHandler
-
+    
     If bDateTime Then
         Version = Major & "." & Minor & "." & Revision & " (" & DateTime & ")"
     Else
@@ -7216,10 +7223,10 @@ End Function
 
 
 Public Property Get XRadius() As Long
-
+    
     '   Handle Any Errors
     On Error GoTo Prop_ErrHandler
-
+    
     XRadius = m_lXRadius
     
 Prop_ErrHandlerExit:
@@ -7230,10 +7237,10 @@ Prop_ErrHandler:
 End Property
 
 Public Property Let XRadius(iNewValue As Long)
-
+    
     '   Handle Any Errors
     On Error GoTo Prop_ErrHandler
-
+    
     m_lXRadius = iNewValue
     '   Redraw
     Refresh
@@ -7251,7 +7258,7 @@ Public Property Get YRadius() As Long
     On Error GoTo Prop_ErrHandler
     
     YRadius = m_lYRadius
-
+    
 Prop_ErrHandlerExit:
     Exit Property
 Prop_ErrHandler:

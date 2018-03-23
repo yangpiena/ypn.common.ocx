@@ -134,6 +134,13 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = True
+'---------------------------------------------------------------------------------------
+' Module    : ypnPropertySheet
+' Author    : YPN
+' Date      : 2018-03-24 00:14
+' Purpose   :  Ù–‘“≥
+'---------------------------------------------------------------------------------------
+
 Private Declare Function DrawText Lib "user32" Alias "DrawTextA" (ByVal hDC As Long, ByVal lpStr As String, ByVal nCount As Long, lpRect As RECT, ByVal wFormat As Long) As Long
 Private Declare Function DrawIconEx Lib "user32" (ByVal hDC As Long, ByVal xLeft As Long, ByVal yTop As Long, ByVal hIcon As Long, ByVal cxWidth As Long, ByVal cyWidth As Long, ByVal istepIfAniCur As Long, ByVal hbrFlickerFreeDraw As Long, ByVal diFlags As Long) As Long
 Private Declare Function SetRect Lib "user32 " (lpRect As RECT, ByVal x1 As Long, ByVal y1 As Long, ByVal x2 As Long, ByVal y2 As Long) As Long
@@ -295,12 +302,12 @@ Private Sub Timer1_Timer()
     Call GetCursorPos(dot)
     ScreenToClient Picture3.hwnd, dot
     If dot.X < 0 Or dot.Y < 0 Or dot.X > UserControl.ScaleWidth Or dot.Y > UserControl.ScaleHeight Then
-            Timer1.Enabled = False
-            Call eraseOldHot
-            comboState = 0
-            Call refreshTable
-            hotIndex = -1
-            oldHotIndex = -1
+        Timer1.Enabled = False
+        Call eraseOldHot
+        comboState = 0
+        Call refreshTable
+        hotIndex = -1
+        oldHotIndex = -1
     End If
 End Sub
 Private Sub Text1_KeyPress(KeyAscii As Integer)
@@ -388,8 +395,8 @@ Private Sub txtChange()
                 .itemSingleValue = CSng(Val(.itemValue))
             End If
             RaiseEvent Change(currentSheetIndex, currentItemIndex, .itemValue)
-'            Call paintTable(highLightIndex)
- '           Call paintItemText(highLightIndex * NameHeight, PropertySheet(currentSheetIndex).sheetItem(currentItemIndex), txtColor)
+            '            Call paintTable(highLightIndex)
+            '           Call paintItemText(highLightIndex * NameHeight, PropertySheet(currentSheetIndex).sheetItem(currentItemIndex), txtColor)
             Call refreshHighlight(highLightIndex * NameHeight, highLightIndex)
             Call refreshTable
         End If
@@ -471,7 +478,7 @@ Private Sub Picture3_MouseDown(Button As Integer, Shift As Integer, X As Single,
     Else
         Text1.Visible = False
     End If
-
+    
 End Sub
 Private Sub Picture3_MouseUp(Button As Integer, Shift As Integer, X As Single, Y As Single)
     If Button = 2 Then
@@ -494,7 +501,7 @@ Private Sub Picture3_MouseUp(Button As Integer, Shift As Integer, X As Single, Y
         UserControl.MousePointer = 0
         Exit Sub
     End If
-
+    
     If highLightIndex = -1 Then Exit Sub
     If comboState = 3 And psList(highLightIndex).itemReadWrite And psList(highLightIndex).ItemEnabled Then
         Combo1.Left = NameWidth + 1
@@ -640,7 +647,7 @@ Private Sub UserControl_Resize()
     If NameWidth < UserControl.Width / 15 * 0.1 Or NameWidth > UserControl.Width / 15 * 0.9 Then NameWidth = UserControl.Width / 15 * 0.5
     Picture1.Width = sheetWidth
     Picture1.Height = sheetHeight
-
+    
     VScroll1.Left = sheetWidth + 1
     VScroll1.Height = sheetHeight - 1
     Call paintSheet
@@ -751,7 +758,7 @@ End Sub
 Public Sub delItems(tempSheetIndex As Integer)
     Dim i As Integer
     If tempSheetIndex < 0 Or tempSheetIndex > PSCount Then Exit Sub
-
+    
     currentSheetIndex = tempSheetIndex
     With PropertySheet(tempSheetIndex)
         .sheetItemCount = 0
@@ -895,10 +902,10 @@ End Property
 Public Sub setNumberRange(tempSheetIndex As Integer, tempItemIndex As Integer, tempMaX As Single, tempMin As Single)
     If CheckItem(tempSheetIndex, tempItemIndex) Then
         With PropertySheet(tempSheetIndex).sheetItem(tempItemIndex)
-        If .itemType = iInteger Or .itemType = iLong Or .itemType = iSingle Then
-            .itemMax = tempMaX
-            .itemMin = tempMin
-        End If
+            If .itemType = iInteger Or .itemType = iLong Or .itemType = iSingle Then
+                .itemMax = tempMaX
+                .itemMin = tempMin
+            End If
         End With
     End If
 End Sub

@@ -12,26 +12,14 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = True
-'*************************************************************************
-''               人人为我，我为人人
-''      枕善居VB及.NET源码博客汉化收藏整理
-''网    站：http://www.Mndsoft.com/
-''e-mail  ：mndsoft@126.com
-''发布日期：2009-10-08 10:13:05
-''QQ      ：88382850
-''   如果您有新的、好的代码可以提供给枕善居上发布，让大家学习哦!
-''----------------------------------------------------------------------
-'**系统名称：VB及.NET工程源代码扫描分析工具 V4.12.0
-'**模块描述：
-'**模 块 名：ypnProgressBar
-'**创 建 人：
-'**汉 化 者：枕善居(mndsoft)
-'**日    期：2009-10-08 10:13:05
-'**修 改 人：
-'**日    期：
-'**描    述：
-'**版    本：V4.12.0
-'*************************************************************************
+'---------------------------------------------------------------------------------------
+' Module    : ypnProgressBar
+' Author    : YPN
+' Date      : 2018-03-24 00:13
+' Purpose   : 3D的progressBar
+'---------------------------------------------------------------------------------------
+
+
 ' *********************************** EDITED FOR DEEPLOOK ***********************************
 ' Metal style can now draw two seperate values on the same bar at the same time. This is used
 ' to show both the group and project scan progress without having to use two progressbars.
@@ -117,13 +105,13 @@ End Type
 '=====================================================
 'THE BRUSHSTYLE ENUM
 Public Enum BrushStyle
- HS_HORIZONTAL = 0
- HS_VERTICAL = 1
- HS_FDIAGONAL = 2
- HS_BDIAGONAL = 3
- HS_CROSS = 4
- HS_DIAGCROSS = 5
- HS_SOLID = 6
+    HS_HORIZONTAL = 0
+    HS_VERTICAL = 1
+    HS_FDIAGONAL = 2
+    HS_BDIAGONAL = 3
+    HS_CROSS = 4
+    HS_DIAGCROSS = 5
+    HS_SOLID = 6
 End Enum
 '=====================================================
 
@@ -195,154 +183,154 @@ Private lSegmentSpacing As Long
 
 Public Sub DrawProgressBar()
     If m_Value > 100 Then m_Value = 100
-
-
+    
+    
     GetClientRect m_hWnd, TR               '//--- Reference = Control Client Area
-
+    
     DrawFillRectangle TR, IIf(m_Scrolling = ccScrollingMediaPlayer, &H0, vbWhite), m_hDC '//--- Draw BackGround
-
+    
     '//-- Draw ProgressBar Style
-
+    
     '==========================================================
     '/---Draw METALLIC XP STYLE
     '==========================================================
-
+    
     If m_Scrolling = ccScrollingMetallic Then
-
+        
         DrawMetalProgressbar
-
-
+        
+        
         '==========================================================
         '/---Draw OFFICE XP STYLE
         '==========================================================
-
+        
     ElseIf m_Scrolling = ccScrollingOfficeXP Then
-
+        
         DrawOfficeXPProgressbar
-
+        
         '==========================================================
         '/---Draw PASTEL XP STYLE
         '==========================================================
-
+        
     ElseIf m_Scrolling = ccScrollingPastel Then
-
+        
         DrawPastelProgressbar
-
+        
         '==========================================================
         '/---Draw JAVT XP STYLE
         '==========================================================
-
+        
     ElseIf m_Scrolling = ccScrollingJavT Then
-
+        
         DrawJavTProgressbar
-
+        
         '==========================================================
         '/---Draw MEDIA PLAYER XP STYLE
         '==========================================================
-
+        
     ElseIf m_Scrolling = ccScrollingMediaPlayer Then
-
+        
         DrawMediaProgressbar
-
+        
         '==========================================================
         '/---Draw CUSTOM BRUSH XP WASH COLOR STYLE
         '==========================================================
-
+        
     ElseIf m_Scrolling = ccScrollingCustomBrush Then
-
+        
         DrawCustomBrushProgressbar
-
+        
         '==========================================================
         '/---Draw PICTURE STYLE
         '==========================================================
-
+        
     ElseIf m_Scrolling = ccScrollingPicture Then
-
+        
         DrawPictureProgressbar
-
+        
     Else
-
+        
         '==========================================================
         '/---Draw WINDOWS XP STYLE
         '==========================================================
-
-
+        
+        
         CalcBarSize                            '//--- Calculate Progress and Percent Values
-
+        
         PBarDraw                               '//--- Draw Scolling Bar (Inside Bar)
-
+        
         If m_Scrolling = 0 Then DrawDivisions  '//--- Draw SegmentSpacing (This Will Generate the Blocks Effect)
-
+        
         pDrawBorder                            '//--- Draw The XP Look Border
-
+        
     End If
-
+    
     '==========================================================
-
+    
     DrawTexto                                  '//--- Draw The Percent Text
-
+    
     '==========================================================
     '/---Use the AntiFlicker DC
     '==========================================================
-
+    
     If m_MemDC Then
         With UserControl
             pDraw .hDC, 0, 0, .ScaleWidth, .ScaleHeight, .ScaleLeft, .ScaleTop
         End With
     End If
-
+    
 End Sub
 
 '==========================================================
 '/---OFFICE XP STYLE
 '==========================================================
 Private Sub DrawOfficeXPProgressbar()
-
+    
     DrawRectangle TR, ShiftColorXP(m_Color, 100), m_hDC
-
+    
     With TBR
         .Left = 1
         .Top = 1
         .Bottom = TR.Bottom - 1
         .Right = TR.Left + (TR.Right - TR.Left) * (m_Value / 100)
     End With
-
+    
     DrawFillRectangle TBR, ShiftColorXP(m_Color, 180), m_hDC
-
+    
 End Sub
 '==========================================================
 '/---JAVT XP STYLE
 '==========================================================
 Private Sub DrawJavTProgressbar()
-
+    
     DrawRectangle TR, ShiftColorXP(m_Color, 10), m_hDC
     TBR.Right = TR.Left + (TR.Right - TR.Left) * (m_Value / 101)
     DrawGradient m_Color, ShiftColorXP(m_Color, 100), 2, 2, TR.Right - 2, TR.Bottom - 5, m_hDC ', True
     DrawGradient ShiftColorXP(m_Color, 250), m_Color, 3, 3, TBR.Right, TR.Bottom - 6, m_hDC  ', True
     DrawLine TBR.Right, 2, TBR.Right, TR.Bottom - 2, m_hDC, ShiftColorXP(m_Color, 25)
-
+    
 End Sub
 '==========================================================
 '/---PICTURE STYLE
 '==========================================================
 Private Sub DrawPictureProgressbar()
-
+    
     Dim Brush      As Long
     Dim origBrush  As Long
-
+    
     DrawEdge m_hDC, TR, 2, BF_RECT                       '//--- Draw ProgressBar Border
-
+    
     If Nothing Is m_Picture Then Exit Sub                '//--- In Case No Picture is Choosen
-
+    
     Brush = CreatePatternBrush(m_Picture.handle)         '//-- Use Pattern Picture Draw
     origBrush = SelectObject(m_hDC, Brush)
     TBR.Right = TR.Left + (TR.Right - TR.Left) * (m_Value / 101)
-
+    
     PatBlt m_hDC, 2, 2, TBR.Right, TR.Bottom - 4, vbPatCopy
-
+    
     SelectObject m_hDC, origBrush
     DeleteObject Brush
-
+    
 End Sub
 '==========================================================
 '/---PASTEL XP STYLE
@@ -359,7 +347,7 @@ Private Sub DrawMetalProgressbar()
     TBR.Right = TR.Left + (TR.Right - TR.Left - 4) * (m_Value / 100)
     DrawGradient vbWhite, &HC0C0C0, 2, 2, TR.Right - 3, (TR.Bottom - 3) / 2, m_hDC
     DrawGradient BlendColor(&HC0C0C0, &H0, 255), &HC0C0C0, 2, (TR.Bottom - 3) / 2, TR.Right - 3, (TR.Bottom - 3) / 2, m_hDC
-
+    
     If m_DoubleValOnMetal = True Then
         TBR.Right = TR.Left + (TR.Right - TR.Left - 4) * (m_Value2 / 100)
         DrawGradient ShiftColorXP(m_Color2, 170), m_Color2, 2, (TR.Bottom - 3) / 2 + 2, TBR.Right, (TR.Bottom - 3) / 2 + 2, m_hDC
@@ -369,7 +357,7 @@ Private Sub DrawMetalProgressbar()
         DrawGradient ShiftColorXP(m_Color, 150), BlendColor(m_Color, &H0, 180), 2, 2, TBR.Right, (TR.Bottom - 3) / 2, m_hDC
         DrawGradient BlendColor(m_Color, &H0, 190), m_Color, 2, (TR.Bottom - 3) / 2, TBR.Right, (TR.Bottom - 3) / 2, m_hDC
     End If
-
+    
     TR.Left = TR.Left + 3
     pDrawBorder
 End Sub
@@ -377,32 +365,32 @@ End Sub
 '/---CUSTOM BRUSH XP STYLE
 '==========================================================
 Private Sub DrawCustomBrushProgressbar()
-
+    
     Dim hBrush As Long
-
+    
     DrawEdge m_hDC, TR, 9, BF_RECT
-
+    
     With TBR
         .Left = 2
         .Top = 2
         .Bottom = TR.Bottom - 2
         .Right = TR.Left + (TR.Right - TR.Left) * (m_Value / 101)
     End With
-
+    
     hBrush = CreateHatchBrush(m_Brush, GetLngColor(Color))
     SetBkColor m_hDC, ShiftColorXP(m_Color, 140)
     FillRect m_hDC, TBR, hBrush
     DeleteObject hBrush
-
+    
 End Sub
 '==========================================================
 '/---MEDIA PROGRESS XP STYLE
 '==========================================================
 Private Sub DrawMediaProgressbar()
-
+    
     DrawRectangle TR, BlendColor(m_Color, &H0, 200), m_hDC
     DrawGradient &H0&, ShiftColorXP(GetLngColor(BlendColor(m_Color, &H0, 100)), 10), 2, 2, TR.Left + (TR.Right - TR.Left - 5) * (m_Value / 100), TR.Bottom - 2, m_hDC, True
-
+    
 End Sub
 
 '==========================================================
@@ -410,34 +398,34 @@ End Sub
 '==========================================================
 
 Private Sub CalcBarSize()
-
+    
     lSegmentWidth = IIf(m_Scrolling = 0, 6, 0) '/-- Windows Default
     lSegmentSpacing = 2                        '/-- Windows Default
-
+    
     TR.Left = TR.Left + 3
-
+    
     LSet TBR = TR
-
+    
     fPercent = m_Value / 98
-
+    
     If fPercent < 0# Then fPercent = 0#
-
+    
     If m_Orientation = 0 Then
-
+        
         '=======================================================================================
         '                                 Calc Horizontal ProgressBar
         '---------------------------------------------------------------------------------------
-
+        
         TBR.Right = TR.Left + (TR.Right - TR.Left) * fPercent
-
+        
         TBR.Right = TBR.Right - ((TBR.Right - TBR.Left) Mod (lSegmentWidth + lSegmentSpacing))
-
+        
         If TBR.Right < TR.Left Then
             TBR.Right = TR.Left
         End If
-
+        
     Else
-
+        
         '=======================================================================================
         '                                 Calc Vertical ProgressBar
         '---------------------------------------------------------------------------------------
@@ -445,11 +433,11 @@ Private Sub CalcBarSize()
         TBR.Top = TR.Top + (TR.Bottom - TR.Top) * fPercent
         TBR.Top = TBR.Top - ((TBR.Top - TBR.Bottom) Mod (lSegmentWidth + lSegmentSpacing))
         If TBR.Top > TR.Bottom Then TBR.Top = TR.Bottom
-
-
-
+        
+        
+        
     End If
-
+    
 End Sub
 
 '==========================================================
@@ -459,15 +447,15 @@ End Sub
 Private Sub DrawDivisions()
     Dim i As Long
     Dim hBR As Long
-
+    
     hBR = CreateSolidBrush(vbWhite)
-
+    
     LSet TSR = TR
-
-
+    
+    
     If m_Orientation = 0 Then
-
-
+        
+        
         '=======================================================================================
         '                                 Draw Horizontal ProgressBar
         '---------------------------------------------------------------------------------------
@@ -477,9 +465,9 @@ Private Sub DrawDivisions()
             FillRect m_hDC, TSR, hBR
         Next i
         '---------------------------------------------------------------------------------------
-
+        
     Else
-
+        
         '=======================================================================================
         '                                  Draw Vertical ProgressBar
         '---------------------------------------------------------------------------------------
@@ -489,11 +477,11 @@ Private Sub DrawDivisions()
             FillRect m_hDC, TSR, hBR
         Next i
         '---------------------------------------------------------------------------------------
-
+        
     End If
-
+    
     DeleteObject hBR
-
+    
 End Sub
 
 
@@ -503,22 +491,22 @@ End Sub
 
 Private Sub pDrawBorder()
     Dim RTemp As RECT
-
+    
     TR.Left = TR.Left - 3
-
+    
     Let RTemp = TR
-
-
+    
+    
     DrawLine 2, 1, TR.Right - 2, 1, m_hDC, &HBEBEBE
     DrawLine 2, TR.Bottom - 2, TR.Right - 2, TR.Bottom - 2, m_hDC, &HEFEFEF
     DrawLine 1, 2, 1, TR.Bottom - 2, m_hDC, &HBEBEBE
     DrawLine 2, 2, 2, TR.Bottom - 2, m_hDC, &HEFEFEF
     DrawLine 2, 2, TR.Right - 2, 2, m_hDC, &HEFEFEF
     DrawLine TR.Right - 2, 2, TR.Right - 2, TR.Bottom - 2, m_hDC, &HEFEFEF
-
+    
     DrawRectangle TR, GetLngColor(&H686868), m_hDC
-
-
+    
+    
     Call SetPixelV(m_hDC, 0, 0, GetLngColor(vbWhite))
     Call SetPixelV(m_hDC, 0, 1, GetLngColor(&HA6ABAC))
     Call SetPixelV(m_hDC, 0, 2, GetLngColor(&H7D7E7F))
@@ -526,28 +514,28 @@ Private Sub pDrawBorder()
     Call SetPixelV(m_hDC, 1, 1, GetLngColor(&H777777))
     Call SetPixelV(m_hDC, 2, 0, GetLngColor(&H7D7E7F))
     Call SetPixelV(m_hDC, 2, 2, GetLngColor(&HBEBEBE))
-
+    
     Call SetPixelV(m_hDC, 0, TR.Bottom - 1, GetLngColor(vbWhite))
     Call SetPixelV(m_hDC, 1, TR.Bottom - 1, GetLngColor(&HA6ABAC))
     Call SetPixelV(m_hDC, 2, TR.Bottom - 1, GetLngColor(&H7D7E7F))
     Call SetPixelV(m_hDC, 0, TR.Bottom - 3, GetLngColor(&H7D7E7F)) '//BOTTOM RIGHT CORNER
     Call SetPixelV(m_hDC, 0, TR.Bottom - 2, GetLngColor(&HA7ABAC))
     Call SetPixelV(m_hDC, 1, TR.Bottom - 2, GetLngColor(&H777777))
-
+    
     Call SetPixelV(m_hDC, TR.Right - 1, 0, GetLngColor(vbWhite))
     Call SetPixelV(m_hDC, TR.Right - 1, 1, GetLngColor(&HBEBEBE))
     Call SetPixelV(m_hDC, TR.Right - 1, 2, GetLngColor(&H7D7E7F)) '//TOP LEFT CORNER
     Call SetPixelV(m_hDC, TR.Right - 2, 2, GetLngColor(&HBEBEBE))
     Call SetPixelV(m_hDC, TR.Right - 2, 1, GetLngColor(&H686868))
-
+    
     Call SetPixelV(m_hDC, TR.Right - 1, TR.Bottom - 1, GetLngColor(vbWhite))
     Call SetPixelV(m_hDC, TR.Right - 1, TR.Bottom - 2, GetLngColor(&HBEBEBE))
     Call SetPixelV(m_hDC, TR.Right - 1, TR.Bottom - 3, GetLngColor(&H7D7E7F))
     Call SetPixelV(m_hDC, TR.Right - 2, TR.Bottom - 2, GetLngColor(&H777777)) '//TOP RIGHT CORNER
     Call SetPixelV(m_hDC, TR.Right - 2, TR.Bottom - 1, GetLngColor(&HBEBEBE))
     Call SetPixelV(m_hDC, TR.Right - 3, TR.Bottom - 1, GetLngColor(&H7D7E7F))
-
-
+    
+    
 End Sub
 
 
@@ -558,21 +546,21 @@ End Sub
 Private Sub PBarDraw()
     Dim tempRect As RECT
     Dim ITemp    As Long
-
+    
     If m_Orientation = 0 Then
-
+        
         If TBR.Right <= 14 Then TBR.Right = 12
-
+        
         tempRect.Left = 4
         tempRect.Right = IIf(TBR.Right + 4 > TR.Right, TBR.Right - 4, TBR.Right)
         tempRect.Top = 8
         tempRect.Bottom = TR.Bottom - 8
-
+        
         '=======================================================================================
         '                                 Draw Horizontal ProgressBar
         '---------------------------------------------------------------------------------------
-
-
+        
+        
         If m_Scrolling = ccScrollingSearch Then
             GoSub HorizontalSearch
         Else
@@ -581,16 +569,16 @@ Private Sub PBarDraw()
             DrawGradient m_Color, ShiftColorXP(m_Color, 150), 4, tempRect.Bottom - 2, tempRect.Right, 6, m_hDC
         End If
     Else
-
+        
         tempRect.Left = 9
         tempRect.Right = TR.Right - 8
         tempRect.Top = TBR.Top
         tempRect.Bottom = TR.Bottom
-
+        
         '=======================================================================================
         '                                 Draw Vertical ProgressBar
         '---------------------------------------------------------------------------------------
-
+        
         If m_Scrolling = ccScrollingSearch Then
             GoSub VerticalSearch
         Else
@@ -598,20 +586,20 @@ Private Sub PBarDraw()
             DrawFillRectangle tempRect, m_Color, m_hDC
             DrawGradient m_Color, ShiftColorXP(m_Color, 150), TR.Right - 8, TBR.Top, 4, TR.Bottom, m_hDC, True
         End If
-
+        
         '--------------------   <-------- Gradient Color From (- to +)
         '||||||||||||||||||||   <-------- Fill Color
         '--------------------   <-------- Gradient Color From (+ to -)
-
+        
     End If
-
+    
     Exit Sub
-
+    
 HorizontalSearch:
-
-
+    
+    
     For ITemp = 0 To 2
-
+        
         With tempRect
             .Left = TBR.Right + ((lSegmentSpacing + 10) * (ITemp)) - (45 * ((100 - m_Value) / 100))
             .Right = .Left + 10
@@ -619,16 +607,16 @@ HorizontalSearch:
             .Bottom = TR.Bottom - 8
             DrawGradient ShiftColorXP(m_Color, 220 - (40 * ITemp)), ShiftColorXP(m_Color, 200 - (40 * ITemp)), .Left, 3, 9, TR.Bottom - 2, m_hDC, True
         End With
-
+        
     Next ITemp
-
+    
     Return
-
+    
 VerticalSearch:
-
-
+    
+    
     For ITemp = 0 To 2
-
+        
         With tempRect
             .Left = 8
             .Right = TR.Right - 8
@@ -636,11 +624,11 @@ VerticalSearch:
             .Bottom = .Top + 10
             DrawGradient ShiftColorXP(m_Color, 220 - (40 * ITemp)), ShiftColorXP(m_Color, 200 - (40 * ITemp)), TR.Right - 2, .Top, 2, 9, m_hDC
         End With
-
+        
     Next ITemp
-
+    
     Return
-
+    
 End Sub
 
 '======================================================================
@@ -648,76 +636,76 @@ End Sub
 Private Function DrawTexto()
     Dim ThisText As String
     Dim isAlpha  As Boolean
-
+    
     If (m_Scrolling = ccScrollingMediaPlayer Or m_Scrolling = ccScrollingMetallic) Then isAlpha = True
-
-
+    
+    
     If m_Scrolling = ccScrollingSearch Then
         ThisText = "Searching.."
     Else
         ThisText = Round(m_Value) & " %"
     End If
-
+    
     If (m_ShowText) Then
-
+        
         Set iFnt = Font                             '//--New Font
         hFntOld = SelectObject(m_hDC, iFnt.hFont)   '//--Use the New Font
         SetBkMode m_hDC, 1                          '//--Transparent Text
-
+        
         '//--Use the Alpha Text Color Look if Progress is MediaPlayer Style, else Normal (Gray)
         SetTextColor m_hDC, GetLngColor(IIf(m_Scrolling = ccScrollingMediaPlayer, &HC0C0C0, vbBlack))
-
+        
         CalculateAlphaTextRect ThisText             '//--Calculate The Text Rectangle
-
+        
         '//-- If ProgressBar is already over the Text don't draw the old text, yust draw the Alpha Text
         'It saves some memory
-
+        
         If ((TR.Right * (m_Value / 100)) <= AT.Right) Or Not isAlpha Then
             DrawText m_hDC, ThisText, Len(ThisText), AT, DT_SINGLELINE
         End If
-
+        
         SelectObject m_hDC, hFntOld  'Delete the Used Font
-
+        
         '//--Use the Alpha Text Look if Progress is AlPhA Style
         If isAlpha Then DrawAlphaText ThisText
-
+        
     End If
-
-
+    
+    
 End Function
 '======================================================================
 
 '======================================================================
 'ALPHA TEXT RECT FUNCTION
 Private Sub CalculateAlphaTextRect(ByVal ThisText As String)
-
+    
     '//--Calculates the Bounding Rects Of the Text using DT_CALCRECT
     DrawText m_hDC, ThisText, Len(ThisText), AT, DT_CALCRECT
     AT.Left = (TR.Right / 2) - ((AT.Right - AT.Left) / 2)
     AT.Top = (TR.Bottom / 2) - ((AT.Bottom - AT.Top) / 2)
-
+    
 End Sub
 '======================================================================
 
 '======================================================================
 'ALPHA TEXT FUNCTION
 Private Sub DrawAlphaText(ByVal ThisText As String)
-
+    
     Set iFnt = Font                             '//--New Font
     hFntOld = SelectObject(m_hDC, iFnt.hFont)   '//--Use the New Font
     SetBkMode m_hDC, 1                          '//--Transparent Text
-
-
+    
+    
     '//-- This is When the Text is Drawn
     '//--Gives the Media Player Text Look (Changes Color When Progress is over the Text)
-
+    
     If (TR.Right * (m_Value / 100)) >= AT.Left Then
         SetTextColor m_hDC, GetLngColor(IIf(m_Scrolling = ccScrollingMediaPlayer, ShiftColorXP(m_Color, 80), vbWhite))
         AT.Left = (TR.Right / 2) - ((AT.Right - AT.Left) / 2)
         AT.Right = (TR.Right * (m_Value / 100))
         DrawText m_hDC, ThisText, Len(ThisText), AT, DT_SINGLELINE
     End If
-
+    
     SelectObject m_hDC, hFntOld
 End Sub
 '======================================================================
@@ -736,65 +724,65 @@ End Function
 '======================================================================
 'DRAWS A BORDER RECTANGLE AREA OF AN SPECIFIED COLOR
 Private Sub DrawRectangle(ByRef bRect As RECT, ByVal Color As Long, ByVal hDC As Long)
-
+    
     Dim hBrush As Long
-
+    
     hBrush = CreateSolidBrush(Color)
     FrameRect hDC, bRect, hBrush
     DeleteObject hBrush
-
+    
 End Sub
 '======================================================================
 
 '======================================================================
 'DRAWS A LINE WITH A DEFINED COLOR
 Public Sub DrawLine( _
-           ByVal X As Long, _
-           ByVal Y As Long, _
-           ByVal Width As Long, _
-           ByVal Height As Long, _
-           ByVal cHdc As Long, _
-           ByVal Color As Long)
-
+    ByVal X As Long, _
+    ByVal Y As Long, _
+    ByVal Width As Long, _
+    ByVal Height As Long, _
+    ByVal cHdc As Long, _
+    ByVal Color As Long)
+    
     Dim Pen1    As Long
     Dim Pen2    As Long
     Dim POS     As POINTAPI
-
+    
     Pen1 = CreatePen(0, 1, GetLngColor(Color))
     Pen2 = SelectObject(cHdc, Pen1)
-
+    
     MoveToEx cHdc, X, Y, POS
     LineTo cHdc, Width, Height
-
+    
     SelectObject cHdc, Pen2
     DeleteObject Pen2
     DeleteObject Pen1
-
+    
 End Sub
 '======================================================================
 
 '======================================================================
 'BLENDS A SPECIFIED COLOR TO GET XP COLOR LOOK
 Private Function ShiftColorXP(ByVal MyColor As Long, ByVal Base As Long) As Long
-
+    
     Dim R As Long, G As Long, B As Long, Delta As Long
-
+    
     R = (MyColor And &HFF)
     G = ((MyColor \ &H100) Mod &H100)
     B = ((MyColor \ &H10000) Mod &H100)
-
+    
     Delta = &HFF - Base
-
+    
     B = Base + B * Delta \ &HFF
     G = Base + G * Delta \ &HFF
     R = Base + R * Delta \ &HFF
-
+    
     If R > 255 Then R = 255
     If G > 255 Then G = 255
     If B > 255 Then B = 255
-
+    
     ShiftColorXP = R + 256& * G + 65536 * B
-
+    
 End Function
 '======================================================================
 
@@ -802,15 +790,15 @@ End Function
 'DRAWS A 2 COLOR GRADIENT AREA WITH A PREDEFINED DIRECTION
 Public Sub DrawGradient(lEndColor As Long, lStartcolor As Long, ByVal X As Long, ByVal Y As Long, ByVal x2 As Long, ByVal y2 As Long, ByVal hDC As Long, Optional bH As Boolean)
     On Error Resume Next
-
+    
     ''Draw a Vertical Gradient in the current HDC
     Dim sR As Single, sG As Single, sB As Single
     Dim eR As Single, eG As Single, eB As Single
     Dim Ni As Long
-
+    
     lEndColor = GetLngColor(lEndColor)
     lStartcolor = GetLngColor(lStartcolor)
-
+    
     sR = (lStartcolor And &HFF)
     sG = (lStartcolor \ &H100) And &HFF
     sB = (lStartcolor And &HFF0000) / &H10000
@@ -820,16 +808,16 @@ Public Sub DrawGradient(lEndColor As Long, lStartcolor As Long, ByVal X As Long,
     sR = (sR - eR) / IIf(bH, x2, y2)
     sG = (sG - eG) / IIf(bH, x2, y2)
     sB = (sB - eB) / IIf(bH, x2, y2)
-
-
+    
+    
     For Ni = 0 To IIf(bH, x2, y2)
-
+        
         If bH Then
             DrawLine X + Ni, Y, X + Ni, y2, hDC, RGB(eR + (Ni * sR), eG + (Ni * sG), eB + (Ni * sB))
         Else
             DrawLine X, Y + Ni, x2, Y + Ni, hDC, RGB(eR + (Ni * sR), eG + (Ni * sG), eB + (Ni * sB))
         End If
-
+        
     Next Ni
 End Sub
 '======================================================================
@@ -845,36 +833,36 @@ Private Function BlendColor(ByVal oColorFrom As OLE_COLOR, ByVal oColorTo As OLE
     Dim lDstR As Long
     Dim lDstG As Long
     Dim lDstB As Long
-
+    
     lCFrom = GetLngColor(oColorFrom)
     lCTo = GetLngColor(oColorTo)
-
+    
     lSrcR = lCFrom And &HFF
     lSrcG = (lCFrom And &HFF00&) \ &H100&
     lSrcB = (lCFrom And &HFF0000) \ &H10000
     lDstR = lCTo And &HFF
     lDstG = (lCTo And &HFF00&) \ &H100&
     lDstB = (lCTo And &HFF0000) \ &H10000
-
+    
     BlendColor = RGB( _
-        ((lSrcR * Alpha) / 255) + ((lDstR * (255 - Alpha)) / 255), _
-        ((lSrcG * Alpha) / 255) + ((lDstG * (255 - Alpha)) / 255), _
-        ((lSrcB * Alpha) / 255) + ((lDstB * (255 - Alpha)) / 255) _
-        )
-
+    ((lSrcR * Alpha) / 255) + ((lDstR * (255 - Alpha)) / 255), _
+    ((lSrcG * Alpha) / 255) + ((lDstG * (255 - Alpha)) / 255), _
+    ((lSrcB * Alpha) / 255) + ((lDstB * (255 - Alpha)) / 255) _
+    )
+    
 End Function
 '======================================================================
 
 '======================================================================
 'DRAWS A FILL RECTANGLE AREA OF AN SPECIFIED COLOR
 Private Sub DrawFillRectangle(ByRef hRect As RECT, ByVal Color As Long, ByVal MyHdc As Long)
-
+    
     Dim hBrush As Long
-
+    
     hBrush = CreateSolidBrush(GetLngColor(Color))
     FillRect MyHdc, hRect, hBrush
     DeleteObject hBrush
-
+    
 End Sub
 '======================================================================
 
@@ -919,15 +907,15 @@ End Sub
 '======================================================================
 'DRAWS THE TEMP DC
 Public Sub pDraw( _
-      ByVal hDC As Long, _
-      Optional ByVal xSrc As Long = 0, Optional ByVal ySrc As Long = 0, _
-      Optional ByVal WidthSrc As Long = 0, Optional ByVal HeightSrc As Long = 0, _
-      Optional ByVal xDst As Long = 0, Optional ByVal yDst As Long = 0 _
-   )
+    ByVal hDC As Long, _
+    Optional ByVal xSrc As Long = 0, Optional ByVal ySrc As Long = 0, _
+    Optional ByVal WidthSrc As Long = 0, Optional ByVal HeightSrc As Long = 0, _
+    Optional ByVal xDst As Long = 0, Optional ByVal yDst As Long = 0 _
+    )
     If WidthSrc <= 0 Then WidthSrc = m_lWidth
     If HeightSrc <= 0 Then HeightSrc = m_lHeight
     BitBlt hDC, xDst, yDst, WidthSrc, HeightSrc, m_ThDC, xSrc, ySrc, vbSrcCopy
-
+    
 End Sub
 '======================================================================
 
@@ -964,12 +952,12 @@ Private Sub UserControl_Initialize()
     Dim fnt As StdFont
     Set fnt = New StdFont
     Set Font = fnt
-
+    
     With UserControl
         .BackColor = vbWhite
         .ScaleMode = vbPixels
     End With
-
+    
     '----------------------------------------------------------
     'Default Values
     hDC = UserControl.hDC
@@ -982,7 +970,7 @@ Private Sub UserControl_Initialize()
     m_Color = GetLngColor(vbHighlight)
     DrawProgressBar
     '----------------------------------------------------------
-
+    
 End Sub
 
 Private Sub UserControl_Paint()
@@ -1065,14 +1053,14 @@ Public Property Let hDC(ByVal cHdc As Long)
     '=============================================
     'AntiFlick...Cleaner HDC
     m_hDC = ThDC(UserControl.ScaleWidth, UserControl.ScaleHeight)
-
+    
     If m_hDC = 0 Then
         m_hDC = UserControl.hDC   'On Fail...Do it Normally
     Else
         m_MemDC = True
     End If
     '=============================================
-
+    
 End Property
 
 Public Property Get Image() As StdPicture
@@ -1172,7 +1160,7 @@ Private Sub UserControl_WriteProperties(PropBag As PropertyBag)
     Call PropBag.WriteProperty("Value2", m_Value2, 0)
     Call PropBag.WriteProperty("Color2", m_Color2, 0)
     Call PropBag.WriteProperty("DoubleValOnMetal", m_DoubleValOnMetal, 0)
- End Sub
+End Sub
 
 '=======================================================================================================================
 ' USERCONTROL READ PROPERTIES

@@ -34,12 +34,19 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = True
+'---------------------------------------------------------------------------------------
+' Module    : ypnImage_Flat
+' Author    : YPN
+' Date      : 2018-03-24 00:11
+' Purpose   : ±âÆ½»¯µÄimage
+'---------------------------------------------------------------------------------------
+
 Private Declare Function WindowFromPoint Lib "user32" (ByVal xPoint As Long, ByVal yPoint As Long) As Long
 Private Declare Function GetCursorPos Lib "user32" (lpPoint As POINTAPI) As Long
 
 Private Type POINTAPI
-        X As Long
-        Y As Long
+    X As Long
+    Y As Long
 End Type
 
 Dim m_Picture As StdPicture

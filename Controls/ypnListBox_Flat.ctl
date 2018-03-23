@@ -19,24 +19,12 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = True
-
-'$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-'$^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^$
-'$^^^^^Gtech^Creations^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^$
-'$^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^¶¶^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^$
-'$^^^^^¶¶¶^^^^¶¶¶^^^^^^^^¶¶^^^^^¶¶^^^^^^^^^¶¶^^^¶¶¶¶¶¶^^^^^^^^^^^^^^^^^^^^^^^^¶¶^^^^^^^^¶¶¶¶¶^^^^^$
-'$^^^^^¶¶¶^^^^¶¶¶^^^^^^^^¶¶^^^^^^^^^^^^^^^^¶¶^^^¶¶^^^¶¶^^^^^^^^^^^^^^^^^^^^^¶¶¶¶^^^^^^^¶^^^^¶¶^^^^$
-'$^^^^^¶^¶¶^^¶^¶¶^^¶¶¶¶^^¶¶^^^^^¶¶^^¶¶¶¶^^¶¶¶¶¶^¶¶^^^¶¶^^¶¶¶¶¶^^¶¶^^¶¶^^^^^^^^¶¶^^^^^^^¶^^^^¶¶^^^^$
-'$^^^^^¶^¶¶^^¶^¶¶^¶¶^^^¶^¶¶^^^^^¶¶^¶¶^^^¶^^¶¶^^^¶¶^^^¶¶^¶¶^^^¶¶^¶¶^^¶¶^^^^^^^^¶¶^^^^^^^^^^^^¶¶^^^^$
-'$^^^^^¶^^¶¶¶^^¶¶^¶¶^^^^^¶¶^^^^^¶¶^¶¶¶^^^^^¶¶^^^¶¶¶¶¶¶^^¶¶^^^¶¶^^¶¶¶¶^^^^^^^^^¶¶^^^^^^^^^^^¶¶^^^^^$
-'$^^^^^¶^^¶¶¶^^¶¶^¶¶^^^^^¶¶^^^^^¶¶^^¶¶¶¶^^^¶¶^^^¶¶^^^¶¶^¶¶^^^¶¶^^^¶¶^^^^^^^^^^¶¶^^^^^^^^^^¶¶^^^^^^$
-'$^^^^^¶^^^¶^^^¶¶^¶¶^^^^^¶¶^^^^^¶¶^^^^¶¶¶^^¶¶^^^¶¶^^^¶¶^¶¶^^^¶¶^^¶¶¶¶^^^^^^^^^¶¶^^^^^^^^^¶¶^^^^^^^$
-'$^^^^^¶^^^¶^^^¶¶^¶¶^^^¶^¶¶^^^^^¶¶^¶^^^¶¶^^¶¶^^^¶¶^^^¶¶^¶¶^^^¶¶^¶¶^^¶¶^^^^^^^^¶¶^^^^¶¶^^¶¶^^^^^^^^$
-'$^^^^^¶^^^^^^^¶¶^^¶¶¶¶^^¶¶¶¶¶¶^¶¶^^¶¶¶¶^^^^¶¶¶^¶¶¶¶¶¶^^^¶¶¶¶¶^^¶¶^^¶¶^^^^^^¶¶¶¶¶¶^^¶¶^¶¶¶¶¶¶¶^^^^$
-'$^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^$
-'$^^^^^^By^Jim^Jose^^^^^^^Email^jimjosev33@yahoo.com^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^$
-'$^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^$
-'$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+'---------------------------------------------------------------------------------------
+' Module    : ypnListBox_Flat
+' Author    : YPN
+' Date      : 2018-03-24 00:12
+' Purpose   : ±âÆ½»¯µÄlistbox
+'---------------------------------------------------------------------------------------
 
 '-----------------------------------------------------------------------------------------------------------
 ' SourceCode : ypnListBox_Flat 3.2
@@ -382,12 +370,12 @@ Private Type BITMAPINFOHEADER
 End Type
 
 Private Type OSVERSIONINFO
-   dwOSVersionInfoSize  As Long
-   dwMajorVersion       As Long
-   dwMinorVersion       As Long
-   dwBuildNumber        As Long
-   dwPlatformId         As Long
-   szCSDVersion         As String * 128 ' Maintenance string
+    dwOSVersionInfoSize  As Long
+    dwMajorVersion       As Long
+    dwMinorVersion       As Long
+    dwBuildNumber        As Long
+    dwPlatformId         As Long
+    szCSDVersion         As String * 128 ' Maintenance string
 End Type
 
 Private Type tSubData                                                                   'Subclass data type
@@ -399,12 +387,12 @@ Private Type tSubData                                                           
     aMsgTblA()    As Long                                            'Msg after table array
     aMsgTblB()    As Long                                            'Msg Before table array
 End Type
-                                
+
 Private Type TRACKMOUSEEVENT_STRUCT
-  cbSize          As Long
-  dwFlags         As TRACKMOUSEEVENT_FLAGS
-  hWndTrack       As Long
-  dwHoverTime     As Long
+    cbSize          As Long
+    dwFlags         As TRACKMOUSEEVENT_FLAGS
+    hWndTrack       As Long
+    dwHoverTime     As Long
 End Type
 
 ' Scroll bar
@@ -634,134 +622,134 @@ Private Declare Function GetLogicalDriveStrings Lib "kernel32" Alias "GetLogical
 '[ Subclassed events receiver ]
 '------------------------------------------------------------------------------------------
 Public Sub zSubclass_Proc(ByVal bBefore As Boolean, ByRef bHandled As Boolean, ByRef lReturn As Long, ByRef lng_hWnd As Long, ByRef uMsg As Long, ByRef wParam As Long, ByRef lParam As Long)
-Dim eBar As EFSScrollBarConstants
-Dim lV As Long, lSC As Long
-Dim lScrollCode As Long
-Dim tSI As SCROLLINFO
-'Dim zDelta As Long
-Dim lPrev_Vert As Long
-Dim lPrev_Hor As Long
-
+    Dim eBar As EFSScrollBarConstants
+    Dim lV As Long, lSC As Long
+    Dim lScrollCode As Long
+    Dim tSI As SCROLLINFO
+    'Dim zDelta As Long
+    Dim lPrev_Vert As Long
+    Dim lPrev_Hor As Long
+    
     lPrev_Vert = SBValue(efsVertical)
     lPrev_Vert = SBValue(efsHorizontal)
     
     ' Gray Nobles's API scrollbar code
     Select Case uMsg
-    
+        
         ' The timer callback for refreshing list
-        Case WM_TIMER
-            m_TimerElsp = m_TimerElsp + 1
-            If m_TimerElsp = 5 Then ' After 1/2 Sec
-                KillTimer hwnd, 1
-                m_TimerElsp = 0
-                Me.Refresh
+    Case WM_TIMER
+        m_TimerElsp = m_TimerElsp + 1
+        If m_TimerElsp = 5 Then ' After 1/2 Sec
+            KillTimer hwnd, 1
+            m_TimerElsp = 0
+            Me.Refresh
+        End If
+        
+    Case WM_VSCROLL, WM_HSCROLL, WM_MOUSEWHEEL
+        lScrollCode = (wParam And &HFFFF&)
+        
+        Select Case uMsg
+            
+        Case WM_HSCROLL ' Get the scrollbar type
+            eBar = efsHorizontal
+            
+        Case WM_VSCROLL
+            eBar = efsVertical
+            
+        Case Else     'WM_MOUSEWHEEL
+            If m_Items.Count > m_iCount Then
+                eBar = IIf(lScrollCode And MK_CONTROL, efsHorizontal, efsVertical)
+                lScrollCode = IIf(wParam / 65536 < 0, SB_LINEDOWN, SB_LINEUP)
+            End If
+        End Select
+        
+        Select Case lScrollCode
+            
+        Case SB_THUMBTRACK
+            
+            ' Is vertical/horizontal?
+            pSBGetSI eBar, tSI, SIF_TRACKPOS
+            SBValue(eBar) = tSI.nTrackPos
+            
+        Case SB_LEFT, SB_BOTTOM
+            SBValue(eBar) = IIf(lScrollCode = 7, SBMax(eBar), SBMin(eBar))
+            
+        Case SB_RIGHT, SB_TOP
+            SBValue(eBar) = SBMin(eBar)
+            
+        Case SB_LINELEFT, SB_LINEUP
+            
+            If SBVisible(eBar) Then
+                
+                lV = SBValue(eBar)
+                If (eBar = efsHorizontal) Then
+                    lSC = m_lSmallChangeHorz
+                Else
+                    lSC = m_lSmallChangeVert
+                End If
+                
+                If (lV - lSC < SBMin(eBar)) Then
+                    SBValue(eBar) = SBMin(eBar)
+                Else
+                    SBValue(eBar) = lV - lSC
+                End If
+                
             End If
             
-        Case WM_VSCROLL, WM_HSCROLL, WM_MOUSEWHEEL
-            lScrollCode = (wParam And &HFFFF&)
-
-            Select Case uMsg
-            
-                Case WM_HSCROLL ' Get the scrollbar type
-                    eBar = efsHorizontal
-                    
-                Case WM_VSCROLL
-                    eBar = efsVertical
-                    
-                Case Else     'WM_MOUSEWHEEL
-                    If m_Items.Count > m_iCount Then
-                        eBar = IIf(lScrollCode And MK_CONTROL, efsHorizontal, efsVertical)
-                        lScrollCode = IIf(wParam / 65536 < 0, SB_LINEDOWN, SB_LINEUP)
-                    End If
-            End Select
-
-            Select Case lScrollCode
-            
-                Case SB_THUMBTRACK
+        Case SB_LINERIGHT, SB_LINEDOWN
+            If SBVisible(eBar) Then
                 
-                    ' Is vertical/horizontal?
-                    pSBGetSI eBar, tSI, SIF_TRACKPOS
-                    SBValue(eBar) = tSI.nTrackPos
-
-                Case SB_LEFT, SB_BOTTOM
-                     SBValue(eBar) = IIf(lScrollCode = 7, SBMax(eBar), SBMin(eBar))
-
-                Case SB_RIGHT, SB_TOP
-                     SBValue(eBar) = SBMin(eBar)
-
-                Case SB_LINELEFT, SB_LINEUP
+                lV = SBValue(eBar)
                 
-                    If SBVisible(eBar) Then
-                    
-                        lV = SBValue(eBar)
-                        If (eBar = efsHorizontal) Then
-                            lSC = m_lSmallChangeHorz
-                        Else
-                            lSC = m_lSmallChangeVert
-                        End If
-                        
-                        If (lV - lSC < SBMin(eBar)) Then
-                             SBValue(eBar) = SBMin(eBar)
-                        Else
-                             SBValue(eBar) = lV - lSC
-                        End If
-                        
-                    End If
-
-                Case SB_LINERIGHT, SB_LINEDOWN
-                    If SBVisible(eBar) Then
+                If (eBar = efsHorizontal) Then
+                    lSC = m_lSmallChangeHorz
+                Else
+                    lSC = m_lSmallChangeVert
+                End If
+                
+                If (lV + lSC > SBMax(eBar)) Then
+                    SBValue(eBar) = SBMax(eBar)
+                Else
+                    SBValue(eBar) = lV + lSC
+                End If
+            End If
             
-                        lV = SBValue(eBar)
-                        
-                        If (eBar = efsHorizontal) Then
-                            lSC = m_lSmallChangeHorz
-                        Else
-                            lSC = m_lSmallChangeVert
-                        End If
-                        
-                        If (lV + lSC > SBMax(eBar)) Then
-                             SBValue(eBar) = SBMax(eBar)
-                        Else
-                             SBValue(eBar) = lV + lSC
-                        End If
-                    End If
-
-                Case SB_PAGELEFT, SB_PAGEUP
-                     SBValue(eBar) = SBValue(eBar) - SBLargeChange(eBar)
-
-                Case SB_PAGERIGHT, SB_PAGEDOWN
-                     SBValue(eBar) = SBValue(eBar) + SBLargeChange(eBar)
-
-                Case SB_ENDSCROLL
-                     Me.Refresh
-            End Select
+        Case SB_PAGELEFT, SB_PAGEUP
+            SBValue(eBar) = SBValue(eBar) - SBLargeChange(eBar)
             
-            If Not lPrev_Vert = SBValue(efsVertical) Or Not lPrev_Hor = SBValue(efsHorizontal) Then ReDrawList
+        Case SB_PAGERIGHT, SB_PAGEDOWN
+            SBValue(eBar) = SBValue(eBar) + SBLargeChange(eBar)
             
+        Case SB_ENDSCROLL
+            Me.Refresh
+        End Select
+        
+        If Not lPrev_Vert = SBValue(efsVertical) Or Not lPrev_Hor = SBValue(efsHorizontal) Then ReDrawList
+        
     End Select
-
-    Select Case uMsg
     
-        Case WM_MOUSEWHEEL
-            m_PicComplete.Visible = False
-            m_LastComplete = -100
-            
-        Case WM_MOUSEMOVE
-            If Not bInCtrl Then
-                bInCtrl = True
-                Call TrackMouseLeave(lng_hWnd)
-                RaiseEvent MouseEnter
-            End If
-
-        Case WM_MOUSELEAVE
-            bInCtrl = False
-            m_PicComplete.Visible = False
-            m_LastComplete = -100
-            RaiseEvent MouseLeave
-            
+    Select Case uMsg
+        
+    Case WM_MOUSEWHEEL
+        m_PicComplete.Visible = False
+        m_LastComplete = -100
+        
+    Case WM_MOUSEMOVE
+        If Not bInCtrl Then
+            bInCtrl = True
+            Call TrackMouseLeave(lng_hWnd)
+            RaiseEvent MouseEnter
+        End If
+        
+    Case WM_MOUSELEAVE
+        bInCtrl = False
+        m_PicComplete.Visible = False
+        m_LastComplete = -100
+        RaiseEvent MouseLeave
+        
     End Select
-
-
+    
+    
     
 End Sub
 
@@ -775,7 +763,7 @@ Public Property Get Mode() As ControlModeEnum
 End Property
 
 Public Property Let Mode(ByVal New_Mode As ControlModeEnum)
-
+    
     If Not m_Mode = New_Mode Then
         m_Mode = New_Mode
         PropertyChanged "Mode"
@@ -816,9 +804,9 @@ Public Sub RefreshPath()
 End Sub
 
 Public Function ListCount() As Long
-On Error GoTo handle
+    On Error GoTo handle
     ListCount = m_Items.Count
-Exit Function
+    Exit Function
 handle:
     ListCount = 0
 End Function
@@ -829,7 +817,7 @@ Public Property Get ListIcon(ByVal Index As Long) As Long
 End Property
 
 Public Property Let ListIcon(ByVal Index As Long, ByVal vNewPicture As Long)
-Dim txtData() As String
+    Dim txtData() As String
     
     txtData() = Split(m_Items(Index + 1), SPLITER)
     txtData(1) = vNewPicture
@@ -842,8 +830,8 @@ End Property
 
 
 Public Property Get ListBold(ByVal Index As Long) As Boolean
-Dim mBold As String
-
+    Dim mBold As String
+    
     mBold = Split(m_Items(Index + 1), SPLITER)(2)
     If mBold = "True" Then
         ListBold = True
@@ -854,7 +842,7 @@ Dim mBold As String
 End Property
 
 Public Property Let ListBold(ByVal Index As Long, ByVal vNewVlaue As Boolean)
-Dim txtData() As String
+    Dim txtData() As String
     
     txtData = Split(m_Items(Index + 1), SPLITER)
     txtData(2) = vNewVlaue
@@ -868,7 +856,7 @@ Dim txtData() As String
     
     PropertyChanged "ListBold"
     ReDrawList
-
+    
 handle:
 End Property
 
@@ -1020,14 +1008,14 @@ End Property
 
 
 Public Property Get List(ByVal Index As Long) As String
-
+    
     If Index > ListCount - 1 Or Index < 0 Then Exit Property
     List = Split(m_Items(Index + 1), SPLITER)(0)
     
 End Property
 
 Public Property Let List(ByVal Index As Long, ByVal vNewValue As String)
-Dim txtData() As String
+    Dim txtData() As String
     
     txtData = Split(m_Items(Index + 1), SPLITER)
     txtData(0) = vNewValue
@@ -1314,7 +1302,7 @@ End Property
 
 ' By 'Gary Noble'
 Public Sub ClearSelection()
-
+    
     Selection_Clear
     m_Selected.Add m_SelItem
     ReDrawList
@@ -1324,25 +1312,25 @@ End Sub
 
 ' By 'Gary Noble'
 Private Function FindSelection(ByVal vIdex As Long) As Long
-On Error Resume Next
-
+    On Error Resume Next
+    
     Dim X As Long
     Dim xMax As Long
-
+    
     xMax = m_Selected.Count
-
+    
     For X = 1 To xMax
         If m_Selected(X) = vIdex Then FindSelection = X: Exit Function
     Next X
     
-On Error GoTo 0
+    On Error GoTo 0
 End Function
 
 ' By 'Gary Noble'
 Public Sub SelectAll()
-
+    
     On Error Resume Next
-
+    
     Dim X As Long
     
     Selection_Clear
@@ -1365,16 +1353,16 @@ Private Sub UserControl_Click()
 End Sub
 
 Private Sub UserControl_DblClick()
-Dim X As Long
-Dim lIndex As Long
-Dim txtData() As String
-Dim xMax As Long
-Dim mFiles() As String
-Dim mFolders() As String
-
+    Dim X As Long
+    Dim lIndex As Long
+    Dim txtData() As String
+    Dim xMax As Long
+    Dim mFiles() As String
+    Dim mFolders() As String
+    
     On Error GoTo handle
     If Mode = Mode_FolderList Or Mode = Mode_FolderBrowser Or Mode = Mode_FileBrowser Then
-    
+        
         txtData = Split(m_Items(m_SelItem + 1), SPLITER)
         
         If Mode = Mode_FolderList Then
@@ -1406,7 +1394,7 @@ Dim mFolders() As String
         ScanPath txtData(0), mFiles, mFolders, "*.*"
         Me.ListBold(m_SelItem) = True
         lIndex = m_SelItem + 1
-    
+        
         xMax = GetMax(mFolders)
         If Not xMax = -1 Then
             For X = 0 To xMax
@@ -1426,7 +1414,7 @@ Dim mFolders() As String
                 lIndex = lIndex + 1
             Next X
         End If
-
+        
         If m_Mode = Mode_FileBrowser Then
             Erase mFiles
             ScanPath txtData(0), mFiles, mFolders, m_Filter
@@ -1454,40 +1442,40 @@ Private Sub UserControl_GotFocus()
 End Sub
 
 Private Sub UserControl_KeyDown(KeyCode As Integer, Shift As Integer)
-Dim mNew As Long
-
+    Dim mNew As Long
+    
     RaiseEvent KeyDown(KeyCode, Shift)
     
     ' Select each Key
     Select Case KeyCode
-        Case vbKeyUp
-            mNew = m_SelItem - 1
-            
-        Case vbKeyDown
-            mNew = m_SelItem + 1
+    Case vbKeyUp
+        mNew = m_SelItem - 1
         
-        Case vbKeyEnd
-            mNew = ListCount - 1
+    Case vbKeyDown
+        mNew = m_SelItem + 1
         
-        Case vbKeyHome
-            mNew = 0
-            
-        Case vbKeyPageDown
-            mNew = m_SelItem + m_iCount
+    Case vbKeyEnd
+        mNew = ListCount - 1
         
-        Case vbKeyPageUp
-            mNew = m_SelItem - m_iCount
+    Case vbKeyHome
+        mNew = 0
         
-        Case Else
-            Exit Sub
+    Case vbKeyPageDown
+        mNew = m_SelItem + m_iCount
+        
+    Case vbKeyPageUp
+        mNew = m_SelItem - m_iCount
+        
+    Case Else
+        Exit Sub
     End Select
     
     If mNew > ListCount - 1 Then mNew = ListCount - 1
     If mNew < 0 Then mNew = 0
-            
+    
     ' Refrech Control
     If Not mNew = m_SelItem And Not mNew = -1 Then
-
+        
         If SBVisible(efsVertical) Then
             If mNew < SBValue(efsVertical) Then SBValue(efsVertical) = IIf(SBValue(efsVertical) = 0, 0, mNew)
             If mNew >= SBValue(efsVertical) + Int(ScaleHeight / m_RowHeight) Then SBValue(efsVertical) = IIf(SBValue(efsVertical) = SBMax(efsVertical), SBMax(efsVertical), mNew - m_iCount + 1)
@@ -1496,7 +1484,7 @@ Dim mNew As Long
         UserControl_MouseDown 999, 0, Val(mNew), 0
         
     End If
-
+    
 End Sub
 
 Private Sub UserControl_KeyPress(KeyAscii As Integer)
@@ -1513,11 +1501,11 @@ Private Sub UserControl_LostFocus()
 End Sub
 
 Private Sub UserControl_MouseDown(Button As Integer, Shift As Integer, X As Single, Y As Single)
-Dim mRowHeight  As Double
-Dim xStart  As Long
-Dim mIndex As Long
-Dim xEnd  As Long
-Dim x1 As Long
+    Dim mRowHeight  As Double
+    Dim xStart  As Long
+    Dim mIndex As Long
+    Dim xEnd  As Long
+    Dim x1 As Long
     
     If (Button = vbRightButton) Then
         RaiseEvent MouseDown(Button, Shift, X, Y)
@@ -1547,7 +1535,7 @@ Dim x1 As Long
     End If
     
     If GetKeyState(vbKeyShift) < 0 And m_MultiSelect Then
-    
+        
         If m_SelStart < m_SelItem Then
             xStart = m_SelStart
             xEnd = m_SelItem
@@ -1581,12 +1569,12 @@ Skip:
 End Sub
 
 Private Sub UserControl_MouseMove(Button As Integer, Shift As Integer, X As Single, Y As Single)
-Dim mRowHeight  As Double
-Static mPrev As Long
-Dim xStart  As Long
-Dim mIndex As Long
-Dim xEnd  As Long
-Dim x1 As Long
+    Dim mRowHeight  As Double
+    Static mPrev As Long
+    Dim xStart  As Long
+    Dim mIndex As Long
+    Dim xEnd  As Long
+    Dim x1 As Long
     
     If (Button = vbRightButton) Then
         RaiseEvent MouseMove(Button, Shift, X, Y)
@@ -1597,11 +1585,11 @@ Dim x1 As Long
     mRowHeight = (ScaleHeight / m_iCount)
     mIndex = Int(Y / mRowHeight)
     ShowItemComplete mIndex + 1
-
+    
     ' In multiselection mode, user is trying to select more than one row
     ' by (LeftButton Down + MouseMove)
     If GetKeyState(vbKeyLButton) < 0 And m_MultiSelect And GetKeyState(vbKeyControl) >= 0 And GetKeyState(vbKeyShift) >= 0 Then
-
+        
         m_SelItem = SBValue(efsVertical) + mIndex
         If Not IsValidSelection(m_SelItem) Then Exit Sub
         If m_SelItem = mPrev Then Exit Sub
@@ -1634,7 +1622,7 @@ Dim x1 As Long
     ' So scroll down the list
     
 NextSelection:
-
+    
     If GetKeyState(vbKeyLButton) < 0 And Not m_MultiSelect Then
         
         mRowHeight = (ScaleHeight / m_iCount)
@@ -1642,9 +1630,9 @@ NextSelection:
         If Not IsValidSelection(m_SelItem) Then Exit Sub
         
         If m_SelItem >= 0 And m_SelItem < m_Items.Count Then
-        
-            If Not m_SelItem = mPrev Then
             
+            If Not m_SelItem = mPrev Then
+                
                 mPrev = m_SelItem
                 Selection_Clear
                 m_Selected.Add m_SelItem
@@ -1664,7 +1652,7 @@ NextSelection:
         End If
         
     End If
-
+    
     If Int(Y / m_RowHeight) > Me.ListCount - 1 Then
         MousePointer = vbArrow
     Else
@@ -1695,7 +1683,7 @@ Private Sub UserControl_Initialize()
 End Sub
 
 Private Sub UserControl_InitProperties()
-
+    
     'Debug.Print "Initilizing Properties..."
     
     m_BackColor = m_def_BackColor
@@ -1734,7 +1722,7 @@ Private Sub UserControl_InitProperties()
     
     If m_hWnd = 0 Then InitializeSubClassing
     
-
+    
     m_Filter = m_def_Filter
     m_AutoRefresh = m_def_AutoRefresh
     m_ShowSystemFiles = m_def_ShowSystemFiles
@@ -1755,24 +1743,24 @@ Private Sub UserControl_Resize()
 End Sub
 
 Private Sub UserControl_Terminate()
-On Error GoTo Catch
-   
+    On Error GoTo Catch
+    
     FreeLibrary m_hMode
     Me.Clear
     pSBClearUp
     Set m_Items = Nothing
     Set m_FileIcons = Nothing
     Call Subclass_StopAll
-
+    
 Catch:
 End Sub
 
 Private Sub CheckSelected()
-
+    
     If m_Items.Count = 0 Then m_SelItem = -1
     If m_SelItem > m_Items.Count - 1 Then m_SelItem = m_Items.Count - 1
     If m_SelItem < 0 Then m_SelItem = 0
-
+    
 End Sub
 
 '------------------------------------------------------------------------------------------
@@ -1784,10 +1772,10 @@ End Sub
 '------------------------------------------------------------------------------------------
 
 Public Sub AddItem(Text As String, _
-                    Optional Index As Long = -1, _
-                    Optional Icon As Long = -1, _
-                    Optional Bold As Boolean = False)
-                
+    Optional Index As Long = -1, _
+    Optional Icon As Long = -1, _
+    Optional Bold As Boolean = False)
+    
     If Not m_Mode = 0 Then Exit Sub
     
     If Index = -1 Then
@@ -1840,8 +1828,8 @@ End Sub
 '------------------------------------------------------------------------------------------
 
 Public Sub Clear()
-Dim X As Long
-
+    Dim X As Long
+    
     If Not m_Mode = 0 Then Exit Sub
     
     ' Remove each Item
@@ -1866,8 +1854,8 @@ End Sub
 '------------------------------------------------------------------------------------------
 
 Public Sub Refresh()
-On Error GoTo handle
-
+    On Error GoTo handle
+    
     ' Determine item height & item cound per Screen
     m_iCount = Int(ScaleHeight / m_RowHeight)
     If m_iCount <= 0 Then m_iCount = 1
@@ -1892,9 +1880,9 @@ On Error GoTo handle
     SBLargeChange(efsVertical) = 5
     SBSmallChange(efsHorizontal) = 5
     SBLargeChange(efsHorizontal) = 15
-        
+    
 handle:
-
+    
     SortCollection m_Items, m_SortOrder
     ReDrawList
     
@@ -1910,27 +1898,27 @@ End Sub
 '------------------------------------------------------------------------------------------
 
 Private Sub ReDrawList()
-
-Dim mRowHeight  As Double
-Dim mIcon       As StdPicture
-Dim txtData()   As String
-Dim mBold       As Boolean
-Dim mText       As String
-Dim mIndex      As Long
-Dim xStart      As Long
-Dim xMax        As Long
-Dim mTop        As Long
-Dim Rct         As RECT
-Dim X           As Long
-Dim TmpSelCol1  As Long
-Dim TmpSelCol2  As Long
-Dim TmpBorderCol As Long
-'Dim lPos        As Long
-Dim lFindPos    As Long
-Dim lPath       As String
- 
+    
+    Dim mRowHeight  As Double
+    Dim mIcon       As StdPicture
+    Dim txtData()   As String
+    Dim mBold       As Boolean
+    Dim mText       As String
+    Dim mIndex      As Long
+    Dim xStart      As Long
+    Dim xMax        As Long
+    Dim mTop        As Long
+    Dim Rct         As RECT
+    Dim X           As Long
+    Dim TmpSelCol1  As Long
+    Dim TmpSelCol2  As Long
+    Dim TmpBorderCol As Long
+    'Dim lPos        As Long
+    Dim lFindPos    As Long
+    Dim lPath       As String
+    
     'Debug.Print "Redrawing.."
-On Error GoTo handle
+    On Error GoTo handle
     UserControl.Cls
     m_Left = 0
     CheckSelected
@@ -1972,7 +1960,7 @@ On Error GoTo handle
     
     m_LastWidth = 0
     For X = xStart To xMax
-
+        
         ' Get the data
         txtData = Split(m_Items(X + 1), SPLITER)
         mText = txtData(0)
@@ -1984,7 +1972,7 @@ On Error GoTo handle
         m_LeftShift = -SBValue(efsHorizontal)
         If Mode = Mode_FileBrowser Or Mode = Mode_FolderBrowser Then CheckItem mText, m_LeftShift, mTop
         If Mode = Mode_FolderList Then
-          Dim mxText As String
+            Dim mxText As String
             
             lFindPos = InStrRev(mText, "\")
             If (lFindPos > 0) Then
@@ -1997,23 +1985,23 @@ On Error GoTo handle
             
             CheckItem mxText, m_LeftShift, mTop
         End If
-                
+        
         'Load Icon
         If m_ShowIcon Then
             If Not m_Mode = Mode_ListBox Then
-            
+                
                 'Hybrid Modes! Load icons from file itself
                 Select Case Mode
-                    Case Mode_FileBrowser, Mode_FolderBrowser
-                         Set mIcon = GetIcon(txtData(0), txtData(2))
-                    Case Mode_DriveList
-                        Set mIcon = GetIcon(mText, txtData(2))
-                    Case Else
-                        If (Mode = Mode_FolderList) Then
-                            Set mIcon = GetIcon(lPath & mxText, txtData(2))
-                        Else
-                            Set mIcon = GetIcon(m_Path & mText, txtData(2))
-                        End If
+                Case Mode_FileBrowser, Mode_FolderBrowser
+                    Set mIcon = GetIcon(txtData(0), txtData(2))
+                Case Mode_DriveList
+                    Set mIcon = GetIcon(mText, txtData(2))
+                Case Else
+                    If (Mode = Mode_FolderList) Then
+                        Set mIcon = GetIcon(lPath & mxText, txtData(2))
+                    Else
+                        Set mIcon = GetIcon(m_Path & mText, txtData(2))
+                    End If
                 End Select
                 
             Else
@@ -2026,45 +2014,45 @@ On Error GoTo handle
         If txtData(2) = "True" Then mBold = True Else mBold = False
         
         Select Case m_Mode
-            Case Mode_DriveList, Mode_FileBrowser, Mode_FolderBrowser
-                If m_LeftShift + SBValue(efsHorizontal) = 0 Then mText = GetVolumeLabel(mText & "\") & " (" & mText & ")"
+        Case Mode_DriveList, Mode_FileBrowser, Mode_FolderBrowser
+            If m_LeftShift + SBValue(efsHorizontal) = 0 Then mText = GetVolumeLabel(mText & "\") & " (" & mText & ")"
         End Select
-            
-            
+        
+        
         If mIndex > 0 Then
-
+            
             ' Fill Selection
             If m_SelGradient = Fill_None Then
-
+                
                 UserControl.ForeColor = TmpBorderCol
                 If X = m_SelItem Then UserControl.FillColor = TmpSelCol1 Else UserControl.FillColor = TmpSelCol2
-
+                
                 If m_FullRowSel Then
                     Rectangle hDC, m_LeftShift + 1, mTop + 1, ScaleWidth, mTop + mRowHeight
                 Else
                     Rectangle hDC, m_LeftShift + m_Left + 1, mTop + 1, ScaleWidth, mTop + mRowHeight
                 End If
-
+                
             Else
                 If m_FullRowSel Then
                     FillGradient hDC, m_LeftShift + 0, mTop + 1, ScaleWidth, mRowHeight, m_SelColor, m_SelGradientCol, m_SelGradient
                 Else
                     FillGradient hDC, m_LeftShift + m_Left, mTop + 1, ScaleWidth - m_Left, mRowHeight, m_SelColor, m_SelGradientCol, m_SelGradient
                 End If
-
+                
             End If
-
+            
             ' Draw Icon Focus
             If (m_IconFocus And Not m_FullRowSel And m_ShowIcon And m_HasFocus) Then
                 UserControl.ForeColor = vbBlack
                 SetRect Rct, m_LeftShift + 1, mTop + 1, mRowHeight + m_LeftShift, mTop + mRowHeight
                 DrawFocusRect UserControl.hDC, Rct
             End If
-
+            
             UserControl.ForeColor = m_SelForeColor
-
+            
         Else
-        
+            
             If (Mode = Mode_FileBrowser Or Mode = Mode_FolderBrowser) And m_IconFocus Then
                 UserControl.ForeColor = vbGrayText
                 UserControl.FillColor = m_BackColor
@@ -2082,7 +2070,7 @@ On Error GoTo handle
             If (lFindPos > 0) Then
                 mText = Mid$(mText, (lFindPos + 1))
             End If
-                        
+            
             DrawText mText, m_LeftShift + m_Left, mTop + 1
         Else
             DrawText mText, m_LeftShift + m_Left, mTop + 1
@@ -2095,7 +2083,7 @@ On Error GoTo handle
         Else
             If m_ShowIcon And Not mIcon Is Nothing Then DrawPicture mIcon, m_LeftShift + 2, mTop + 2, mRowHeight - 4, mRowHeight - 4
         End If
-
+        
         'Draw Grid
         If m_GridLines Then
             UserControl.ForeColor = m_GridColor
@@ -2103,7 +2091,7 @@ On Error GoTo handle
         End If
         
         If X = m_SelItem Then
-        
+            
             ' Draw Focus Rect
             If m_FocusRectangle Then
                 UserControl.ForeColor = vbBlack
@@ -2149,12 +2137,12 @@ End Sub
 
 
 Private Sub LoadPath()
-Dim X As Long
-Dim xMax As Long
-Dim mDrives() As String
-Dim mFiles() As String
-Dim mFolders() As String
-
+    Dim X As Long
+    Dim xMax As Long
+    Dim mDrives() As String
+    Dim mFiles() As String
+    Dim mFolders() As String
+    
     ' Remove each Item
     Set m_Items = Nothing
     Set m_Items = New Collection
@@ -2164,27 +2152,27 @@ Dim mFolders() As String
     
     On Error GoTo handle
     Select Case m_Mode
-        Case Mode_DriveList, Mode_FileBrowser, Mode_FolderBrowser
-            mDrives = GetDrives
-            xMax = UBound(mDrives)
-            For X = 0 To xMax
-                m_Items.Add mDrives(X) & SPLITER & "-1" & SPLITER & "False"
-            Next X
-            
-        Case Mode_FolderList
-            ScanPath m_Path, mFiles, mFolders, "*.*"
-            xMax = UBound(mFolders)
-            For X = 0 To xMax
-                m_Items.Add mFolders(X) & SPLITER & "-1" & SPLITER & "False"
-            Next X
-            
-        Case Mode_FileList
-            ScanPath m_Path, mFiles, mFolders, m_Filter
-            xMax = UBound(mFiles)
-            For X = 0 To xMax
-                m_Items.Add mFiles(X) & SPLITER & "-1" & SPLITER & "False"
-            Next X
-            
+    Case Mode_DriveList, Mode_FileBrowser, Mode_FolderBrowser
+        mDrives = GetDrives
+        xMax = UBound(mDrives)
+        For X = 0 To xMax
+            m_Items.Add mDrives(X) & SPLITER & "-1" & SPLITER & "False"
+        Next X
+        
+    Case Mode_FolderList
+        ScanPath m_Path, mFiles, mFolders, "*.*"
+        xMax = UBound(mFolders)
+        For X = 0 To xMax
+            m_Items.Add mFolders(X) & SPLITER & "-1" & SPLITER & "False"
+        Next X
+        
+    Case Mode_FileList
+        ScanPath m_Path, mFiles, mFolders, m_Filter
+        xMax = UBound(mFiles)
+        For X = 0 To xMax
+            m_Items.Add mFiles(X) & SPLITER & "-1" & SPLITER & "False"
+        Next X
+        
     End Select
     
 handle:
@@ -2192,9 +2180,9 @@ End Sub
 
 
 Public Sub CheckItem(sText As String, lShift As Long, lTop As Long)
- 
- Dim lPos As Long
- 
+    
+    Dim lPos As Long
+    
     Do
         lPos = InStr(lPos + 1, sText, "\")
         If lPos = 0 Then
@@ -2203,28 +2191,28 @@ Public Sub CheckItem(sText As String, lShift As Long, lTop As Long)
             If Not lTop = -1 Then Line (lShift - m_RowHeight / 2, lTop + m_RowHeight / 2)-(lShift, lTop + m_RowHeight / 2), vbGrayText
             Exit Do
         End If
-
+        
         If Not lTop = -1 Then Line (lShift + m_RowHeight / 2, lTop)-(lShift + m_RowHeight / 2, lTop + m_RowHeight + 2), vbGrayText
         lShift = lShift + m_RowHeight
-
+        
     Loop
     
 End Sub
 
 
 Public Function GetMax(sArr() As String) As Long
-On Error GoTo handle
+    On Error GoTo handle
     GetMax = UBound(sArr)
-Exit Function
+    Exit Function
 handle:
-GetMax = -1
+    GetMax = -1
 End Function
 
 
 Private Function GetIcon(ByVal sFileName As String, Optional ByVal IsBol As Boolean = False) As StdPicture
-Dim lPos As Long
-Dim sKey As String
-
+    Dim lPos As Long
+    Dim sKey As String
+    
     On Error GoTo handle
     'This is a tough subject!! We have to store the icons loaded by 'GetFileIcon' function
     'for better speed. But storing all the icons is carzy when the filecount become 100 or more...
@@ -2253,30 +2241,30 @@ Dim sKey As String
     If (Mode = Mode_FolderList) And (sKey <> "default") Then sKey = "default"
     
     Select Case sKey
-        Case "exe", "lnk", "ico", "ani", "Cur"
-            Set GetIcon = GetFileIcon(sFileName, m_IconExtractSize)
-        Case Else
-            If (m_CustomIcons = True) Then
-                If (IsFolder(sFileName & "\") <> "") And (IsDriver(sFileName) = False) Then
-                    If (IsBol = True) Then
-                        Set GetIcon = m_IconFolderOpen
-                    Else
-                        Set GetIcon = m_IconFolderClose
-                    End If
-                
+    Case "exe", "lnk", "ico", "ani", "Cur"
+        Set GetIcon = GetFileIcon(sFileName, m_IconExtractSize)
+    Case Else
+        If (m_CustomIcons = True) Then
+            If (IsFolder(sFileName & "\") <> "") And (IsDriver(sFileName) = False) Then
+                If (IsBol = True) Then
+                    Set GetIcon = m_IconFolderOpen
                 Else
-                    Set GetIcon = m_FileIcons(sKey)
+                    Set GetIcon = m_IconFolderClose
                 End If
                 
             Else
                 Set GetIcon = m_FileIcons(sKey)
             End If
             
+        Else
+            Set GetIcon = m_FileIcons(sKey)
+        End If
+        
     End Select
     
-Exit Function
+    Exit Function
 handle:
-   
+    
     If (m_CustomIcons = True) Then
         If (IsDriver(sFileName) = True) Then
             Select Case GetDriveType(sFileName & "\")
@@ -2293,14 +2281,14 @@ handle:
             Case Else
                 m_FileIcons.Add GetFileIcon(sFileName, m_IconExtractSize), sKey
             End Select
-        
+            
             If Not (m_FileIcons(sKey) Is Nothing) Then
                 Set GetIcon = m_FileIcons(sKey)
             Else
                 m_FileIcons.Add GetFileIcon(sFileName, m_IconExtractSize), sKey
                 Set GetIcon = m_FileIcons(sKey)
             End If
-        
+            
         ElseIf (IsFolder(sFileName & "\") <> "") Then
             
             If (IsBol = True) Then
@@ -2326,9 +2314,9 @@ End Function
 
 
 Private Sub DrawText(ByVal lpStr As String, _
-                        ByVal X As Long, ByVal Y As Long)
-Dim Rct As RECT
-
+    ByVal X As Long, ByVal Y As Long)
+    Dim Rct As RECT
+    
     ' Set the Rect
     Rct.Left = X + 5
     Rct.Top = Y + (m_RowHeight - TextHeight("A")) / 2
@@ -2337,20 +2325,20 @@ Dim Rct As RECT
     
     ' Draw the Text
     If IsNT Then
-       DrawTextW hDC, StrPtr(lpStr), -1, Rct, m_TextAlignment
+        DrawTextW hDC, StrPtr(lpStr), -1, Rct, m_TextAlignment
     Else
-       DrawTextA hDC, lpStr, -1, Rct, m_TextAlignment
+        DrawTextA hDC, lpStr, -1, Rct, m_TextAlignment
     End If
     
 End Sub
 
 
 Private Sub DrawPicture(mPicture As StdPicture, _
-                        ByVal X As Long, ByVal Y As Long, _
-                        ByVal lWidth As Long, ByVal lHeight As Long)
- Dim picWidth As Long
- Dim picHeight As Long
- 
+    ByVal X As Long, ByVal Y As Long, _
+    ByVal lWidth As Long, ByVal lHeight As Long)
+    Dim picWidth As Long
+    Dim picHeight As Long
+    
     If Not m_StrechIcon Then
         picWidth = ScaleX(mPicture.Width)
         picHeight = ScaleY(mPicture.Height)
@@ -2360,34 +2348,34 @@ Private Sub DrawPicture(mPicture As StdPicture, _
         picWidth = lWidth
         picHeight = lHeight
     End If
-        
+    
     If mPicture.Type = vbPicTypeIcon Then
         Call DrawIconEx(hDC, X, Y, mPicture.handle, picWidth, picHeight, 0, 0, &H3)
     Else
         PaintPicture mPicture, X, Y, picWidth, picHeight
     End If
-        
+    
 End Sub
 
 Private Sub InitializeSubClassing()
-On Error GoTo handle
-
+    On Error GoTo handle
+    
     If Not m_hWnd = 0 Then Exit Sub
     
     ' Subclass in runtime
     If Ambient.UserMode Then
-    
-    bTrack = True
-    bTrackUser32 = IsFunctionExported("TrackMouseEvent", "User32")
-  
-    If Not bTrackUser32 Then
-      If Not IsFunctionExported("_TrackMouseEvent", "Comctl32") Then
-        bTrack = False
-      End If
-    End If
-    
-    If Not bTrack Then Exit Sub
-    
+        
+        bTrack = True
+        bTrackUser32 = IsFunctionExported("TrackMouseEvent", "User32")
+        
+        If Not bTrackUser32 Then
+            If Not IsFunctionExported("_TrackMouseEvent", "Comctl32") Then
+                bTrack = False
+            End If
+        End If
+        
+        If Not bTrack Then Exit Sub
+        
         With UserControl
             
             ' Start subclassing our calendar
@@ -2403,7 +2391,7 @@ On Error GoTo handle
             Call Subclass_AddMsg(.hwnd, WM_TIMER, MSG_AFTER)
             
         End With
-    
+        
     End If
     
     'Create Standard Scrollbars
@@ -2420,9 +2408,9 @@ End Sub
 
 
 Private Function Selection_Find(ByVal vIdex As Long) As Long
-Dim X As Long
-Dim xMax As Long
-
+    Dim X As Long
+    Dim xMax As Long
+    
     xMax = m_Selected.Count
     
     For X = 1 To xMax
@@ -2433,13 +2421,13 @@ End Function
 
 
 Private Sub Selection_Sort()
-Dim X As Long
-Dim vPos As Long
-Dim vCount As Long
-Dim vStart As Long
-Dim vNewCount As Long
-Dim vNew As New Collection
-
+    Dim X As Long
+    Dim vPos As Long
+    Dim vCount As Long
+    Dim vStart As Long
+    Dim vNewCount As Long
+    Dim vNew As New Collection
+    
     vStart = 1
     vCount = m_Selected.Count
     
@@ -2463,7 +2451,7 @@ End Sub
 
 
 Private Sub CreateItemComplete()
-
+    
     ' Create a new object
     Set m_PicComplete = UserControl.Controls.Add("vb.PictureBox", "PicComplete")
     m_PicComplete.AutoRedraw = True
@@ -2472,7 +2460,7 @@ Private Sub CreateItemComplete()
     m_PicComplete.BackColor = UserControl.FillColor
     m_PicComplete.ForeColor = vbBlack
     m_PicComplete.Enabled = False
-
+    
     ' Hide window from TaskBar
     SetParent m_PicComplete.hwnd, GetDesktopWindow
     SetWindowLong m_PicComplete.hwnd, GWL_EXSTYLE, WS_EX_TOOLWINDOW
@@ -2481,16 +2469,16 @@ End Sub
 
 
 Private Sub ShowItemComplete(ByVal lItem As Long)
-Dim mArray() As String
-Dim mTmp As Long
-Dim Rct As RECT
-Dim wRect As RECT
-Dim ScrX As Long
-Dim ScrY As Long
-Dim lWidth As Long
-Dim sText As String
-Dim mRowHeight As Double
-
+    Dim mArray() As String
+    Dim mTmp As Long
+    Dim Rct As RECT
+    Dim wRect As RECT
+    Dim ScrX As Long
+    Dim ScrY As Long
+    Dim lWidth As Long
+    Dim sText As String
+    Dim mRowHeight As Double
+    
     On Error Resume Next
     mArray = Split(m_Items(SBValue(efsVertical) + lItem), SPLITER)
     sText = mArray(0)
@@ -2515,7 +2503,7 @@ Dim mRowHeight As Double
     GetWindowRect hwnd, wRect
     mTmp = Screen.Width / ScrX - (wRect.Left + m_Left)
     If mTmp < lWidth Then
-    
+        
         lWidth = mTmp - 10
         mArray = SplitToLines(sText, mTmp - 15)
         sText = Join(mArray, vbCrLf)
@@ -2526,7 +2514,7 @@ Dim mRowHeight As Double
             Rct.Top = 5
         End If
         m_PicComplete.Move (wRect.Left + m_Left + 2 + m_LeftShift) * ScrX, Int((wRect.Top + 3 + (lItem - 1) * mRowHeight) * ScrY), (lWidth) * ScrX, (5 + mTmp + 5) * ScrY
-    
+        
     Else
         m_PicComplete.Move (wRect.Left + m_Left + 2 + m_LeftShift) * ScrX, Int((wRect.Top + 3 + (lItem - 1) * mRowHeight) * ScrY), (lWidth + 12) * ScrX, (mRowHeight - 1) * ScrY
     End If
@@ -2536,17 +2524,17 @@ Dim mRowHeight As Double
     
     ' Draw the Text
     If IsNT Then
-       DrawTextW m_PicComplete.hDC, StrPtr(sText), -1, Rct, vbLeftJustify
+        DrawTextW m_PicComplete.hDC, StrPtr(sText), -1, Rct, vbLeftJustify
     Else
-       DrawTextA m_PicComplete.hDC, sText, -1, Rct, vbLeftJustify
+        DrawTextA m_PicComplete.hDC, sText, -1, Rct, vbLeftJustify
     End If
-
+    
     ' Show
     m_PicComplete.ZOrder (0)
     m_PicComplete.Visible = True
     m_LastComplete = lItem
     
-Exit Sub
+    Exit Sub
 handle:
     m_PicComplete.Visible = False
     m_LastComplete = -100
@@ -2555,20 +2543,20 @@ End Sub
 
 ' By Gary Noble
 Private Function IsValidSelection(ByVal lSelectedItemIndex As Long) As Boolean
-On Error Resume Next
-
-        If lSelectedItemIndex > ListCount Then
-            m_SelItem = ListCount - 1
-            IsValidSelection = False
-        ElseIf lSelectedItemIndex <= -1 Then
-            m_SelItem = 0
-            IsValidSelection = False
-        Else
-            m_SelItem = lSelectedItemIndex
-            IsValidSelection = True
-        End If
-
-On Error GoTo 0
+    On Error Resume Next
+    
+    If lSelectedItemIndex > ListCount Then
+        m_SelItem = ListCount - 1
+        IsValidSelection = False
+    ElseIf lSelectedItemIndex <= -1 Then
+        m_SelItem = 0
+        IsValidSelection = False
+    Else
+        m_SelItem = lSelectedItemIndex
+        IsValidSelection = True
+    End If
+    
+    On Error GoTo 0
 End Function
 
 '------------------------------------------------------------------------------------------
@@ -2624,7 +2612,7 @@ Private Sub UserControl_WriteProperties(PropBag As PropertyBag)
     Call PropBag.WriteProperty("ShowSystemFiles", m_ShowSystemFiles, m_def_ShowSystemFiles)
     Call PropBag.WriteProperty("ShowHiddenFiles", m_ShowHiddenFiles, m_def_ShowHiddenFiles)
     'Debug.Print "Completed Reading properties!!"
-
+    
 End Sub
 
 '------------------------------------------------------------------------------------------
@@ -2636,7 +2624,7 @@ End Sub
 '------------------------------------------------------------------------------------------
 
 Private Sub UserControl_ReadProperties(PropBag As PropertyBag)
-
+    
     'Debug.Print "Reading Properties..."
     Set m_IconFolderOpen = PropBag.ReadProperty("IconFolderOpen", Nothing)
     Set m_IconFolderClose = PropBag.ReadProperty("IconFolderClose", Nothing)
@@ -2689,8 +2677,8 @@ Private Sub UserControl_ReadProperties(PropBag As PropertyBag)
     'Debug.Print "Completed Reading Properties!!"
     LoadPath
     Me.Refresh
-
-
+    
+    
 End Sub
 
 '------------------------------------------------------------------------------------------
@@ -2702,11 +2690,11 @@ End Sub
 '------------------------------------------------------------------------------------------
 
 Private Function GetDrives() As String()
-Dim mArray() As String
-Dim mFsObj As Object
-Dim mDrv As Object
-Dim X As Long
-
+    Dim mArray() As String
+    Dim mFsObj As Object
+    Dim mDrv As Object
+    Dim X As Long
+    
     Set mFsObj = CreateObject("scripting.filesystemobject")
     ReDim mArray(mFsObj.Drives.Count - 1)
     
@@ -2728,56 +2716,56 @@ End Function
 '------------------------------------------------------------------------------------------
 
 Private Function ScanPath(ByVal sPath As String, _
-                    ByRef SFiles() As String, _
-                    ByRef sFolders() As String, _
-                    Optional ByVal sFilter As String = "*.*") As Boolean
-
- Dim lResult    As Long
- Dim mWFD       As WIN32_FIND_DATA
- Dim TmpName    As String
- Dim lFiles     As Long
- Dim lFolders   As Long
- Dim lFlag1      As Long
- Dim lFlag2      As Long
- 
+    ByRef SFiles() As String, _
+    ByRef sFolders() As String, _
+    Optional ByVal sFilter As String = "*.*") As Boolean
+    
+    Dim lResult    As Long
+    Dim mWFD       As WIN32_FIND_DATA
+    Dim TmpName    As String
+    Dim lFiles     As Long
+    Dim lFolders   As Long
+    Dim lFlag1      As Long
+    Dim lFlag2      As Long
+    
     On Error GoTo handle
     If Right$(sPath, 1) <> "\" Then sPath = sPath & "\"
     lResult = FindFirstFile(sPath & sFilter, mWFD)
     If lResult = INVALID_HANDLE_VALUE Then ScanPath = False: Exit Function
-
+    
     If Not m_ShowHiddenFiles Then lFlag1 = FILE_ATTRIBUTE_HIDDEN
     If Not m_ShowSystemFiles Then lFlag2 = FILE_ATTRIBUTE_SYSTEM
-
+    
     Do
         TmpName = Left$(mWFD.cFileName, InStr(mWFD.cFileName, Chr$(0)) - 1)
-   
+        
         Select Case TmpName
-            Case ".", ".."
+        Case ".", ".."
             
-            Case Else
-                If (mWFD.dwFileAttributes And FILE_ATTRIBUTE_DIRECTORY) Then
+        Case Else
+            If (mWFD.dwFileAttributes And FILE_ATTRIBUTE_DIRECTORY) Then
                 
-                    If (mWFD.dwFileAttributes And FILE_ATTRIBUTE_DIRECTORY) And (mWFD.dwFileAttributes And lFlag2) = False And (mWFD.dwFileAttributes And lFlag1) = False Then
-                        ReDim Preserve sFolders(lFolders)
-                        sFolders(lFolders) = TmpName
-                        lFolders = lFolders + 1
-                    End If
-                    
-                ElseIf (mWFD.dwFileAttributes And lFlag2) = False And (mWFD.dwFileAttributes And lFlag1) = False Then
-                    ReDim Preserve SFiles(lFiles)
-                    SFiles(lFiles) = TmpName
-                    lFiles = lFiles + 1
+                If (mWFD.dwFileAttributes And FILE_ATTRIBUTE_DIRECTORY) And (mWFD.dwFileAttributes And lFlag2) = False And (mWFD.dwFileAttributes And lFlag1) = False Then
+                    ReDim Preserve sFolders(lFolders)
+                    sFolders(lFolders) = TmpName
+                    lFolders = lFolders + 1
                 End If
-                   
+                
+            ElseIf (mWFD.dwFileAttributes And lFlag2) = False And (mWFD.dwFileAttributes And lFlag1) = False Then
+                ReDim Preserve SFiles(lFiles)
+                SFiles(lFiles) = TmpName
+                lFiles = lFiles + 1
+            End If
+            
         End Select
-
+        
     Loop While FindNextFile(lResult, mWFD)
     
     ScanPath = True
     
-Exit Function
+    Exit Function
 handle:
-ScanPath = False
+    ScanPath = False
 End Function
 
 
@@ -2791,13 +2779,13 @@ End Function
 '------------------------------------------------------------------------------------------
 
 Private Function GetFileIcon(ByVal sFileName As String, _
-                                ByVal IconSize As IconExtractEnum) As StdPicture
- Dim SHinfo As SHFILEINFO
- Dim mTYPEICON As TypeIcon
- Dim mCLSID As CLSID
- 'Dim hIcon As Long
- Dim lFlag As Long
-
+    ByVal IconSize As IconExtractEnum) As StdPicture
+    Dim SHinfo As SHFILEINFO
+    Dim mTYPEICON As TypeIcon
+    Dim mCLSID As CLSID
+    'Dim hIcon As Long
+    Dim lFlag As Long
+    
     If IconSize = [SIZE_16] Then lFlag = SHGFI_SMALLICON Else lFlag = SHGFI_LARGEICON
     If Right$(sFileName, 1) <> "\" Then sFileName = sFileName & "\"
     Call SHGetFileInfo(sFileName, 0, SHinfo, Len(SHinfo), SHGFI_ICON + lFlag)
@@ -2814,7 +2802,7 @@ Private Function GetFileIcon(ByVal sFileName As String, _
     End With
     
     Call OleCreatePictureIndirect(mTYPEICON, mCLSID, 1, GetFileIcon)
-
+    
 End Function
 
 
@@ -2827,13 +2815,13 @@ End Function
 '------------------------------------------------------------------------------------------
 
 Private Function IsThere(mPicture As StdPicture) As Boolean
-On Error GoTo handle
+    On Error GoTo handle
     If Not mPicture.handle = 0 And Not mPicture.Height = 0 And Not mPicture.Width = 0 Then
         IsThere = True
     Else
         IsThere = False
     End If
-Exit Function
+    Exit Function
 handle:
     IsThere = False
 End Function
@@ -2848,23 +2836,23 @@ End Function
 '------------------------------------------------------------------------------------------------------------------------------------------
 
 Private Function SplitToLines(ByVal sText As String, ByVal lLength As Long, _
-                            Optional ByVal bFilterLines As Boolean = True) As String()
- Dim mArray() As String
- Dim mChar As String
- Dim mLine As String
- Dim lnCount As Long
- Dim xMax As String
- Dim mPos As Long
- Dim X As Long
- Dim lDone As Long
-
+    Optional ByVal bFilterLines As Boolean = True) As String()
+    Dim mArray() As String
+    Dim mChar As String
+    Dim mLine As String
+    Dim lnCount As Long
+    Dim xMax As String
+    Dim mPos As Long
+    Dim X As Long
+    Dim lDone As Long
+    
     If bFilterLines Then sText = Replace(sText, vbNewLine, vbNullString)
     xMax = Len(sText)
     
     For X = 1 To xMax
-    
+        
         mChar = Mid$(sText, X, 1)
-
+        
         If IsDelim(mChar) Then mPos = X - (lDone + 1)
         If TextWidth(mLine & mChar) >= lLength Or X = xMax Then
             If mPos = 0 Then mPos = X - (lDone + 1)
@@ -2878,7 +2866,7 @@ Private Function SplitToLines(ByVal sText As String, ByVal lLength As Long, _
         mLine = mLine & mChar
         
     Next X
-
+    
     mArray(lnCount - 1) = mArray(lnCount - 1) & mChar
     SplitToLines = mArray
     
@@ -2911,22 +2899,22 @@ End Function
 '------------------------------------------------------------------------------------------------------------------------------------------
 
 Private Function IsNT() As Boolean
-   Static m_bInit As Boolean
-   Dim udtVer           As OSVERSIONINFO
-   
-   On Error Resume Next
-   'Cache m_bIsNT on first execution
-   If Not m_bInit Then
-      m_bInit = True
-      udtVer.dwOSVersionInfoSize = Len(udtVer)
-      If GetVersionEx(udtVer) Then
-         If udtVer.dwPlatformId = VER_PLATFORM_WIN32_NT Then
-            m_bIsNT = True
-         End If
-      End If
-   End If
-   IsNT = m_bIsNT
-   
+    Static m_bInit As Boolean
+    Dim udtVer           As OSVERSIONINFO
+    
+    On Error Resume Next
+    'Cache m_bIsNT on first execution
+    If Not m_bInit Then
+        m_bInit = True
+        udtVer.dwOSVersionInfoSize = Len(udtVer)
+        If GetVersionEx(udtVer) Then
+            If udtVer.dwPlatformId = VER_PLATFORM_WIN32_NT Then
+                m_bIsNT = True
+            End If
+        End If
+    End If
+    IsNT = m_bIsNT
+    
 End Function
 
 '------------------------------------------------------------------------------------------
@@ -2938,17 +2926,17 @@ End Function
 '------------------------------------------------------------------------------------------
 
 Private Sub SortSrtingArray(ByRef sArray() As String, _
-                        ByVal vSortOrder As SortOrderEnum)
-Dim X As Long
-Dim Y As Long
-Dim xMax As Long
-Dim xStart As Long
-Dim tmpStr As String
+    ByVal vSortOrder As SortOrderEnum)
+    Dim X As Long
+    Dim Y As Long
+    Dim xMax As Long
+    Dim xStart As Long
+    Dim tmpStr As String
     
     On Error GoTo handle
     xStart = LBound(sArray)
     xMax = UBound(sArray)
-
+    
     For X = xStart To xMax
         For Y = X + 1 To xMax
             If StrComp(sArray(X), sArray(Y), vbTextCompare) = vSortOrder Then
@@ -2958,7 +2946,7 @@ Dim tmpStr As String
             End If
         Next Y
     Next X
-
+    
 handle:
 End Sub
 
@@ -2972,14 +2960,14 @@ End Sub
 '------------------------------------------------------------------------------------------
 
 Private Sub SortCollection(ByRef vCollection As Collection, _
-                        ByVal vSortOrder As SortOrderEnum)
-Dim X As Long
-Dim vPos As Long
-Dim vRtn  As Long
-Dim vCount As Long
-Dim vStart As Long
-Dim vNewCount As Long
-Dim vNew As New Collection
+    ByVal vSortOrder As SortOrderEnum)
+    Dim X As Long
+    Dim vPos As Long
+    Dim vRtn  As Long
+    Dim vCount As Long
+    Dim vStart As Long
+    Dim vNewCount As Long
+    Dim vNew As New Collection
     
     ' Check Sort?
     If Not m_Mode = Mode_ListBox Then Exit Sub
@@ -2988,7 +2976,7 @@ Dim vNew As New Collection
     ' Get current Count
     vStart = 1
     vCount = vCollection.Count
-
+    
     ' Loop through Current collection
     For X = vStart To vCount
         
@@ -2997,12 +2985,12 @@ Dim vNew As New Collection
         
         ' Loop through new collection
         For vPos = 1 To vNewCount
-        
+            
             ' Compair each item in new collection
             vRtn = StrComp(vCollection(X), vNew(vPos), vbTextCompare)
             ' Escape with purpose
             If vRtn = vSortOrder Then Exit For
-        
+            
         Next vPos
         
         If X = vStart Or vPos = vNewCount + 1 Then
@@ -3030,18 +3018,18 @@ End Sub
 ' -------------------------------------------------------------------------------------
 
 Private Property Get BlendColor(ByVal oColorFrom As OLE_COLOR, _
-                               ByVal oColorTo As OLE_COLOR, _
-                               Optional ByVal Alpha As Long = 128) As Long
-
-Dim lSrcR As Long
-Dim lSrcG As Long
-Dim lSrcB As Long
-Dim lDstR As Long
-Dim lDstG As Long
-Dim lDstB As Long
-Dim lCFrom As Long
-Dim lCTo As Long
-
+    ByVal oColorTo As OLE_COLOR, _
+    Optional ByVal Alpha As Long = 128) As Long
+    
+    Dim lSrcR As Long
+    Dim lSrcG As Long
+    Dim lSrcB As Long
+    Dim lDstR As Long
+    Dim lDstG As Long
+    Dim lDstB As Long
+    Dim lCFrom As Long
+    Dim lCTo As Long
+    
     lCFrom = TranslateColor(oColorFrom)
     lCTo = TranslateColor(oColorTo)
     lSrcR = lCFrom And &HFF
@@ -3051,7 +3039,7 @@ Dim lCTo As Long
     lDstG = (lCTo And &HFF00&) \ &H100&
     lDstB = (lCTo And &HFF0000) \ &H10000
     BlendColor = RGB(((lSrcR * Alpha) / 255) + ((lDstR * (255 - Alpha)) / 255), ((lSrcG * Alpha) / 255) + ((lDstG * (255 - Alpha)) / 255), ((lSrcB * Alpha) / 255) + ((lDstB * (255 - Alpha)) / 255))
-
+    
 End Property
 
 ' -------------------------------------------------------------------------------------
@@ -3064,12 +3052,12 @@ End Property
 ' -------------------------------------------------------------------------------------
 
 Private Function TranslateColor(ByVal oClr As OLE_COLOR, _
-                               Optional hPal As Long = 0) As Long
-
+    Optional hPal As Long = 0) As Long
+    
     If OleTranslateColor(oClr, hPal, TranslateColor) Then
         TranslateColor = -1
     End If
-
+    
 End Function
 
 
@@ -3082,17 +3070,17 @@ End Function
 '------------------------------------------------------------------------------------------------------------------------------------------
 
 Private Sub FillGradient(ByVal hDC As Long, _
-                         ByVal X As Long, _
-                         ByVal Y As Long, _
-                         ByVal Width As Long, _
-                         ByVal Height As Long, _
-                         ByVal Col1 As Long, _
-                         ByVal Col2 As Long, _
-                         ByVal GradientDirection As ListGradientDirectionEnum, _
-                         Optional Right2Left As Boolean = True)
-                         
-Dim tmpCol  As Long
-  
+    ByVal X As Long, _
+    ByVal Y As Long, _
+    ByVal Width As Long, _
+    ByVal Height As Long, _
+    ByVal Col1 As Long, _
+    ByVal Col2 As Long, _
+    ByVal GradientDirection As ListGradientDirectionEnum, _
+    Optional Right2Left As Boolean = True)
+    
+    Dim tmpCol  As Long
+    
     ' Exit if needed
     If GradientDirection = Fill_None Then Exit Sub
     
@@ -3108,16 +3096,16 @@ Dim tmpCol  As Long
     If Col2 < 0 Then Col2 = TranslateColor(Col2)
     
     Select Case GradientDirection
-        Case Fill_HorizontalMiddleOut
-            DIBGradient hDC, X, Y, Width / 2, Height, Col1, Col2, Fill_Horizontal
-            DIBGradient hDC, X + Width / 2 - 1, Y, Width / 2, Height, Col2, Col1, Fill_Horizontal
-
-        Case Fill_VerticalMiddleOut
-            DIBGradient hDC, X, Y, Width, Height / 2, Col1, Col2, Fill_Vertical
-            DIBGradient hDC, X, Y + Height / 2 - 1, Width, Height / 2, Col2, Col1, Fill_Vertical
-
-        Case Else
-            DIBGradient hDC, X, Y, Width, Height, Col1, Col2, GradientDirection
+    Case Fill_HorizontalMiddleOut
+        DIBGradient hDC, X, Y, Width / 2, Height, Col1, Col2, Fill_Horizontal
+        DIBGradient hDC, X + Width / 2 - 1, Y, Width / 2, Height, Col2, Col1, Fill_Horizontal
+        
+    Case Fill_VerticalMiddleOut
+        DIBGradient hDC, X, Y, Width, Height / 2, Col1, Col2, Fill_Vertical
+        DIBGradient hDC, X, Y + Height / 2 - 1, Width, Height / 2, Col2, Col1, Fill_Vertical
+        
+    Case Else
+        DIBGradient hDC, X, Y, Width, Height, Col1, Col2, GradientDirection
     End Select
     
 End Sub
@@ -3131,36 +3119,36 @@ End Sub
 '------------------------------------------------------------------------------------------------------------------------------------------
 
 Private Sub DIBGradient(ByVal hDC As Long, _
-                         ByVal X As Long, _
-                         ByVal Y As Long, _
-                         ByVal Width As Long, _
-                         ByVal Height As Long, _
-                         ByVal Col1 As Long, _
-                         ByVal Col2 As Long, _
-                         ByVal GradientDirection As ListGradientDirectionEnum)
-
-  Dim uBIH    As BITMAPINFOHEADER
-  Dim lBits() As Long
-  Dim lGrad() As Long
-  
-  Dim R1      As Long
-  Dim G1      As Long
-  Dim b1      As Long
-  Dim R2      As Long
-  Dim G2      As Long
-  Dim b2      As Long
-  Dim dR      As Long
-  Dim dG      As Long
-  Dim dB      As Long
-  
-  Dim Scan    As Long
-  Dim i       As Long
-  Dim iEnd    As Long
-  Dim iOffset As Long
-  Dim j       As Long
-  Dim jEnd    As Long
-  Dim iGrad   As Long
-  
+    ByVal X As Long, _
+    ByVal Y As Long, _
+    ByVal Width As Long, _
+    ByVal Height As Long, _
+    ByVal Col1 As Long, _
+    ByVal Col2 As Long, _
+    ByVal GradientDirection As ListGradientDirectionEnum)
+    
+    Dim uBIH    As BITMAPINFOHEADER
+    Dim lBits() As Long
+    Dim lGrad() As Long
+    
+    Dim R1      As Long
+    Dim G1      As Long
+    Dim b1      As Long
+    Dim R2      As Long
+    Dim G2      As Long
+    Dim b2      As Long
+    Dim dR      As Long
+    Dim dG      As Long
+    Dim dB      As Long
+    
+    Dim Scan    As Long
+    Dim i       As Long
+    Dim iEnd    As Long
+    Dim iOffset As Long
+    Dim j       As Long
+    Dim jEnd    As Long
+    Dim iGrad   As Long
+    
     '-- A minor check
     If (Width < 1 Or Height < 1) Then Exit Sub
     
@@ -3185,12 +3173,12 @@ Private Sub DIBGradient(ByVal hDC As Long, _
     
     '-- Size gradient-Cols array
     Select Case GradientDirection
-        Case [Fill_Horizontal]
-            ReDim lGrad(0 To Width - 1)
-        Case [Fill_Vertical]
-            ReDim lGrad(0 To Height - 1)
-        Case Else
-            ReDim lGrad(0 To Width + Height - 2)
+    Case [Fill_Horizontal]
+        ReDim lGrad(0 To Width - 1)
+    Case [Fill_Vertical]
+        ReDim lGrad(0 To Height - 1)
+    Case Else
+        ReDim lGrad(0 To Width + Height - 2)
     End Select
     
     '-- Calculate gradient-Cols
@@ -3198,7 +3186,7 @@ Private Sub DIBGradient(ByVal hDC As Long, _
     If (iEnd = 0) Then
         '-- Special case (1-pixel wide gradient)
         lGrad(0) = (b1 \ 2 + b2 \ 2) + 256 * (G1 \ 2 + G2 \ 2) + 65536 * (R1 \ 2 + R2 \ 2)
-      Else
+    Else
         For i = 0 To iEnd
             lGrad(i) = b1 + (dB * i) \ iEnd + 256 * (G1 + (dG * i) \ iEnd) + 65536 * (R1 + (dR * i) \ iEnd)
         Next i
@@ -3213,47 +3201,47 @@ Private Sub DIBGradient(ByVal hDC As Long, _
     '-- Render gradient DIB
     Select Case GradientDirection
         
-        Case [Fill_Horizontal]
+    Case [Fill_Horizontal]
         
-            For j = 0 To jEnd
-                For i = iOffset To iEnd + iOffset
-                    lBits(i) = lGrad(i - iOffset)
-                Next i
-                iOffset = iOffset + Scan
-            Next j
+        For j = 0 To jEnd
+            For i = iOffset To iEnd + iOffset
+                lBits(i) = lGrad(i - iOffset)
+            Next i
+            iOffset = iOffset + Scan
+        Next j
         
-        Case [Fill_Vertical]
+    Case [Fill_Vertical]
         
-            For j = jEnd To 0 Step -1
-                For i = iOffset To iEnd + iOffset
-                    lBits(i) = lGrad(j)
-                Next i
-                iOffset = iOffset + Scan
-            Next j
-            
-        Case [Fill_DownwardDiagonal]
-            
-            iOffset = jEnd * Scan
-            For j = 1 To jEnd + 1
-                For i = iOffset To iEnd + iOffset
-                    lBits(i) = lGrad(iGrad)
-                    iGrad = iGrad + 1
-                Next i
-                iOffset = iOffset - Scan
-                iGrad = j
-            Next j
-            
-        Case [Fill_UpwardDiagonal]
-            
-            iOffset = 0
-            For j = 1 To jEnd + 1
-                For i = iOffset To iEnd + iOffset
-                    lBits(i) = lGrad(iGrad)
-                    iGrad = iGrad + 1
-                Next i
-                iOffset = iOffset + Scan
-                iGrad = j
-            Next j
+        For j = jEnd To 0 Step -1
+            For i = iOffset To iEnd + iOffset
+                lBits(i) = lGrad(j)
+            Next i
+            iOffset = iOffset + Scan
+        Next j
+        
+    Case [Fill_DownwardDiagonal]
+        
+        iOffset = jEnd * Scan
+        For j = 1 To jEnd + 1
+            For i = iOffset To iEnd + iOffset
+                lBits(i) = lGrad(iGrad)
+                iGrad = iGrad + 1
+            Next i
+            iOffset = iOffset - Scan
+            iGrad = j
+        Next j
+        
+    Case [Fill_UpwardDiagonal]
+        
+        iOffset = 0
+        For j = 1 To jEnd + 1
+            For i = iOffset To iEnd + iOffset
+                lBits(i) = lGrad(iGrad)
+                iGrad = iGrad + 1
+            Next i
+            iOffset = iOffset + Scan
+            iGrad = j
+        Next j
     End Select
     
     '-- Define DIB header
@@ -3267,7 +3255,7 @@ Private Sub DIBGradient(ByVal hDC As Long, _
     
     '-- Paint it!
     Call StretchDIBits(hDC, X, Y, Width, Height, 0, 0, Width, Height, lBits(0), uBIH, DIB_RGB_ColS, vbSrcCopy)
-
+    
 End Sub
 
 '-----------------------------------------------------------------------------------------------------------
@@ -3322,32 +3310,32 @@ End Sub
 
 Private Sub pSBGetSI(ByVal eBar As EFSScrollBarConstants, ByRef tSI As SCROLLINFO, ByVal fMask As Long)
     Dim Lo As Long
-
+    
     Lo = eBar
     tSI.fMask = fMask
     tSI.cbSize = LenB(tSI)
-
+    
     If (m_bNoFlatScrollBars) Then
         GetScrollInfo m_hWnd, Lo, tSI
     Else
         FlatSB_GetScrollInfo m_hWnd, Lo, tSI
     End If
-
+    
 End Sub
 
 Private Sub pSBLetSI(ByVal eBar As EFSScrollBarConstants, ByRef tSI As SCROLLINFO, ByVal fMask As Long)
     Dim Lo As Long
-
+    
     Lo = eBar
     tSI.fMask = fMask
     tSI.cbSize = LenB(tSI)
-
+    
     If (m_bNoFlatScrollBars) Then
         SetScrollInfo m_hWnd, Lo, tSI, True
     Else
         FlatSB_SetScrollInfo m_hWnd, Lo, tSI, True
     End If
-
+    
 End Sub
 
 Friend Property Get SBStyle() As ScrollBarStyleEnum
@@ -3370,7 +3358,7 @@ Friend Property Let SBStyle(ByVal eStyle As ScrollBarStyleEnum)
         'Debug.Print lR
         m_eStyle = eStyle
     End If
-
+    
 End Property
 
 Friend Property Get SBSmallChange(ByVal eBar As EFSScrollBarConstants) As Long
@@ -3400,7 +3388,7 @@ End Property
 Friend Property Let SBEnabled(ByVal eBar As EFSScrollBarConstants, ByVal bEnabled As Boolean)
     Dim Lo As Long
     Dim lF As Long
-
+    
     Lo = eBar
     If (bEnabled) Then
         lF = ESB_ENABLE_BOTH
@@ -3412,7 +3400,7 @@ Friend Property Let SBEnabled(ByVal eBar As EFSScrollBarConstants, ByVal bEnable
     Else
         FlatSB_EnableScrollBar m_hWnd, Lo, lF
     End If
-
+    
 End Property
 
 Friend Property Get SBMin(ByVal eBar As EFSScrollBarConstants) As Long
@@ -3464,7 +3452,7 @@ End Property
 
 Friend Property Let SBLargeChange(ByVal eBar As EFSScrollBarConstants, ByVal iLargeChange As Long)
     Dim tSI As SCROLLINFO
-
+    
     pSBGetSI eBar, tSI, SIF_ALL
     tSI.nMax = tSI.nMax - tSI.nPage + iLargeChange
     tSI.nPage = iLargeChange
@@ -3478,7 +3466,7 @@ End Property
 Private Sub pSBCreateScrollBar()
     'Dim lR As Long
     'Dim hParent As Long
-
+    
     On Error Resume Next
     InitialiseFlatSB m_hWnd
     If (err.Number <> 0) Then
@@ -3504,7 +3492,7 @@ Private Sub pSBClearUp()
         If Not (m_bNoFlatScrollBars) Then
             UninitializeFlatSB m_hWnd
         End If
-
+        
         On Error GoTo 0
     End If
     m_hWnd = 0
@@ -3524,328 +3512,328 @@ End Sub
 
 'Add a message to the table of those that will invoke a callback. You should Subclass_Start first and then add the messages
 Private Sub Subclass_AddMsg(ByVal lng_hWnd As Long, ByVal uMsg As Long, Optional ByVal When As eMsgWhen = MSG_AFTER)
-'Parameters:
-  'lng_hWnd  - The handle of the window for which the uMsg is to be added to the callback table
-  'uMsg      - The message number that will invoke a callback. NB Can also be ALL_MESSAGES, ie all messages will callback
-  'When      - Whether the msg is to callback before, after or both with respect to the the default (previous) handler
-  With sc_aSubData(zIdx(lng_hWnd))
-    If When And eMsgWhen.MSG_BEFORE Then
-      Call zAddMsg(uMsg, .aMsgTblB, .nMsgCntB, eMsgWhen.MSG_BEFORE, .nAddrSub)
-    End If
-    If When And eMsgWhen.MSG_AFTER Then
-      Call zAddMsg(uMsg, .aMsgTblA, .nMsgCntA, eMsgWhen.MSG_AFTER, .nAddrSub)
-    End If
-  End With
+    'Parameters:
+    'lng_hWnd  - The handle of the window for which the uMsg is to be added to the callback table
+    'uMsg      - The message number that will invoke a callback. NB Can also be ALL_MESSAGES, ie all messages will callback
+    'When      - Whether the msg is to callback before, after or both with respect to the the default (previous) handler
+    With sc_aSubData(zIdx(lng_hWnd))
+        If When And eMsgWhen.MSG_BEFORE Then
+            Call zAddMsg(uMsg, .aMsgTblB, .nMsgCntB, eMsgWhen.MSG_BEFORE, .nAddrSub)
+        End If
+        If When And eMsgWhen.MSG_AFTER Then
+            Call zAddMsg(uMsg, .aMsgTblA, .nMsgCntA, eMsgWhen.MSG_AFTER, .nAddrSub)
+        End If
+    End With
 End Sub
 
 'Delete a message from the table of those that will invoke a callback.
 Private Sub Subclass_DelMsg(ByVal lng_hWnd As Long, ByVal uMsg As Long, Optional ByVal When As eMsgWhen = MSG_AFTER)
-'Parameters:
-  'lng_hWnd  - The handle of the window for which the uMsg is to be removed from the callback table
-  'uMsg      - The message number that will be removed from the callback table. NB Can also be ALL_MESSAGES, ie all messages will callback
-  'When      - Whether the msg is to be removed from the before, after or both callback tables
-  With sc_aSubData(zIdx(lng_hWnd))
-    If When And eMsgWhen.MSG_BEFORE Then
-      Call zDelMsg(uMsg, .aMsgTblB, .nMsgCntB, eMsgWhen.MSG_BEFORE, .nAddrSub)
-    End If
-    If When And eMsgWhen.MSG_AFTER Then
-      Call zDelMsg(uMsg, .aMsgTblA, .nMsgCntA, eMsgWhen.MSG_AFTER, .nAddrSub)
-    End If
-  End With
+    'Parameters:
+    'lng_hWnd  - The handle of the window for which the uMsg is to be removed from the callback table
+    'uMsg      - The message number that will be removed from the callback table. NB Can also be ALL_MESSAGES, ie all messages will callback
+    'When      - Whether the msg is to be removed from the before, after or both callback tables
+    With sc_aSubData(zIdx(lng_hWnd))
+        If When And eMsgWhen.MSG_BEFORE Then
+            Call zDelMsg(uMsg, .aMsgTblB, .nMsgCntB, eMsgWhen.MSG_BEFORE, .nAddrSub)
+        End If
+        If When And eMsgWhen.MSG_AFTER Then
+            Call zDelMsg(uMsg, .aMsgTblA, .nMsgCntA, eMsgWhen.MSG_AFTER, .nAddrSub)
+        End If
+    End With
 End Sub
 
 'Return whether we're running in the IDE.
 Private Function Subclass_InIDE() As Boolean
-  Debug.Assert zSetTrue(Subclass_InIDE)
+    Debug.Assert zSetTrue(Subclass_InIDE)
 End Function
 
 'Start subclassing the passed window handle
 Private Function Subclass_Start(ByVal lng_hWnd As Long) As Long
-'Parameters:
-  'lng_hWnd  - The handle of the window to be subclassed
-'Returns;
-  'The sc_aSubData() index
-  Const CODE_LEN              As Long = 200                                             'Length of the machine code in bytes
-  Const FUNC_CWP              As String = "CallWindowProcA"                             'We use CallWindowProc to call the original WndProc
-  Const FUNC_EBM              As String = "EbMode"                                      'VBA's EbMode function allows the machine code thunk to know if the IDE has stopped or is on a breakpoint
-  Const FUNC_SWL              As String = "SetWindowLongA"                              'SetWindowLongA allows the cSubclasser machine code thunk to unsubclass the subclasser itself if it detects via the EbMode function that the IDE has stopped
-  Const MOD_USER              As String = "user32"                                      'Location of the SetWindowLongA & CallWindowProc functions
-  Const MOD_VBA5              As String = "vba5"                                        'Location of the EbMode function if running VB5
-  Const MOD_VBA6              As String = "vba6"                                        'Location of the EbMode function if running VB6
-  Const PATCH_01              As Long = 18                                              'Code buffer offset to the location of the relative address to EbMode
-  Const PATCH_02              As Long = 68                                              'Address of the previous WndProc
-  Const PATCH_03              As Long = 78                                              'Relative address of SetWindowsLong
-  Const PATCH_06              As Long = 116                                             'Address of the previous WndProc
-  Const PATCH_07              As Long = 121                                             'Relative address of CallWindowProc
-  Const PATCH_0A              As Long = 186                                             'Address of the owner object
-  Static aBuf(1 To CODE_LEN)  As Byte                                                   'Static code buffer byte array
-  Static pCWP                 As Long                                                   'Address of the CallWindowsProc
-  Static pEbMode              As Long                                                   'Address of the EbMode IDE break/stop/running function
-  Static pSWL                 As Long                                                   'Address of the SetWindowsLong function
-  Dim i                       As Long                                                   'Loop index
-  Dim j                       As Long                                                   'Loop index
-  Dim nSubIdx                 As Long                                                   'Subclass data index
-  Dim sHex                    As String                                                 'Hex code string
-  
-'If it's the first time through here..
-  If aBuf(1) = 0 Then
-  
-'The hex pair machine code representation.
-    sHex = "5589E583C4F85731C08945FC8945F8EB0EE80000000083F802742185C07424E830000000837DF800750AE838000000E84D00" & _
-           "00005F8B45FCC9C21000E826000000EBF168000000006AFCFF7508E800000000EBE031D24ABF00000000B900000000E82D00" & _
-           "0000C3FF7514FF7510FF750CFF75086800000000E8000000008945FCC331D2BF00000000B900000000E801000000C3E33209" & _
-           "C978078B450CF2AF75278D4514508D4510508D450C508D4508508D45FC508D45F85052B800000000508B00FF90A4070000C3"
-
-'Convert the string from hex pairs to bytes and store in the static machine code buffer
-    i = 1
-    Do While j < CODE_LEN
-      j = j + 1
-      aBuf(j) = Val("&H" & Mid$(sHex, i, 2))                                            'Convert a pair of hex characters to an eight-bit value and store in the static code buffer array
-      i = i + 2
-    Loop                                                                                'Next pair of hex characters
+    'Parameters:
+    'lng_hWnd  - The handle of the window to be subclassed
+    'Returns;
+    'The sc_aSubData() index
+    Const CODE_LEN              As Long = 200                                             'Length of the machine code in bytes
+    Const FUNC_CWP              As String = "CallWindowProcA"                             'We use CallWindowProc to call the original WndProc
+    Const FUNC_EBM              As String = "EbMode"                                      'VBA's EbMode function allows the machine code thunk to know if the IDE has stopped or is on a breakpoint
+    Const FUNC_SWL              As String = "SetWindowLongA"                              'SetWindowLongA allows the cSubclasser machine code thunk to unsubclass the subclasser itself if it detects via the EbMode function that the IDE has stopped
+    Const MOD_USER              As String = "user32"                                      'Location of the SetWindowLongA & CallWindowProc functions
+    Const MOD_VBA5              As String = "vba5"                                        'Location of the EbMode function if running VB5
+    Const MOD_VBA6              As String = "vba6"                                        'Location of the EbMode function if running VB6
+    Const PATCH_01              As Long = 18                                              'Code buffer offset to the location of the relative address to EbMode
+    Const PATCH_02              As Long = 68                                              'Address of the previous WndProc
+    Const PATCH_03              As Long = 78                                              'Relative address of SetWindowsLong
+    Const PATCH_06              As Long = 116                                             'Address of the previous WndProc
+    Const PATCH_07              As Long = 121                                             'Relative address of CallWindowProc
+    Const PATCH_0A              As Long = 186                                             'Address of the owner object
+    Static aBuf(1 To CODE_LEN)  As Byte                                                   'Static code buffer byte array
+    Static pCWP                 As Long                                                   'Address of the CallWindowsProc
+    Static pEbMode              As Long                                                   'Address of the EbMode IDE break/stop/running function
+    Static pSWL                 As Long                                                   'Address of the SetWindowsLong function
+    Dim i                       As Long                                                   'Loop index
+    Dim j                       As Long                                                   'Loop index
+    Dim nSubIdx                 As Long                                                   'Subclass data index
+    Dim sHex                    As String                                                 'Hex code string
     
-'Get API function addresses
-    If Subclass_InIDE Then                                                              'If we're running in the VB IDE
-      aBuf(16) = &H90                                                                   'Patch the code buffer to enable the IDE state code
-      aBuf(17) = &H90                                                                   'Patch the code buffer to enable the IDE state code
-      pEbMode = zAddrFunc(MOD_VBA6, FUNC_EBM)                                           'Get the address of EbMode in vba6.dll
-      If pEbMode = 0 Then                                                               'Found?
-        pEbMode = zAddrFunc(MOD_VBA5, FUNC_EBM)                                         'VB5 perhaps
-      End If
+    'If it's the first time through here..
+    If aBuf(1) = 0 Then
+        
+        'The hex pair machine code representation.
+        sHex = "5589E583C4F85731C08945FC8945F8EB0EE80000000083F802742185C07424E830000000837DF800750AE838000000E84D00" & _
+        "00005F8B45FCC9C21000E826000000EBF168000000006AFCFF7508E800000000EBE031D24ABF00000000B900000000E82D00" & _
+        "0000C3FF7514FF7510FF750CFF75086800000000E8000000008945FCC331D2BF00000000B900000000E801000000C3E33209" & _
+        "C978078B450CF2AF75278D4514508D4510508D450C508D4508508D45FC508D45F85052B800000000508B00FF90A4070000C3"
+        
+        'Convert the string from hex pairs to bytes and store in the static machine code buffer
+        i = 1
+        Do While j < CODE_LEN
+            j = j + 1
+            aBuf(j) = Val("&H" & Mid$(sHex, i, 2))                                            'Convert a pair of hex characters to an eight-bit value and store in the static code buffer array
+            i = i + 2
+        Loop                                                                                'Next pair of hex characters
+        
+        'Get API function addresses
+        If Subclass_InIDE Then                                                              'If we're running in the VB IDE
+            aBuf(16) = &H90                                                                   'Patch the code buffer to enable the IDE state code
+            aBuf(17) = &H90                                                                   'Patch the code buffer to enable the IDE state code
+            pEbMode = zAddrFunc(MOD_VBA6, FUNC_EBM)                                           'Get the address of EbMode in vba6.dll
+            If pEbMode = 0 Then                                                               'Found?
+                pEbMode = zAddrFunc(MOD_VBA5, FUNC_EBM)                                         'VB5 perhaps
+            End If
+        End If
+        
+        pCWP = zAddrFunc(MOD_USER, FUNC_CWP)                                                'Get the address of the CallWindowsProc function
+        pSWL = zAddrFunc(MOD_USER, FUNC_SWL)                                                'Get the address of the SetWindowLongA function
+        ReDim sc_aSubData(0 To 0) As tSubData                                               'Create the first sc_aSubData element
+    Else
+        nSubIdx = zIdx(lng_hWnd, True)
+        If nSubIdx = -1 Then                                                                'If an sc_aSubData element isn't being re-cycled
+            nSubIdx = UBound(sc_aSubData()) + 1                                               'Calculate the next element
+            ReDim Preserve sc_aSubData(0 To nSubIdx) As tSubData                              'Create a new sc_aSubData element
+        End If
+        
+        Subclass_Start = nSubIdx
     End If
     
-    pCWP = zAddrFunc(MOD_USER, FUNC_CWP)                                                'Get the address of the CallWindowsProc function
-    pSWL = zAddrFunc(MOD_USER, FUNC_SWL)                                                'Get the address of the SetWindowLongA function
-    ReDim sc_aSubData(0 To 0) As tSubData                                               'Create the first sc_aSubData element
-  Else
-    nSubIdx = zIdx(lng_hWnd, True)
-    If nSubIdx = -1 Then                                                                'If an sc_aSubData element isn't being re-cycled
-      nSubIdx = UBound(sc_aSubData()) + 1                                               'Calculate the next element
-      ReDim Preserve sc_aSubData(0 To nSubIdx) As tSubData                              'Create a new sc_aSubData element
-    End If
-    
-    Subclass_Start = nSubIdx
-  End If
-
-  With sc_aSubData(nSubIdx)
-    .hwnd = lng_hWnd                                                                    'Store the hWnd
-    .nAddrSub = GlobalAlloc(GMEM_FIXED, CODE_LEN)                                       'Allocate memory for the machine code WndProc
-    .nAddrOrig = SetWindowLongA(.hwnd, GWL_WNDPROC, .nAddrSub)                          'Set our WndProc in place
-    Call RtlMoveMemory(ByVal .nAddrSub, aBuf(1), CODE_LEN)                              'Copy the machine code from the static byte array to the code array in sc_aSubData
-    Call zPatchRel(.nAddrSub, PATCH_01, pEbMode)                                        'Patch the relative address to the VBA EbMode api function, whether we need to not.. hardly worth testing
-    Call zPatchVal(.nAddrSub, PATCH_02, .nAddrOrig)                                     'Original WndProc address for CallWindowProc, call the original WndProc
-    Call zPatchRel(.nAddrSub, PATCH_03, pSWL)                                           'Patch the relative address of the SetWindowLongA api function
-    Call zPatchVal(.nAddrSub, PATCH_06, .nAddrOrig)                                     'Original WndProc address for SetWindowLongA, unsubclass on IDE stop
-    Call zPatchRel(.nAddrSub, PATCH_07, pCWP)                                           'Patch the relative address of the CallWindowProc api function
-    Call zPatchVal(.nAddrSub, PATCH_0A, ObjPtr(Me))                                     'Patch the address of this object instance into the static machine code buffer
-  End With
+    With sc_aSubData(nSubIdx)
+        .hwnd = lng_hWnd                                                                    'Store the hWnd
+        .nAddrSub = GlobalAlloc(GMEM_FIXED, CODE_LEN)                                       'Allocate memory for the machine code WndProc
+        .nAddrOrig = SetWindowLongA(.hwnd, GWL_WNDPROC, .nAddrSub)                          'Set our WndProc in place
+        Call RtlMoveMemory(ByVal .nAddrSub, aBuf(1), CODE_LEN)                              'Copy the machine code from the static byte array to the code array in sc_aSubData
+        Call zPatchRel(.nAddrSub, PATCH_01, pEbMode)                                        'Patch the relative address to the VBA EbMode api function, whether we need to not.. hardly worth testing
+        Call zPatchVal(.nAddrSub, PATCH_02, .nAddrOrig)                                     'Original WndProc address for CallWindowProc, call the original WndProc
+        Call zPatchRel(.nAddrSub, PATCH_03, pSWL)                                           'Patch the relative address of the SetWindowLongA api function
+        Call zPatchVal(.nAddrSub, PATCH_06, .nAddrOrig)                                     'Original WndProc address for SetWindowLongA, unsubclass on IDE stop
+        Call zPatchRel(.nAddrSub, PATCH_07, pCWP)                                           'Patch the relative address of the CallWindowProc api function
+        Call zPatchVal(.nAddrSub, PATCH_0A, ObjPtr(Me))                                     'Patch the address of this object instance into the static machine code buffer
+    End With
 End Function
 
 'Stop all subclassing
 Private Sub Subclass_StopAll()
-  Dim i As Long
-  
-  i = UBound(sc_aSubData())                                                             'Get the upper bound of the subclass data array
-  Do While i >= 0                                                                       'Iterate through each element
-    With sc_aSubData(i)
-      If .hwnd <> 0 Then                                                                'If not previously Subclass_Stop'd
-        Call Subclass_Stop(.hwnd)                                                       'Subclass_Stop
-      End If
-    End With
+    Dim i As Long
     
-    i = i - 1                                                                           'Next element
-  Loop
+    i = UBound(sc_aSubData())                                                             'Get the upper bound of the subclass data array
+    Do While i >= 0                                                                       'Iterate through each element
+        With sc_aSubData(i)
+            If .hwnd <> 0 Then                                                                'If not previously Subclass_Stop'd
+                Call Subclass_Stop(.hwnd)                                                       'Subclass_Stop
+            End If
+        End With
+        
+        i = i - 1                                                                           'Next element
+    Loop
 End Sub
 
 'Stop subclassing the passed window handle
 Private Sub Subclass_Stop(ByVal lng_hWnd As Long)
-'Parameters:
-  'lng_hWnd  - The handle of the window to stop being subclassed
-  With sc_aSubData(zIdx(lng_hWnd))
-    Call SetWindowLongA(.hwnd, GWL_WNDPROC, .nAddrOrig)                                 'Restore the original WndProc
-    Call zPatchVal(.nAddrSub, PATCH_05, 0)                                              'Patch the Table B entry count to ensure no further 'before' callbacks
-    Call zPatchVal(.nAddrSub, PATCH_09, 0)                                              'Patch the Table A entry count to ensure no further 'after' callbacks
-    Call GlobalFree(.nAddrSub)                                                          'Release the machine code memory
-    .hwnd = 0                                                                           'Mark the sc_aSubData element as available for re-use
-    .nMsgCntB = 0                                                                       'Clear the before table
-    .nMsgCntA = 0                                                                       'Clear the after table
-    Erase .aMsgTblB                                                                     'Erase the before table
-    Erase .aMsgTblA                                                                     'Erase the after table
-  End With
+    'Parameters:
+    'lng_hWnd  - The handle of the window to stop being subclassed
+    With sc_aSubData(zIdx(lng_hWnd))
+        Call SetWindowLongA(.hwnd, GWL_WNDPROC, .nAddrOrig)                                 'Restore the original WndProc
+        Call zPatchVal(.nAddrSub, PATCH_05, 0)                                              'Patch the Table B entry count to ensure no further 'before' callbacks
+        Call zPatchVal(.nAddrSub, PATCH_09, 0)                                              'Patch the Table A entry count to ensure no further 'after' callbacks
+        Call GlobalFree(.nAddrSub)                                                          'Release the machine code memory
+        .hwnd = 0                                                                           'Mark the sc_aSubData element as available for re-use
+        .nMsgCntB = 0                                                                       'Clear the before table
+        .nMsgCntA = 0                                                                       'Clear the after table
+        Erase .aMsgTblB                                                                     'Erase the before table
+        Erase .aMsgTblA                                                                     'Erase the after table
+    End With
 End Sub
 
 'Worker sub for Subclass_AddMsg
 Private Sub zAddMsg(ByVal uMsg As Long, ByRef aMsgTbl() As Long, ByRef nMsgCnt As Long, ByVal When As eMsgWhen, ByVal nAddr As Long)
-  Dim nEntry  As Long                                                                   'Message table entry index
-  Dim nOff1   As Long                                                                   'Machine code buffer offset 1
-  Dim nOff2   As Long                                                                   'Machine code buffer offset 2
-  
-  If uMsg = ALL_MESSAGES Then                                                           'If all messages
-    nMsgCnt = ALL_MESSAGES                                                              'Indicates that all messages will callback
-  Else                                                                                  'Else a specific message number
-    Do While nEntry < nMsgCnt                                                           'For each existing entry. NB will skip if nMsgCnt = 0
-      nEntry = nEntry + 1
-      
-      If aMsgTbl(nEntry) = 0 Then                                                       'This msg table slot is a deleted entry
-        aMsgTbl(nEntry) = uMsg                                                          'Re-use this entry
-        Exit Sub                                                                        'Bail
-      ElseIf aMsgTbl(nEntry) = uMsg Then                                                'The msg is already in the table!
-        Exit Sub                                                                        'Bail
-      End If
-    Loop                                                                                'Next entry
-
-    nMsgCnt = nMsgCnt + 1                                                               'New slot required, bump the table entry count
-    ReDim Preserve aMsgTbl(1 To nMsgCnt) As Long                                        'Bump the size of the table.
-    aMsgTbl(nMsgCnt) = uMsg                                                             'Store the message number in the table
-  End If
-
-  If When = eMsgWhen.MSG_BEFORE Then                                                    'If before
-    nOff1 = PATCH_04                                                                    'Offset to the Before table
-    nOff2 = PATCH_05                                                                    'Offset to the Before table entry count
-  Else                                                                                  'Else after
-    nOff1 = PATCH_08                                                                    'Offset to the After table
-    nOff2 = PATCH_09                                                                    'Offset to the After table entry count
-  End If
-
-  If uMsg <> ALL_MESSAGES Then
-    Call zPatchVal(nAddr, nOff1, VarPtr(aMsgTbl(1)))                                    'Address of the msg table, has to be re-patched because Redim Preserve will move it in memory.
-  End If
-  Call zPatchVal(nAddr, nOff2, nMsgCnt)                                                 'Patch the appropriate table entry count
+    Dim nEntry  As Long                                                                   'Message table entry index
+    Dim nOff1   As Long                                                                   'Machine code buffer offset 1
+    Dim nOff2   As Long                                                                   'Machine code buffer offset 2
+    
+    If uMsg = ALL_MESSAGES Then                                                           'If all messages
+        nMsgCnt = ALL_MESSAGES                                                              'Indicates that all messages will callback
+    Else                                                                                  'Else a specific message number
+        Do While nEntry < nMsgCnt                                                           'For each existing entry. NB will skip if nMsgCnt = 0
+            nEntry = nEntry + 1
+            
+            If aMsgTbl(nEntry) = 0 Then                                                       'This msg table slot is a deleted entry
+                aMsgTbl(nEntry) = uMsg                                                          'Re-use this entry
+                Exit Sub                                                                        'Bail
+            ElseIf aMsgTbl(nEntry) = uMsg Then                                                'The msg is already in the table!
+                Exit Sub                                                                        'Bail
+            End If
+        Loop                                                                                'Next entry
+        
+        nMsgCnt = nMsgCnt + 1                                                               'New slot required, bump the table entry count
+        ReDim Preserve aMsgTbl(1 To nMsgCnt) As Long                                        'Bump the size of the table.
+        aMsgTbl(nMsgCnt) = uMsg                                                             'Store the message number in the table
+    End If
+    
+    If When = eMsgWhen.MSG_BEFORE Then                                                    'If before
+        nOff1 = PATCH_04                                                                    'Offset to the Before table
+        nOff2 = PATCH_05                                                                    'Offset to the Before table entry count
+    Else                                                                                  'Else after
+        nOff1 = PATCH_08                                                                    'Offset to the After table
+        nOff2 = PATCH_09                                                                    'Offset to the After table entry count
+    End If
+    
+    If uMsg <> ALL_MESSAGES Then
+        Call zPatchVal(nAddr, nOff1, VarPtr(aMsgTbl(1)))                                    'Address of the msg table, has to be re-patched because Redim Preserve will move it in memory.
+    End If
+    Call zPatchVal(nAddr, nOff2, nMsgCnt)                                                 'Patch the appropriate table entry count
 End Sub
 
 'Return the memory address of the passed function in the passed dll
 Private Function zAddrFunc(ByVal sDLL As String, ByVal sProc As String) As Long
-  zAddrFunc = GetProcAddress(GetModuleHandleA(sDLL), sProc)
-  'Debug.Assert zAddrFunc                                                                'You may wish to comment out this line if you're using vb5 else the EbMode GetProcAddress will stop here everytime because we look for vba6.dll first
+    zAddrFunc = GetProcAddress(GetModuleHandleA(sDLL), sProc)
+    'Debug.Assert zAddrFunc                                                                'You may wish to comment out this line if you're using vb5 else the EbMode GetProcAddress will stop here everytime because we look for vba6.dll first
 End Function
 
 'Worker sub for Subclass_DelMsg
 Private Sub zDelMsg(ByVal uMsg As Long, ByRef aMsgTbl() As Long, ByRef nMsgCnt As Long, ByVal When As eMsgWhen, ByVal nAddr As Long)
-  Dim nEntry As Long
-  
-  If uMsg = ALL_MESSAGES Then                                                           'If deleting all messages
-    nMsgCnt = 0                                                                         'Message count is now zero
-    If When = eMsgWhen.MSG_BEFORE Then                                                  'If before
-      nEntry = PATCH_05                                                                 'Patch the before table message count location
-    Else                                                                                'Else after
-      nEntry = PATCH_09                                                                 'Patch the after table message count location
+    Dim nEntry As Long
+    
+    If uMsg = ALL_MESSAGES Then                                                           'If deleting all messages
+        nMsgCnt = 0                                                                         'Message count is now zero
+        If When = eMsgWhen.MSG_BEFORE Then                                                  'If before
+            nEntry = PATCH_05                                                                 'Patch the before table message count location
+        Else                                                                                'Else after
+            nEntry = PATCH_09                                                                 'Patch the after table message count location
+        End If
+        Call zPatchVal(nAddr, nEntry, 0)                                                    'Patch the table message count to zero
+    Else                                                                                  'Else deleteting a specific message
+        Do While nEntry < nMsgCnt                                                           'For each table entry
+            nEntry = nEntry + 1
+            If aMsgTbl(nEntry) = uMsg Then                                                    'If this entry is the message we wish to delete
+                aMsgTbl(nEntry) = 0                                                             'Mark the table slot as available
+                Exit Do                                                                         'Bail
+            End If
+        Loop                                                                                'Next entry
     End If
-    Call zPatchVal(nAddr, nEntry, 0)                                                    'Patch the table message count to zero
-  Else                                                                                  'Else deleteting a specific message
-    Do While nEntry < nMsgCnt                                                           'For each table entry
-      nEntry = nEntry + 1
-      If aMsgTbl(nEntry) = uMsg Then                                                    'If this entry is the message we wish to delete
-        aMsgTbl(nEntry) = 0                                                             'Mark the table slot as available
-        Exit Do                                                                         'Bail
-      End If
-    Loop                                                                                'Next entry
-  End If
 End Sub
 
 'Get the sc_aSubData() array index of the passed hWnd
 Private Function zIdx(ByVal lng_hWnd As Long, Optional ByVal bAdd As Boolean = False) As Long
-'Get the upper bound of sc_aSubData() - If you get an error here, you're probably Subclass_AddMsg-ing before Subclass_Start
-  zIdx = UBound(sc_aSubData)
-  Do While zIdx >= 0                                                                    'Iterate through the existing sc_aSubData() elements
-    With sc_aSubData(zIdx)
-      If .hwnd = lng_hWnd Then                                                          'If the hWnd of this element is the one we're looking for
-        If Not bAdd Then                                                                'If we're searching not adding
-          Exit Function                                                                 'Found
-        End If
-      ElseIf .hwnd = 0 Then                                                             'If this an element marked for reuse.
-        If bAdd Then                                                                    'If we're adding
-          Exit Function                                                                 'Re-use it
-        End If
-      End If
-    End With
-    zIdx = zIdx - 1                                                                     'Decrement the index
-  Loop
-  
-  If Not bAdd Then
-    'Debug.Assert False                                                                  'hWnd not found, programmer error
-  End If
-
-'If we exit here, we're returning -1, no freed elements were found
+    'Get the upper bound of sc_aSubData() - If you get an error here, you're probably Subclass_AddMsg-ing before Subclass_Start
+    zIdx = UBound(sc_aSubData)
+    Do While zIdx >= 0                                                                    'Iterate through the existing sc_aSubData() elements
+        With sc_aSubData(zIdx)
+            If .hwnd = lng_hWnd Then                                                          'If the hWnd of this element is the one we're looking for
+                If Not bAdd Then                                                                'If we're searching not adding
+                    Exit Function                                                                 'Found
+                End If
+            ElseIf .hwnd = 0 Then                                                             'If this an element marked for reuse.
+                If bAdd Then                                                                    'If we're adding
+                    Exit Function                                                                 'Re-use it
+                End If
+            End If
+        End With
+        zIdx = zIdx - 1                                                                     'Decrement the index
+    Loop
+    
+    If Not bAdd Then
+        'Debug.Assert False                                                                  'hWnd not found, programmer error
+    End If
+    
+    'If we exit here, we're returning -1, no freed elements were found
 End Function
 
 'Patch the machine code buffer at the indicated offset with the relative address to the target address.
 Private Sub zPatchRel(ByVal nAddr As Long, ByVal nOffset As Long, ByVal nTargetAddr As Long)
-  Call RtlMoveMemory(ByVal nAddr + nOffset, nTargetAddr - nAddr - nOffset - 4, 4)
+    Call RtlMoveMemory(ByVal nAddr + nOffset, nTargetAddr - nAddr - nOffset - 4, 4)
 End Sub
 
 'Patch the machine code buffer at the indicated offset with the passed value
 Private Sub zPatchVal(ByVal nAddr As Long, ByVal nOffset As Long, ByVal nValue As Long)
-  Call RtlMoveMemory(ByVal nAddr + nOffset, nValue, 4)
+    Call RtlMoveMemory(ByVal nAddr + nOffset, nValue, 4)
 End Sub
 
 'Worker function for Subclass_InIDE
 Private Function zSetTrue(ByRef bValue As Boolean) As Boolean
-  zSetTrue = True
-  bValue = True
+    zSetTrue = True
+    bValue = True
 End Function
 
 'Return the upper 16 bits of the passed 32 bit value
 Private Function WordHi(lngValue As Long) As Long
-  If (lngValue And &H80000000) = &H80000000 Then
-    WordHi = ((lngValue And &H7FFF0000) \ &H10000) Or &H8000&
-  Else
-    WordHi = (lngValue And &HFFFF0000) \ &H10000
-  End If
+    If (lngValue And &H80000000) = &H80000000 Then
+        WordHi = ((lngValue And &H7FFF0000) \ &H10000) Or &H8000&
+    Else
+        WordHi = (lngValue And &HFFFF0000) \ &H10000
+    End If
 End Function
 
 'Return the lower 16 bits of the passed 32 bit value
 Private Function WordLo(lngValue As Long) As Long
-  WordLo = (lngValue And &HFFFF&)
+    WordLo = (lngValue And &HFFFF&)
 End Function
 
 'Determine if the passed function is supported
 Private Function IsFunctionExported(ByVal sFunction As String, ByVal sModule As String) As Boolean
-  Dim hMod        As Long
-  Dim bLibLoaded  As Boolean
-
-  hMod = GetModuleHandleA(sModule)
-
-  If hMod = 0 Then
-    hMod = LoadLibraryA(sModule)
+    Dim hMod        As Long
+    Dim bLibLoaded  As Boolean
+    
+    hMod = GetModuleHandleA(sModule)
+    
+    If hMod = 0 Then
+        hMod = LoadLibraryA(sModule)
+        If hMod Then
+            bLibLoaded = True
+        End If
+    End If
+    
     If hMod Then
-      bLibLoaded = True
+        If GetProcAddress(hMod, sFunction) Then
+            IsFunctionExported = True
+        End If
     End If
-  End If
-
-  If hMod Then
-    If GetProcAddress(hMod, sFunction) Then
-      IsFunctionExported = True
+    
+    If bLibLoaded Then
+        Call FreeLibrary(hMod)
     End If
-  End If
-
-  If bLibLoaded Then
-    Call FreeLibrary(hMod)
-  End If
 End Function
 
 'Track the mouse leaving the indicated window
 Private Sub TrackMouseLeave(ByVal lng_hWnd As Long)
-  Dim tme As TRACKMOUSEEVENT_STRUCT
-  
-  If bTrack Then
-    With tme
-      .cbSize = Len(tme)
-      .dwFlags = TME_LEAVE
-      .hWndTrack = lng_hWnd
-    End With
-
-    If bTrackUser32 Then
-      Call TrackMouseEvent(tme)
-    Else
-      Call TrackMouseEventComCtl(tme)
+    Dim tme As TRACKMOUSEEVENT_STRUCT
+    
+    If bTrack Then
+        With tme
+            .cbSize = Len(tme)
+            .dwFlags = TME_LEAVE
+            .hWndTrack = lng_hWnd
+        End With
+        
+        If bTrackUser32 Then
+            Call TrackMouseEvent(tme)
+        Else
+            Call TrackMouseEventComCtl(tme)
+        End If
     End If
-  End If
-  
+    
 End Sub
 
 
 Private Function GetVolumeLabel(ByVal sDrive As String) As String
-
+    
     Dim sBuffer As String
     Dim sSysName As String
     Dim lResult As Long
@@ -3857,25 +3845,25 @@ Private Function GetVolumeLabel(ByVal sDrive As String) As String
     lRtn = GetDriveType(sDrive)
     
     Select Case lRtn
-        Case DRIVE_REMOVABLE
-            GetVolumeLabel = "Floppy"
-        Case DRIVE_CDROM, DRIVE_FIXED, DRIVE_RAMDISK, DRIVE_REMOTE
-            sBuffer = String$(256, 0)
-            sSysName = String$(256, 0)
-            lResult = GetVolumeInformation(sDrive, sBuffer, 255, mSerial, lComponentLength, lSysFlags, sSysName, 255)
+    Case DRIVE_REMOVABLE
+        GetVolumeLabel = "Floppy"
+    Case DRIVE_CDROM, DRIVE_FIXED, DRIVE_RAMDISK, DRIVE_REMOTE
+        sBuffer = String$(256, 0)
+        sSysName = String$(256, 0)
+        lResult = GetVolumeInformation(sDrive, sBuffer, 255, mSerial, lComponentLength, lSysFlags, sSysName, 255)
         
-            If Not lResult = 0 Then
-                ' retrieve the information
-                sBuffer = Left$(sBuffer, InStr(sBuffer, Chr$(0)) - 1)
-                If sBuffer = vbNullString Then
-                    GetVolumeLabel = "Local Disc"
-                Else
-                    GetVolumeLabel = StrConv(sBuffer, vbProperCase)
-                End If
+        If Not lResult = 0 Then
+            ' retrieve the information
+            sBuffer = Left$(sBuffer, InStr(sBuffer, Chr$(0)) - 1)
+            If sBuffer = vbNullString Then
+                GetVolumeLabel = "Local Disc"
             Else
-                If lRtn = DRIVE_CDROM Then GetVolumeLabel = "CD Drive"
+                GetVolumeLabel = StrConv(sBuffer, vbProperCase)
             End If
-            
+        Else
+            If lRtn = DRIVE_CDROM Then GetVolumeLabel = "CD Drive"
+        End If
+        
     End Select
     
 End Function
@@ -3996,9 +3984,9 @@ End Property
 
 Private Function IsDriver(ByVal sDriver As String) As Boolean
     
-  Dim strSave As String
-  Dim keer As Long
-  Dim mSave As String
+    Dim strSave As String
+    Dim keer As Long
+    Dim mSave As String
     
     strSave = String$(255, Chr$(0))
     sDriver = sDriver & "\" & Chr$(0)
@@ -4017,10 +4005,10 @@ End Function
 
 Private Sub SaveDrivers()
     
-  Dim strSave As String
-  Dim keer As Long
-  Dim mSave As String
-  Dim l As Integer
+    Dim strSave As String
+    Dim keer As Long
+    Dim mSave As String
+    Dim l As Integer
     
     strSave = String$(255, Chr$(0))
     l = 0
@@ -4046,8 +4034,8 @@ Private Sub SaveDrivers()
 End Sub
 
 Private Function IsFolder(ByVal sFolder As String) As String
-
-On Error GoTo IsFolderErr
+    
+    On Error GoTo IsFolderErr
     IsFolder = Dir$(sFolder, vbDirectory)
     
     If (IsFolder = "") And ((Mode = Mode_FolderBrowser) Or (Mode = Mode_FolderList)) Then
@@ -4055,7 +4043,7 @@ On Error GoTo IsFolderErr
     End If
     
     Exit Function
-
+    
 IsFolderErr:
     
     sFolder = ""
