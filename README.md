@@ -1,2 +1,2 @@
 # ypn.common.ocx
-vb.ocx
+vb公共组件ocx
